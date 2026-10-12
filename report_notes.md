@@ -4,6 +4,33 @@ Evidence only. Every number here was printed by code that was actually run;
 the source line is named next to each block. This file feeds
 `long_report/long_report.tex` at Step 19.
 
+## Problem 1. The categories, and how many images came back
+
+Source: `src/collect.py` writes into `data/raw/<class name>/0001.jpg`, and its
+own docstring (lines 8-10) says an image that fails to download, fails to open,
+or is too small is skipped and counted, so the number you get back is usually
+smaller than the number you asked for. `data/clean` is a copy of `data/raw` made
+before any cleaning. Counts printed in Colab:
+
+| class | data/raw | data/clean | data/new_images |
+|---|---|---|---|
+| amethyst | 134 | 134 | 5 |
+| aventurine | 138 | 138 | 5 |
+| citrine | 150 | 150 | 5 |
+| rose_quartz | 150 | 150 | 6 |
+| total | 572 | 572 | 21 |
+
+Four categories, all varieties of quartz: amethyst, citrine, rose_quartz and
+aventurine. A quartz variety is mostly the same crystal with a different colour
+and a different kind of inclusion inside it, so the model has to work from
+colour and from what shows through the stone, which is what makes the pairs
+worth telling apart rather than being obviously different shapes. 150 each was
+asked for; amethyst (134) and aventurine (138) came back short because the
+collector keeps only the links that still open and are big enough. `data/clean`
+matched `data/raw` exactly, so nothing had been cleaned yet at that point. The
+new images are 21, five in each class and six rose quartz, which is the five per
+class Problem 5 asks for.
+
 ## Problem 2. What prepare_image made of the images
 
 Source: `src/data.py` lines 23-26 hold the recipe and lines 41-71 are
