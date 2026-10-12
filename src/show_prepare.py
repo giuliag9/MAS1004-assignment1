@@ -8,6 +8,15 @@ model sees only after you export a model and open the page in a browser.
     python src/show_prepare.py --image data/clean/amethyst/0007.jpg
     python src/show_prepare.py --scan data/clean          # worst crops first
 
+It takes no arguments of its own beyond these, and nothing else in the
+repository works this way: on your own computer run it through uv like every
+other command. On an Intel Mac uv cannot install PyTorch at all ("The current
+Python platform is not compatible with the lockfile's supported environments"),
+so there, and in Colab, run the same commands with `!python` after the cell in
+section 3:
+
+    !python src/show_prepare.py --scan data/clean
+
 The first command writes four pictures into long_report/figures/, which is where
 long_report.tex looks for them (figures/prepare_original.jpg and
 figures/prepare_result.png):
