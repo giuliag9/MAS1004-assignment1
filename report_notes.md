@@ -7,9 +7,12 @@ the source line is named next to each block. This file feeds
 ## Problem 2. What prepare_image made of the images
 
 Source: `src/data.py` lines 23-26 hold the recipe and lines 41-71 are
-`prepare_image`. `pytest tests/test_data.py` is 16 passed. `src/show_prepare.py`
-draws the crop for one file and prints what it keeps and throws away;
-`--scan <folder>` ranks a whole folder by how much the crop throws away.
+`prepare_image`. `pytest tests/test_data.py` is 16 passed, and
+`python -m pytest -q tests/test_data.py -k prepare` is 7 passed, 9 deselected.
+`src/show_prepare.py` draws the crop for one file and prints what it keeps and
+throws away; `--scan <folder>` lists the pictures the crop throws most of away,
+and `--scan <folder> --sheet` draws those as one picture of tiles, each tile
+named and measured with what the crop keeps and what it drops from each side.
 
 Measured on `data/new_images/aventurine/IMG_3068.JPG`, one of the photos taken
 for this assignment, 4032 x 3024:
@@ -37,6 +40,34 @@ original, and only 43.1% of the area survives. The stone reaches the top of the
 square, so its edge is thrown away. Wide photos lose the same way on the left
 and right: the 4032 x 3024 photo above loses 34.3% of its width, 686 pixels each
 side, even though the stone is nowhere near those edges.
+
+A second case, found with `--scan data/new_images --sheet`: the contact sheet
+draws the 15 worst of the 21 photos as `prepare_sheet.png`, and
+`data/new_images/rose_quartz/ea7f4b76-efcc-4973-814e-a7afe9273198.JPG`,
+1500 x 2000, keeps 57.5% of the area while the point of the heart is below the
+bottom edge of the square: the tip of the stone is thrown away and the model
+never sees it. The sheet turned up four pieces the crop cuts through, all in
+these 21 photos, and each one is drawn at full size with `--image`:
+the tall rose quartz above (top and both sides), the heart (its point),
+`amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG` (the top of the crystal) and
+`aventurine/aba4d635-c6c9-4d89-af6f-9f279d0e5178.JPG` (the point of a pendant and
+its loop). The heart and the tall quartz are the clearest of the four.
+
+Finding a case needed the drawings, not a number. Three cheap ways of guessing
+"did the crop cut the stone" were tried on these 21 photos, and all three put a
+photo whose stone is safely inside the square above the one that is really cut:
+
+| way of guessing | the picture that is really cut | a picture whose stone is safe | verdict |
+|---|---|---|---|
+| how unlike the plain background the band outside the square is | 9dacd40a, 24.8%, 8th of 21 | `aventurine/IMG_3197.JPG`, a stone lying in a palm, 84.3%, 1st | wrong way round |
+| the same, as the longest unbroken run along the edge of the square | 9dacd40a, 5.6%, 10th of 21 | `amethyst/IMG_3200.JPG`, stone inside on cardboard, 33.9%, 1st | wrong way round |
+| how busy the crop line is against how busy the inside is | 9dacd40a, 5.83 | `aventurine/IMG_3197.JPG`, 6.73 | the safe one scores higher |
+
+The palm and the cardboard photo both beat the real case because what is on
+their crop line is a brightness gradient or skin, not the stone. So `--scan`
+reports the crop's own geometry only, says that the drawing decides, and
+`src/show_prepare.py` keeps that reasoning in its docstring instead of shipping a
+number that would have put the wrong photo in the report.
 
 ### Four of the photos are stored sideways (EXIF orientation 6)
 
