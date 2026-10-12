@@ -6,6 +6,10 @@ data/
 results/
 *.pt
 
+# macOS writes one of these into every folder you open in Finder. They are not
+# part of the assignment, and they would otherwise show up in git status.
+.DS_Store
+
 .venv/
 __pycache__/
 .pytest_cache/
