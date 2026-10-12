@@ -7,7 +7,10 @@ that the model can eat.
 Run `pytest tests/test_data.py` after you fill them in.
 """
 
+from pathlib import Path
+
 import numpy as np
+from PIL import Image
 from torchvision import transforms
 
 # Files with any other extension should be ignored.
@@ -98,7 +101,34 @@ def load_folder(root):
     Memory: every image becomes 3 x 224 x 224 numbers of 4 bytes, about 0.6 MB.
     750 images is about 450 MB. That fits on Colab and on most laptops.
     """
-    raise NotImplementedError("Problem 2: fill in load_folder")
+    root = Path(root)
+    # One sub-folder per class, in alphabetical order, so labels are stable.
+    class_names = sorted(p.name for p in root.iterdir() if p.is_dir())
+
+    images, labels, paths = [], [], []
+    for label, name in enumerate(class_names):
+        folder = root / name
+        # Sort the files: the order on disk is not guaranteed, and two runs
+        # should give the same rows in the same order.
+        files = sorted(p for p in folder.iterdir()
+                       if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES)
+        for path in files:
+            try:
+                with Image.open(path) as image:
+                    pixels = prepare_image(image)
+            except Exception:
+                # A broken file, or one Pillow cannot read. Skip it.
+                continue
+            images.append(pixels)
+            labels.append(label)
+            paths.append(path)
+
+    if images:
+        X = np.stack(images).astype(np.float32)
+    else:
+        X = np.empty((0, 3, CROP, CROP), dtype=np.float32)
+    y = np.asarray(labels, dtype=np.int64)
+    return X, y, class_names, paths
 
 
 def split_train_test(X, y, paths, test_ratio=0.2, seed=0):
@@ -117,4 +147,20 @@ def split_train_test(X, y, paths, test_ratio=0.2, seed=0):
         up with a class that has no test images at all, and then your accuracy
         number means nothing.
     """
-    raise NotImplementedError("Problem 2: fill in split_train_test")
+    rng = np.random.default_rng(seed)
+
+    train_rows, test_rows = [], []
+    # Split each class on its own, so no class can end up on only one side.
+    for label in np.unique(y):
+        rows = rng.permutation(np.flatnonzero(y == label))
+        n_test = int(round(len(rows) * test_ratio))
+        if test_ratio > 0:
+            # Keep at least one image of this class on each side.
+            n_test = min(max(n_test, 1), len(rows) - 1)
+        test_rows.extend(rows[:n_test])
+        train_rows.extend(rows[n_test:])
+
+    train_rows = np.sort(np.asarray(train_rows, dtype=np.int64))
+    test_rows = np.sort(np.asarray(test_rows, dtype=np.int64))
+    return (X[train_rows], y[train_rows], [paths[i] for i in train_rows],
+            X[test_rows], y[test_rows], [paths[i] for i in test_rows])
