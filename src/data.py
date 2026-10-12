@@ -8,6 +8,7 @@ Run `pytest tests/test_data.py` after you fill them in.
 """
 
 import numpy as np
+from torchvision import transforms
 
 # Files with any other extension should be ignored.
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
@@ -20,6 +21,18 @@ RESIZE = 256                    # the shorter side is resized to this
 CROP = 224                      # then the square in the middle is cut out
 MEAN = (0.485, 0.456, 0.406)    # red, green, blue
 STD = (0.229, 0.224, 0.225)     # red, green, blue
+
+# Steps 2 to 6 of prepare_image below, done by torchvision. This is the same
+# pipeline torchvision uses to prepare photos for ResNet18, so the numbers match
+# exactly what the model was trained to read.
+_TO_TENSOR = transforms.Compose(
+    [
+        transforms.Resize(RESIZE),        # 2. shorter side -> 256, keeps shape
+        transforms.CenterCrop(CROP),      # 3. middle 224 x 224 square
+        transforms.ToTensor(),            # 4 and 6. /255, channels first
+        transforms.Normalize(MEAN, STD),  # 5. (value - MEAN[c]) / STD[c]
+    ]
+)
 
 
 def prepare_image(image):
@@ -50,7 +63,9 @@ def prepare_image(image):
     The web page does these same six steps in JavaScript. If your version is
     different, the self test badge at the top of your page turns red.
     """
-    raise NotImplementedError("Problem 2: fill in prepare_image")
+    # Step 1, then steps 2 to 6. ToTensor already gives float32, and .numpy()
+    # turns it into the numpy array the rest of the code expects.
+    return np.asarray(_TO_TENSOR(image.convert("RGB")), dtype=np.float32)
 
 
 def load_folder(root):
