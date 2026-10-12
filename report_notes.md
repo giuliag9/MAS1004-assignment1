@@ -96,6 +96,25 @@ reports the crop's own geometry only, says that the drawing decides, and
 `src/show_prepare.py` keeps that reasoning in its docstring instead of shipping a
 number that would have put the wrong photo in the report.
 
+### The four pictures that go in the report
+
+`long_report/figures/prepare_original.jpg`, `prepare_result.png`,
+`prepare_cropbox.png` and `prepare_side_by_side.png` are `show_prepare.py` run in
+Colab on an image from `data/clean/rose_quartz/`, so the left-hand picture is
+what the template's caption at `long_report.tex:42` asks for, an image as
+downloaded: a rose quartz heart on a stand, with a sphere and two towers behind
+it. The red square in `prepare_cropbox.png` is the 224 x 224 crop and
+`prepare_result.png` is the heart filling it. `prepare_sheet.png` is the drawing
+of the 15 crops that throw most of the area away, described above; it is not in
+the template and is kept as the evidence behind that paragraph.
+
+The same four files made from `data/new_images/aventurine/IMG_3068.JPG` (the
+4032 x 3024 photo measured above, a stone on a plain surface) are not lost: they
+are kept as `own_photo_original.jpg` and `own_photo_result.png`, so a picture
+taken by hand for this assignment can still be shown as a second Problem 2
+picture if the report wants one. Nothing in `check.py` reads any of these files;
+they are there for `long_report.tex` only.
+
 ### Four of the photos are stored sideways (EXIF orientation 6)
 
 `show_prepare.py --scan data/new_images` over 21 images reports an orientation
