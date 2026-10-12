@@ -197,8 +197,10 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
    training images right against 9 of 115 test images wrong. Meaning: the model
    can memorise 457 pictures of four visually distinct stones, and test accuracy
    measures what it can do on pictures it has not seen.
-3. The confusion matrix. `results/run_confusion.png`, and the numbers printed by
-   the snippet in `results/` -> TO FILL IN.
+3. The confusion matrix. `results/run_confusion.png` draws the counts inside the
+   squares, and `src/show_confusion.py --tag run` prints the same numbers from
+   `results/run_model.pt` (same split, `seed 0`, so they match the picture).
+   The numbers, and which two categories are mixed up most -> TO FILL IN.
 4. ImageNet against random, same code, data, epochs, lr: 92.2% against 82.6%,
    11 test images apart, and the scratch test loss rises as its train accuracy
    approaches 100%. The pretrained features already carry most of what
