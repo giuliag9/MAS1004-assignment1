@@ -198,9 +198,32 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
    can memorise 457 pictures of four visually distinct stones, and test accuracy
    measures what it can do on pictures it has not seen.
 3. The confusion matrix. `results/run_confusion.png` draws the counts inside the
-   squares, and `src/show_confusion.py --tag run` prints the same numbers from
-   `results/run_model.pt` (same split, `seed 0`, so they match the picture).
-   The numbers, and which two categories are mixed up most -> TO FILL IN.
+   squares, and `src/show_confusion.py --tag run` printed these same numbers
+   from `results/run_model.pt` in Colab (same split, `seed 0`, 115 test
+   pictures, so picture and numbers agree):
+
+   ```
+                     amethyst   aventurine      citrine  rose_quartz      total
+   amethyst                23            2            0            2         27
+   aventurine               0           25            1            2         28
+   citrine                  0            0           30            0         30
+   rose_quartz              2            0            0           28         30
+                           25           27           31           32        115
+   ```
+
+   The 9 wrong ones, all of them once or twice: amethyst -> aventurine 2,
+   amethyst -> rose_quartz 2, aventurine -> citrine 1, aventurine ->
+   rose_quartz 2, rose_quartz -> amethyst 2. Per class recall: amethyst 23/27
+   (85%), aventurine 25/28 (89%), citrine 30/30 (100%), rose_quartz 28/30
+   (93%). No single direction is ahead: 2 is the largest count and four
+   directions reach it, so which pair looks "most" mixed up depends on whether
+   the two directions of a pair are added (amethyst/rose_quartz 4 and
+   aventurine/rose_quartz 4 against amethyst/aventurine 2 and
+   aventurine/citrine 1). Citrine is never the true class of a mistake, and it
+   ends with one more prediction than it has pictures (31 against 30).
+
+   Which two categories that is, and whether it surprises -> TO FILL IN, in
+   Giulia's own words.
 4. ImageNet against random, same code, data, epochs, lr: 92.2% against 82.6%,
    11 test images apart, and the scratch test loss rises as its train accuracy
    approaches 100%. The pretrained features already carry most of what
