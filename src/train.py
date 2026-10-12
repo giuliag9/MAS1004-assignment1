@@ -11,6 +11,7 @@ downloads the ImageNet weights, about 45 MB.
 
 import torch
 import torch.nn as nn
+from torchvision.models import ResNet18_Weights, resnet18
 
 
 def build_model(num_classes, pretrained=True, freeze=False):
@@ -35,7 +36,21 @@ def build_model(num_classes, pretrained=True, freeze=False):
     Do not put a softmax at the end. The loss function adds it for you, and the
     web page adds it for you.
     """
-    raise NotImplementedError("Problem 3: fill in build_model")
+    weights = ResNet18_Weights.IMAGENET1K_V1 if pretrained else None
+    model = resnet18(weights=weights)
+
+    # Replace only the last layer, so the model answers with your categories
+    # instead of the 1,000 ImageNet ones. No softmax: CrossEntropyLoss adds it
+    # for training, and the web page adds it at prediction time.
+    model.fc = nn.Linear(512, num_classes)
+
+    if freeze:
+        for parameter in model.parameters():
+            parameter.requires_grad = False
+        for parameter in model.fc.parameters():
+            parameter.requires_grad = True
+
+    return model
 
 
 def train(model, X_train, y_train, X_test, y_test,
@@ -78,7 +93,75 @@ def train(model, X_train, y_train, X_test, y_test,
     The model is trained in place. When this function returns, `model` is the
     trained one, and it is left on the device it was trained on.
     """
-    raise NotImplementedError("Problem 3: fill in train")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+
+    # Adam may only change the parameters that are allowed to change. With
+    # freeze=True that is only the new last layer.
+    trainable = [p for p in model.parameters() if p.requires_grad]
+    optimiser = torch.optim.Adam(trainable, lr=lr)
+    loss_function = nn.CrossEntropyLoss()
+
+    # The rows stay in ordinary memory and go to the GPU one batch at a time,
+    # so that a big training set does not run you out of room.
+    train_X = torch.as_tensor(X_train, dtype=torch.float32)
+    train_y = torch.as_tensor(y_train, dtype=torch.long)
+    test_X = torch.as_tensor(X_test, dtype=torch.float32)
+    test_y = torch.as_tensor(y_test, dtype=torch.long)
+
+    history = {"train_loss": [], "train_acc": [], "test_loss": [], "test_acc": []}
+
+    for epoch in range(1, epochs + 1):
+        model.train()  # BatchNorm and Dropout behave differently in the two modes
+        order = torch.randperm(len(train_X))
+        losses, correct, seen = [], 0, 0
+
+        for start in range(0, len(train_X), batch_size):
+            rows = order[start:start + batch_size]
+            inputs = train_X[rows].to(device)
+            targets = train_y[rows].to(device)
+
+            optimiser.zero_grad()
+            outputs = model(inputs)
+            loss = loss_function(outputs, targets)
+            losses.append(float(loss))
+            correct += int((outputs.argmax(dim=1) == targets).sum())
+            seen += len(targets)
+
+            loss.backward()
+            optimiser.step()
+
+        test_loss, test_acc = _measure(model, test_X, test_y, loss_function,
+                                       device, batch_size)
+        history["train_loss"].append(sum(losses) / len(losses))
+        history["train_acc"].append(correct / seen)
+        history["test_loss"].append(test_loss)
+        history["test_acc"].append(test_acc)
+
+        print(f"epoch {epoch:3d}/{epochs}  "
+              f"train loss {history['train_loss'][-1]:.4f}  "
+              f"train acc {history['train_acc'][-1]:6.1%}  "
+              f"test loss {test_loss:.4f}  "
+              f"test acc {test_acc:6.1%}")
+
+    return history
+
+
+def _measure(model, X, y, loss_function, device, batch_size):
+    """Mean loss and accuracy over X, without letting it change the model."""
+    model.eval()
+    losses, correct, seen = [], 0, 0
+
+    with torch.no_grad():
+        for start in range(0, len(X), batch_size):
+            inputs = X[start:start + batch_size].to(device)
+            targets = y[start:start + batch_size].to(device)
+            outputs = model(inputs)
+            losses.append(float(loss_function(outputs, targets)))
+            correct += int((outputs.argmax(dim=1) == targets).sum())
+            seen += len(targets)
+
+    return sum(losses) / len(losses), correct / seen
 
 
 def count_trainable(model):
