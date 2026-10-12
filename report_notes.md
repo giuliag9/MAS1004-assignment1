@@ -4,6 +4,55 @@ Evidence only. Every number here was printed by code that was actually run;
 the source line is named next to each block. This file feeds
 `long_report/long_report.tex` at Step 19.
 
+## Problem 2. What prepare_image made of the images
+
+Source: `src/data.py` lines 23-26 hold the recipe and lines 41-71 are
+`prepare_image`. `pytest tests/test_data.py` is 16 passed. `src/show_prepare.py`
+draws the crop for one file and prints what it keeps and throws away;
+`--scan <folder>` ranks a whole folder by how much the crop throws away.
+
+Measured on `data/new_images/aventurine/IMG_3068.JPG`, one of the photos taken
+for this assignment, 4032 x 3024:
+
+| step | result |
+|---|---|
+| on disk | 4032 x 3024 |
+| after Resize(256) | 341 x 256 (shorter side 3024 -> 256) |
+| square kept | x 58..282, y 16..240 |
+| cut off, in the 341 x 256 picture | 58 left, 59 right, 16 top, 16 bottom |
+| cut off, back in the original photo | 686 left, 698 right, 189 top, 189 bottom |
+| kept | 57.5% of the area; 34.3% of the width and 12.5% of the height thrown away |
+
+That the rectangle drawn is the rectangle the model gets is measured, not
+assumed: the same box run through ToTensor and Normalize differs from
+`prepare_image` by 0.0e+00, and `prepare_image` differs from torchvision's own
+ImageNet recipe for ResNet18 by 0.0e+00.
+
+### An image where the crop cut off part of the thing I care about
+
+`data/new_images/rose_quartz/9dacd40a-f98e-4312-a62d-78c4fd3a0a4b.JPG`,
+900 x 1600. Resize gives 256 x 455, the square keeps y 116..340, so 116 rows are
+dropped above and 115 below: 50.8% of the height, 408 and 404 pixels of the
+original, and only 43.1% of the area survives. The stone reaches the top of the
+square, so its edge is thrown away. Wide photos lose the same way on the left
+and right: the 4032 x 3024 photo above loses 34.3% of its width, 686 pixels each
+side, even though the stone is nowhere near those edges.
+
+### Four of the photos are stored sideways (EXIF orientation 6)
+
+`show_prepare.py --scan data/new_images` over 21 images reports an orientation
+other than 1 for `amethyst/IMG_3200.JPG`, `aventurine/IMG_3196.JPG`,
+`rose_quartz/IMG_3069.JPG` and `rose_quartz/IMG_3194.JPG`. The camera stored
+those landscape, with a note in the file saying "turn 90 degrees before
+showing". `Image.open(...).convert("RGB")` does not apply the note, so
+`prepare_image` cuts the middle out of a turned picture. The six steps do not
+include a turning step and the tests never use a picture with EXIF data, so the
+tests pass while those four reach the model sideways. The page will not even
+agree with itself here: `docs/app.js` line 166 loads an upload into an `<img>`,
+and browsers apply the note themselves, so the browser turns the photo and
+Python does not. The self test badge cannot catch it, because `selftest.json`
+holds three already resized square pictures with no EXIF in them.
+
 ## Problem 3 experiment table (before any cleaning)
 
 Source: the four "One line for your experiment table" blocks, saved in
