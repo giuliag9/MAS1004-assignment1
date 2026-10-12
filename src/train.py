@@ -124,7 +124,7 @@ def train(model, X_train, y_train, X_test, y_test,
             optimiser.zero_grad()
             outputs = model(inputs)
             loss = loss_function(outputs, targets)
-            losses.append(float(loss))
+            losses.append(float(loss.detach()))  # detach: loss still tracks grad
             correct += int((outputs.argmax(dim=1) == targets).sum())
             seen += len(targets)
 
