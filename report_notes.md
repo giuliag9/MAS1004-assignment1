@@ -310,17 +310,80 @@ copied into the report's figures:
 The three further pictures I first put forward are not used:
 `amethyst/0123.jpg`, `amethyst/0131.jpg`, `rose_quartz/0109.jpg`.
 
+### The suspect sheets against my rule, per class
+
+The suspect pass ran on all 572 images before any removal, so these numbers are
+about the data as downloaded. Each sheet draws the 32 images of a class that
+look least like the rest of their class, and
+`results/cleaning/suspects/suspects.csv` carries a row for every image with its
+rank, rank 1 being the least typical.
+
+| class | removed by my rule | of those, rank 1-20 | rank 21-32 | rank 33 and later |
+|---|---|---|---|---|
+| amethyst | 38 | 11 | 6 | 21 |
+| aventurine | 81 | 15 | 9 | 57 |
+| citrine | 12 | 4 | 0 | 8 |
+| rose_quartz | 57 | 15 | 6 | 36 |
+
+What the first 20 of each class went by:
+
+- amethyst: no crystal 5, jewellery 3, drawing 1, unclear 1, wrong crystal 1
+- aventurine: no crystal 9, wrong crystal 2, jewellery 1, more than one 1,
+  unclear 1, text 1
+- citrine: text 2, more than one 2
+- rose_quartz: no crystal 5, jewellery 4, more than one 4, wrong crystal 1, text 1
+
+Reading: the images that look least like the rest of their class are mostly junk
+by my rule too, most strongly in aventurine and rose quartz, which are also the
+two classes my rule removed the most from. Citrine is where the two views
+disagree most, 4 of 20, and aventurine is where I went furthest on my own: 57 of
+its 81 removals sit at rank 33 or later, in pictures the sheet never showed me.
+
+"Removed but not on the suspect list at all" is always 0 and says nothing, since
+`suspects.csv` has a rank for all 572 images. The number that answers "did you
+find junk it did not list" is the rank 33 and later column, 21 / 57 / 8 / 36.
+
+### Near copies
+
+The suspect pass found **27 pairs** above 0.95 similarity.
+
+16 of them were settled by rule, because both halves were junk under one of my
+seven clauses and had already gone. That covers the amethyst tail: `0123`,
+`0124`, `0126`, `0127` and `0128` are near copies of each other, so the run I
+removed under "doesn't show a crystal at all" was a burst of near-identical
+photos and removing it as junk took the duplicates with it.
+
+The other 9 groups, 19 pictures, were still in `data/clean` and I decided them
+one by one on the `copies.png` sheet, keeping the better picture of each group
+and removing the rest under one new reason, "The image is a near copy of another
+picture".
+
+| kept | the near copies removed |
+|---|---|
+| `citrine/0100.jpg` | `citrine/0018.jpg` |
+| `citrine/0149.jpg` | `citrine/0032.jpg` |
+| `citrine/0006.jpg` | `citrine/0069.jpg` |
+| `citrine/0050.jpg` | `citrine/0099.jpg` |
+| `citrine/0083.jpg` | `citrine/0041.jpg` |
+| `rose_quartz/0144.jpg` | `rose_quartz/0150.jpg` |
+| `amethyst/0033.jpg` | `amethyst/0055.jpg` |
+| `amethyst/0022.jpg` | `amethyst/0031.jpg` |
+| `aventurine/0134.jpg` | `aventurine/0123.jpg`, `aventurine/0132.jpg` |
+
+Ten images removed, one kept of each group, decided on 13 October 2026.
+
+For the report, in one sentence: the suspect pass found 27 pairs of images above
+0.95 similarity, 16 of them already removed as junk by my own rule, and of the
+remaining nine groups I kept a single picture each and removed the other ten.
+
 ### Still to fill in for Problem 4
 
 - TO FILL IN: the table of how many images were removed from each class and why
   (`clean.py count`, `results/clean_count.txt`). Every class's `other` column
   must read 0.
-- TO FILL IN: how many near copies the suspect pass found, and what I did with
-  them (`results/cleaning/suspects/copies.png` and the `copy of` rows of
-  `suspects.csv`). None of my seven clauses is about copies, so this is decided
-  separately.
-- TO FILL IN: of the first 20 suspects of each class, how many I removed, how
-  many of those the suspect list found and I had missed, and how many pieces of
-  junk it did not list at all.
+- The first 20 suspects per class, and the junk the suspect sheets never showed
+  me, are in the section above, from the Colab run of 13 October 2026.
+- The near copies are decided and written above; only the `count` row for the new
+  reason is still to come.
 - TO FILL IN: test accuracy (and accuracy on the new images) before cleaning
   92.2% and after, from `check.py --compare run clean`.
