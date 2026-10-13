@@ -419,5 +419,43 @@ remaining nine groups I kept a single picture each and removed the other ten.
 - The first 20 suspects per class, and the junk the suspect sheets never showed
   me, are in the section above, from the Colab run of 13 October 2026.
 - The near copies are decided and written above.
+
+## Problem 5. Images from a new source
+
+Source: `src/clean.py` lines 364-415, run after all 198 removals, with `data/raw`,
+`data/clean` and `data/removed` all still on disk. Output, in
+`results/overlap.txt`:
+
+    none of your 21 new images is a near copy of any of the 570 images you
+    downloaded
+
+    the closest any new image comes to a downloaded one: 0.85 (near copies are
+    above 0.95)
+
+Where the new images came from: photographs I took myself for this assignment,
+with my own phone, saved as JPEG because the phone's HEIC files cannot be read
+by the code (one of them, `data/new_images/aventurine/IMG_3068.JPG`, is the
+photo measured in Problem 2). They are 21, five per class and six rose quartz,
+in `data/new_images/<class>/`.
+
+Why none of them can be among the downloads: they are photographs of objects in
+front of me, taken by me, while the four classes were downloaded from a search
+engine; a search could not return a photograph that never existed on the web.
+The overlap check tests that rather than assuming it: every new image is
+described and compared with all 572 downloaded files, including the 198 moved to
+`data/removed/`, and the closest any of the 21 comes to any of them is 0.85,
+under the 0.95 the tool calls a near copy. So the new images are a source that
+cannot overlap with the downloads, which is what Problem 5 needs.
+
+The tool prints 570 rather than 572 because it hashes every file and counts each
+picture once; two of the 572 downloaded files are byte-for-byte copies of
+another file in the set.
+
+- TO FILL IN: accuracy on the downloaded test set and on the new images, side by
+  side, from `check.py --compare run clean`.
+- TO FILL IN: the five mistakes it was most sure about on the new images, with
+  the pictures, and what in each image pushed it the wrong way.
+- TO FILL IN: what is different about the new images: background, lighting,
+  angle, distance, what else is in the frame.
 - TO FILL IN: test accuracy (and accuracy on the new images) before cleaning
   92.2% and after, from `check.py --compare run clean`.
