@@ -222,29 +222,26 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
    aventurine/citrine 1). Citrine is never the true class of a mistake, and it
    ends with one more prediction than it has pictures (31 against 30).
 
-   Which two categories that is, and whether it surprises me. Mine, as I wrote
-   it, with one typo fixed (`thoguht` to `thought`):
+   Which two categories that is, and whether it surprises me. My final answer,
+   with spellings fixed (`thoguht` to `thought`, `comapred` to `compared`,
+   `turining` to `turning`):
 
    > The categories that got mixed up and surprised me was amethyst turning out
-   > as aventurine twice. That is because purple and green are very different
-   > colors so I thought they wouldn't get mixed. Whereas, I would expect
-   > amethyst and rose quartz to get mixed up more since the colors are more
-   > similar.
+   > as aventurine twice. That is because purple is very different from green, so
+   > I thought they wouldn't get mixed. Aventurine was mixed up for rose quartz
+   > also twice but that surprised me less compared to the amethyst turning out
+   > as aventurine, because rose is a lighter color such as it can be sometimes
+   > the green of aventurine. I wasn't surprised about amethyst and rose quartz
+   > to get mixed up due to their similar colors.
 
-   The same words reordered, so that the box is answered first and the surprise
-   comes second. Agent's check, because the first sentence above disagrees with
-   the matrix in point 3: amethyst and rose quartz *is* the pair it mixes up
-   most, 4 of the 9 mistakes, 2 each way, ahead of the three directions sitting
-   at 2. So my colour intuition about amethyst and rose quartz is right, and the
-   aventurine mix is the smaller, unexpected one at 2 mistakes.
-
-   > The two categories it mixes up most are amethyst and rose quartz, 4 of the 9
-   > mistakes, and that does not surprise me, the colors are close. What
-   > surprised me was amethyst turning out as aventurine twice. That is because
-   > purple and green are very different colors so I thought they wouldn't get
-   > mixed.
-
-   TO CHOOSE: which of the two versions goes in the report.
+   Agent's check, not my words: this agrees with the matrix in point 3. Amethyst
+   to aventurine 2 and aventurine to rose quartz 2 both appear there, and it is
+   amethyst with rose quartz that is the pair it mixes up most, 4 of the 9
+   mistakes, through both directions. The sentence does not say the last part
+   out loud, that the pair I was not surprised about is also the biggest, 4
+   against 2. If wanted, it can open with one extra clause: "Amethyst and rose
+   quartz is the pair it mixes up most, 4 of the 9 mistakes, and I was not
+   surprised, their colors are close."
 4. ImageNet against random, same code, data, epochs, lr: 92.2% against 82.6%,
    11 test images apart, and the scratch test loss rises as its train accuracy
    approaches 100%. The pretrained features already carry most of what
