@@ -310,6 +310,42 @@ copied into the report's figures:
 The three further pictures I first put forward are not used:
 `amethyst/0123.jpg`, `amethyst/0131.jpg`, `rose_quartz/0109.jpg`.
 
+### What was removed, by class
+
+`clean.py count` on 14 October 2026, in `results/clean_count.txt`:
+
+| class | downloaded | removed | kept | other |
+|---|---|---|---|---|
+| amethyst | 134 | 40 | 94 | 0 |
+| aventurine | 138 | 83 | 55 | 0 |
+| citrine | 150 | 17 | 133 | 0 |
+| rose_quartz | 150 | 58 | 92 | 0 |
+
+and the same removals by reason, seven rows from my rule and one from the
+suspect pass:
+
+| images | reason |
+|---|---|
+| 86 | The image doesn't show a crystal at all |
+| 25 | The image shows the wrong crystal |
+| 25 | The image has text and that take much space of the photo |
+| 22 | The image shows jewelry where the crystal is not predominant |
+| 18 | The image has more than one type of crystal |
+| 10 | The image doesn't show clearly the crystal, or not in the right direction |
+| 10 | The image is a near copy of another picture |
+| 2 | The image is a drawing |
+
+198 images removed and 374 kept of 572. The seven rule reasons add to 188, the
+figure the seven commands moved, and the reason strings are spelled the same
+every time, so this line groups the removals the tool would otherwise only know
+by file name. Every class's `other` column is 0: no image left `data/raw` except
+through `clean.py remove`, and every removal has a reason written down.
+
+Aventurine is the class the cleaning changes most, 83 of its 138 images gone,
+60%, and citrine the least, 17 of 150. That is what the class pages showed: the
+aventurine search returned far more beads, bracelets and jewellery than the
+other three.
+
 ### The suspect sheets against my rule, per class
 
 The suspect pass ran on all 572 images before any removal, so these numbers are
@@ -378,12 +414,10 @@ remaining nine groups I kept a single picture each and removed the other ten.
 
 ### Still to fill in for Problem 4
 
-- TO FILL IN: the table of how many images were removed from each class and why
-  (`clean.py count`, `results/clean_count.txt`). Every class's `other` column
-  must read 0.
+- The class and reason tables are in the section above, from
+  `results/clean_count.txt`, and every class's `other` column is 0.
 - The first 20 suspects per class, and the junk the suspect sheets never showed
   me, are in the section above, from the Colab run of 13 October 2026.
-- The near copies are decided and written above; only the `count` row for the new
-  reason is still to come.
+- The near copies are decided and written above.
 - TO FILL IN: test accuracy (and accuracy on the new images) before cleaning
   92.2% and after, from `check.py --compare run clean`.
