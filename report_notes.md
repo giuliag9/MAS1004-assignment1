@@ -239,4 +239,67 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
    erratic, 16.8645 at epoch 1, 1.8993 at epoch 4 and 1.4221 at epoch 9, while
    the run at 0.0001 keeps test loss under 0.33 the whole way. A learning rate
    large enough for a frozen backbone pulling one fresh layer into place is too
-   large when all 11 million parameters can move.
+large when all 11 million parameters can move.
+
+## Problem 4. Cleaning
+
+### The rule, as I wrote it before I ran anything
+
+Given to the agent on 13 October 2026, while `data/removed/` was still empty: no
+`clean.py remove` command had been run when this was written down. The wording
+below is mine and is not tidied.
+
+> My rules:
+> I remove images that don't show a crystal at all
+> I remove images that show drawings
+> I remove images that show jewellery where the crystal is not predominant
+> I remove images that has text and that take much space in the photo.
+> I remove images that don't show clearly the crystal or not in the right direction.
+> I remove images that has more than one type of crystal
+> I remove images that show the wrong crystal.
+
+Seven clauses. The command that applies them takes one `--reason` string per
+clause, shorter than the sentence above, and `clean.py count` groups by that
+exact string, so the string used in the log is written here too.
+
+| clause (as written above) | `--reason` string put in the log | files | classes |
+|---|---|---|---|
+| doesn't show a crystal at all | `The image doesn't show a crystal at all` | 86 | amethyst 12, aventurine 45, rose_quartz 29 |
+| show drawings | `The image is a drawing` | 2 | amethyst 2 |
+| jewellery, crystal not predominant | `The image shows jewelry where the crystal is not predominant` | 22 | amethyst 9, aventurine 3, rose_quartz 10 |
+| text taking much space | `The image has text and that take much space of the photo` | 25 | aventurine 16, citrine 7, rose_quartz 2 |
+| not shown clearly / wrong direction | `The image doesn't show clearly the crystal, or not in the right direction` | 10 | amethyst 6, aventurine 2, rose_quartz 2 |
+| more than one type of crystal | `The image has more than one type of crystal` | 18 | amethyst 1, aventurine 8, citrine 4, rose_quartz 5 |
+| the wrong crystal | `The image shows the wrong crystal` | 25 | amethyst 8, aventurine 7, citrine 1, rose_quartz 9 |
+| | **total** | **188** | amethyst 38, aventurine 81, citrine 12, rose_quartz 57 |
+
+### The kinds of junk I found
+
+Mine, as I wrote it down: mostly unrelated objects such as clothes, car
+accessories, logos, drawings. I also found characters and wrong crystals.
+
+That is four kinds named, and the report asks for three, each with one picture.
+Pictures I picked as good examples: `amethyst/0118.jpg`, `amethyst/0123.jpg`,
+`amethyst/0131.jpg`, `rose_quartz/0109.jpg`, `aventurine/0102.jpg`,
+`aventurine/0110.jpg`.
+
+- TO FILL IN: which three kinds go in the report, and which picture stands for
+  each one. Note that these six are already among the files removed above:
+  `amethyst/0118.jpg` was removed as a drawing, `aventurine/0110.jpg` as the
+  wrong crystal, and the other four as "doesn't show a crystal at all", so they
+  survive in `data/removed/` for the report figure.
+
+### Still to fill in for Problem 4
+
+- TO FILL IN: the table of how many images were removed from each class and why
+  (`clean.py count`, `results/clean_count.txt`). Every class's `other` column
+  must read 0.
+- TO FILL IN: how many near copies the suspect pass found, and what I did with
+  them (`results/cleaning/suspects/copies.png` and the `copy of` rows of
+  `suspects.csv`). None of my seven clauses is about copies, so this is decided
+  separately.
+- TO FILL IN: of the first 20 suspects of each class, how many I removed, how
+  many of those the suspect list found and I had missed, and how many pieces of
+  junk it did not list at all.
+- TO FILL IN: test accuracy (and accuracy on the new images) before cleaning
+  92.2% and after, from `check.py --compare run clean`.
