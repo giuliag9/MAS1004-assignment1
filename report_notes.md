@@ -222,8 +222,29 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
    aventurine/citrine 1). Citrine is never the true class of a mistake, and it
    ends with one more prediction than it has pictures (31 against 30).
 
-   Which two categories that is, and whether it surprises -> TO FILL IN, in
-   Giulia's own words.
+   Which two categories that is, and whether it surprises me. Mine, as I wrote
+   it, with one typo fixed (`thoguht` to `thought`):
+
+   > The categories that got mixed up and surprised me was amethyst turning out
+   > as aventurine twice. That is because purple and green are very different
+   > colors so I thought they wouldn't get mixed. Whereas, I would expect
+   > amethyst and rose quartz to get mixed up more since the colors are more
+   > similar.
+
+   The same words reordered, so that the box is answered first and the surprise
+   comes second. Agent's check, because the first sentence above disagrees with
+   the matrix in point 3: amethyst and rose quartz *is* the pair it mixes up
+   most, 4 of the 9 mistakes, 2 each way, ahead of the three directions sitting
+   at 2. So my colour intuition about amethyst and rose quartz is right, and the
+   aventurine mix is the smaller, unexpected one at 2 mistakes.
+
+   > The two categories it mixes up most are amethyst and rose quartz, 4 of the 9
+   > mistakes, and that does not surprise me, the colors are close. What
+   > surprised me was amethyst turning out as aventurine twice. That is because
+   > purple and green are very different colors so I thought they wouldn't get
+   > mixed.
+
+   TO CHOOSE: which of the two versions goes in the report.
 4. ImageNet against random, same code, data, epochs, lr: 92.2% against 82.6%,
    11 test images apart, and the scratch test loss rises as its train accuracy
    approaches 100%. The pretrained features already carry most of what
@@ -278,16 +299,19 @@ exact string, so the string used in the log is written here too.
 Mine, as I wrote it down: mostly unrelated objects such as clothes, car
 accessories, logos, drawings. I also found characters and wrong crystals.
 
-That is four kinds named, and the report asks for three, each with one picture.
-Pictures I picked as good examples: `amethyst/0118.jpg`, `amethyst/0123.jpg`,
-`amethyst/0131.jpg`, `rose_quartz/0109.jpg`, `aventurine/0102.jpg`,
-`aventurine/0110.jpg`.
+Four kinds were named and the report asks for three, each with one picture.
+These are the three, settled on 13 October 2026. Each file was already removed
+by one of the clauses above, so it is waiting in `data/removed/<class>/` to be
+copied into the report's figures:
 
-- TO FILL IN: which three kinds go in the report, and which picture stands for
-  each one. Note that these six are already among the files removed above:
-  `amethyst/0118.jpg` was removed as a drawing, `aventurine/0110.jpg` as the
-  wrong crystal, and the other four as "doesn't show a crystal at all", so they
-  survive in `data/removed/` for the report figure.
+| kind in the report | picture | the clause that removed it |
+|---|---|---|
+| not a crystal at all (clothes, car accessories, logos, characters) | `aventurine/0102.jpg` | doesn't show a crystal at all |
+| a drawing rather than a photo | `amethyst/0118.jpg` | show drawings |
+| the wrong crystal | `aventurine/0110.jpg` | the wrong crystal |
+
+The three further pictures I first put forward are not used:
+`amethyst/0123.jpg`, `amethyst/0131.jpg`, `rose_quartz/0109.jpg`.
 
 ### Still to fill in for Problem 4
 
