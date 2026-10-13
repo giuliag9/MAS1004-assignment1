@@ -224,15 +224,15 @@ The new head is `512*4 + 4 = 2,052` parameters, 0.018% of the model.
 
    Which two categories that is, and whether it surprises me. My final answer,
    with spellings fixed (`thoguht` to `thought`, `comapred` to `compared`,
-   `turining` to `turning`):
+   `turining` to `turning`) and the aventurine clause reworded as I asked:
 
    > The categories that got mixed up and surprised me was amethyst turning out
    > as aventurine twice. That is because purple is very different from green, so
    > I thought they wouldn't get mixed. Aventurine was mixed up for rose quartz
    > also twice but that surprised me less compared to the amethyst turning out
-   > as aventurine, because rose is a lighter color such as it can be sometimes
-   > the green of aventurine. I wasn't surprised about amethyst and rose quartz
-   > to get mixed up due to their similar colors.
+   > as aventurine, because rose quartz can be lighter in color, which makes it
+   > more similar to the light green of aventurine. I wasn't surprised about
+   > amethyst and rose quartz to get mixed up due to their similar colors.
 
    Agent's check, not my words: this agrees with the matrix in point 3. Amethyst
    to aventurine 2 and aventurine to rose quartz 2 both appear there, and it is
