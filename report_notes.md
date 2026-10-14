@@ -715,3 +715,24 @@ After Problem 7, and before the PDF is made, go through the whole long report
 with Giulia, section by section: every number next to the output it comes from,
 and every step we did, in simple words, so that she knows and can explain all of
 it. Nothing in the long report is final until that walk-through is done.
+
+## Problem 7, Guess 1 (14 October 2026)
+
+Guess, in Giulia's words: "I'll start from my original guess on what the model
+would look at to distinguish the crystal. I mentioned I expect it to look at
+colors. from my images, amethyst and aventurine were not mistaken in the current
+model. So my first guess is that if we lower the saturation on amethyst and
+aventurine the model will have more problems to distinguish them."
+
+Request, word for word: "make a copy of each image in data/new_images/amethyst
+and data/new_images/aventurine with lowered saturation and save the copies,
+respectively, in data/changed/less_saturation_amethyst and
+data/changed/less_saturation_aventurine"
+
+Asked how much lower, word for word: "to 0% , so we can test with the absence of
+color."
+
+The change is run as a cell on Colab, where the images are: Pillow's
+ImageEnhance.Color(...).enhance(0.0) on the RGB image, the EXIF kept so that a
+sideways-stored photo is turned the same way as its original, JPEG quality 95.
+Tested here on two pictures: every pixel of the result has R = G = B.
