@@ -736,3 +736,21 @@ The change is run as a cell on Colab, where the images are: Pillow's
 ImageEnhance.Color(...).enhance(0.0) on the RGB image, the EXIF kept so that a
 sideways-stored photo is turned the same way as its original, JPEG quality 95.
 Tested here on two pictures: every pixel of the result has R = G = B.
+
+### Guess 1: the page's answers, as Giulia read them off the page
+
+| photo | original | saturation 0% |
+|---|---|---|
+| amethyst/44db3aaf | amethyst 96.7%, rose_quartz 2.4% | amethyst 84.6%, aventurine 7.9% |
+| amethyst/a95f9f93 | amethyst 86.9%, rose_quartz 8.1% | amethyst 77.0%, aventurine 14.3% |
+| amethyst/IMG_3072 | amethyst 80.2%, rose_quartz 16.7% | **aventurine 45.5%**, amethyst 36.4% |
+| amethyst/IMG_3089 | amethyst 90.5%, aventurine 5.2% | amethyst 40.8%, aventurine 30.6% |
+| amethyst/IMG_3200 | amethyst 94.8%, rose_quartz 2.3% | **aventurine 45.6%**, amethyst 42.8% |
+| aventurine/59ad40f0 | aventurine 99.3%, amethyst 0.4% | aventurine 62.9%, amethyst 23.7% |
+| aventurine/aba4d635 | aventurine 97.3%, amethyst 1.7% | aventurine 82.1%, amethyst 12.5% |
+| aventurine/IMG_3068 | aventurine 75.2%, rose_quartz 15.6% | aventurine 51.5%, rose_quartz 33.7% |
+| aventurine/IMG_3196 | aventurine 80.9%, rose_quartz 13.3% | **rose_quartz 47.1%**, aventurine 44.6% |
+| aventurine/IMG_3197 | aventurine 88.7%, rose_quartz 9.9% | **rose_quartz 62.3%**, aventurine 34.6% |
+
+Originals: 10 of 10 right. Saturation 0%: 6 of 10 right, and the confidence in
+the right answer is lower for all 10.
