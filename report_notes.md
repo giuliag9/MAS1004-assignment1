@@ -811,3 +811,22 @@ have its dark parts getting too much lighter."
 | amethyst/44db3aaf | amethyst 84.6%, aventurine 7.9% | rose_quartz 50.0%, amethyst 27.7% (re-checked: first typed as 96.7%) |
 | amethyst/a95f9f93 | amethyst 77.0%, aventurine 14.3% | rose_quartz 46.2%, aventurine 27.8% |
 | amethyst/IMG_3089 | amethyst 40.8%, aventurine 30.6% | rose_quartz 64.4%, aventurine 25.2% |
+
+## Where we stopped (end of 14 October 2026)
+
+Done: Problems 1 to 6 in the long report, checked against README and PLAN and
+against the saved outputs; the page is live at
+https://giuliag9.github.io/MAS1004-assignment1/ with a green badge; Problem 7
+Guess 1 (saturation 0%) and Guess 2 (contrast 50% on the 0% saturation amethysts)
+are in the report with their pictures, answers and Giulia's conclusions.
+
+Still to do, in order:
+1. Problem 7 Guess 3 (Giulia, next day): her guess, change and photos. Changes
+   are made as a Colab cell, because the photos are in her Drive; the small
+   upright report copies come back through a zip and a push from her Mac.
+2. Problem 7 "What I now think the model uses", in her words (last red box).
+3. Her name and student ID at the top of long_report.tex.
+4. The walk-through of the whole long report with her (see above).
+5. Bring this branch, claude/epic-clarke-c92agm, into main (ask her first).
+6. PDF on Overleaf with XeLaTeX, and look for red text.
+7. The short report, which she writes on her own; the agent does not touch it.
