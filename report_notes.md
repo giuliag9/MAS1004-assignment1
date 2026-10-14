@@ -754,3 +754,31 @@ Tested here on two pictures: every pixel of the result has R = G = B.
 
 Originals: 10 of 10 right. Saturation 0%: 6 of 10 right, and the confidence in
 the right answer is lower for all 10.
+
+## Problem 7, Guess 2 (14 October 2026), as Giulia gave it
+
+"Given what I observed from the first guess, color is not the determinant element
+for the model. I start to think that transparency also is important when
+guessing the crystals. As I mentioned in the first guess, 0% saturation
+aventurine that were guessed to be rose quartz were paler and less full in color,
+while the amethyst 0% saturation that were guessed to be aventurine also were
+less full, paler but overall darker. Which makes me think that for the model
+aventurine is dark, but also pale, while rose quartz is pale but lighter. If I
+think of the mistakes made, the first one was of
+data/new_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG being guessed as
+rose quartz, and in fact the crystal in the photo is less full in color, and
+lighter. To check this, the transparency of the images should be lowered.
+In particular my guess to check if transparency plays a role in how the model
+distinguishes the crystals, is that if we lower the transparency of the images
+of amethyst we turned to 0% saturation, since they're dark, they would be
+guessed as aventurine (pale but dark)."
+
+First request, word for word: "So make a copy of
+data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG and
+data/changed/less_saturation_amethyst/IMG_3089.JPG with lower transparency and
+save the copies in data/changed/less_saturation_less_transparency_amethyst"
+
+Not made yet: an image's alpha channel is dropped by prepare_image's
+convert("RGB"), so "transparency" has to be turned into a change to the pixels
+(brightness or contrast, and how much). Asked Giulia to choose.
