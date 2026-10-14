@@ -198,14 +198,15 @@ against no pretraining (106 against 95) not one.
 
 \picturefile{figures/run_curves.png}
 
-The train loss falls every epoch in the \texttt{run} curve, 0.8494, 0.1486,
-0.0485, down to 0.0054 at epoch 10, and it does not flatten: it keeps going down.
-Test loss is a different story. It falls to 0.2505 at epoch 4 and then drifts up
-to 0.2822 by epoch 10, and test accuracy stops improving at epoch 4 as well
-(92.2\%) and stays there for epochs 5 to 10. Epochs 5 to 10 bought nothing on
+The train loss in the \texttt{run} curve goes down from 0.8494 at epoch 1 to
+0.0054 at epoch 10, with one small rise at epoch 4 (0.0485 to 0.0615). From
+epoch 5 on it is below 0.02 and keeps going down only slowly. Test loss is a
+different story. It falls to 0.2505 at epoch 4, rises to 0.3218 at epoch 9 and
+ends at 0.2822, and test accuracy stops improving at epoch 4 as well: 92.2\% at
+epoch 4, 90.4\% at epoch 5, and 92.2\% again for epochs 6 to 10. Epochs 5 to 10 bought nothing on
 pictures the model had not seen. In the \texttt{scratch} curve test loss never
-settles below about 0.52 and jumps to 1.2557 at epoch 7 while train accuracy
-reaches 98.9\%: that is a network fitting its training set.
+settles below about 0.52 and jumps to 1.2557 at epoch 7, while train accuracy keeps rising, to 98.9\% at
+epoch 10: that is a network fitting its training set.
 
 100.0\% train against 92.2\% test is a gap of 7.8 points, which is all 457
 training images right against 9 of 115 test images wrong. It means the model can
@@ -251,8 +252,9 @@ similar to the light green of aventurine. I wasn't surprised about amethyst and
 rose quartz to get mixed up due to their similar colors.
 \end{quote}
 
-Amethyst with rose quartz is what it mixes up most, 4 of the 9 mistakes through
-both of its directions, and that is the pair I was not surprised about.
+Amethyst with rose quartz and aventurine with rose quartz are tied as the pairs
+it mixes up most, 4 of the 9 mistakes each through both directions.
+Amethyst with rose quartz is the pair I was not surprised about.
 
 Same code, same data, same epochs and learning rate: 92.2\% starting from
 ImageNet against 82.6\% starting from random numbers, 11 test images apart, and
@@ -268,9 +270,16 @@ the four-image noise of the best run, with a smaller train/test gap (97.2 agains
 
 A fourth setting, \texttt{lr1e-3}, is the default run with the learning rate ten
 times larger: 84.3\% against 92.2\%, and an erratic test loss, 16.8645 at epoch
-1, 1.8993 at epoch 4 and 1.4221 at epoch 9, where the run at 0.0001 keeps test
-loss under 0.33 the whole way. A learning rate big enough to pull one fresh layer
+1, 1.8993 at epoch 4 and 1.4221 at epoch 9, where the run at 0.0001 starts at 0.6067 and keeps
+test loss under 0.33 from epoch 3 on. A learning rate big enough to pull one fresh layer
 into place is too big when all 11 million parameters can move.
+
+The curves of the other three runs, \texttt{scratch}, \texttt{frozen} and
+\texttt{lr1e-3}, top to bottom:
+
+\picturefile[0.8\linewidth]{figures/scratch_curves.png}
+\picturefile[0.8\linewidth]{figures/frozen_curves.png}
+\picturefile[0.8\linewidth]{figures/lr1e-3_curves.png}
 
 \subsection*{Output of the runs}
 \outputfile{outputs/run_output.txt}
@@ -397,12 +406,20 @@ and 36.
 \subsection*{Before and after cleaning}
 \outputfile{outputs/compare.txt}
 
+The \texttt{clean} run, its curves and its confusion matrix on the 75 test
+images:
+
+\picturefile[0.8\linewidth]{figures/clean_curves.png}
+\begin{center}\picturefile[0.5\linewidth]{figures/clean_confusion.png}\end{center}
+
+\outputfile{outputs/clean_output.txt}
+
 Nothing went down, but the pair of test numbers is not as big as it looks. 92.2\%
 was 9 wrong of 115; 100\% is 0 wrong of 75, so after cleaning one test image is
 worth 1.3\% instead of 0.87\%, the 198 removals took 28 images out of the test set
-(aventurine's share of it fell from 28 to 11), and the cleaned test set is by
-construction the part of the collection that survived my own rule of throwing
-away the pictures the model was getting wrong. Some of the 7.8 points is a better
+(aventurine's share of it fell from 28 to 11), and the cleaned test set is the part of the
+collection that survived my rule, so the unusual pictures that are hardest to
+classify are mostly gone from it. Some of the 7.8 points is a better
 model and some of it is a kinder exam, and these two numbers cannot tell those
 apart. Nor can 100\% of 75 be anything more than 75 pictures out of 75:
 \texttt{run.py} printed "no mistakes to plot, which is suspicious. Check your
