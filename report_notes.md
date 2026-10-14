@@ -456,8 +456,10 @@ smaller than it looks:
   a better model and some of it is a kinder exam, and these two numbers cannot
   tell those apart.
 - The fair comparison is the row that did not change: the same 21 photographs
-  from a different source, 18/21 before and 18/21 after. Cleaning the training
-  data did not change how the model behaves on pictures it has never seen.
+  from a different source, 18/21 before and 18/21 after. Cleaning moved the
+  number of right answers by nothing at all, but it did not leave the pictures
+  alone: the three mistakes changed hands, to three other photographs, and the
+  section "Which eighteen, and which three" lists them.
 - 100% of 75 is 75/75 and no more. `run.py` printed "no mistakes to plot, which
   is suspicious. Check your split.", because with nothing wrong on the test set
   there is no mistake picture to draw, so this run has no `clean_worst.png`.
@@ -506,11 +508,153 @@ The two test accuracies are measured on different sets of pictures, because the
 split is drawn after cleaning; that pair, and why it is not the fair comparison,
 is in the section "Test accuracy before and after cleaning (box 6)": 92.2% of
 115, then 100.0% of 75. The new images are the same 21 photographs for both rows,
-and cleaning changed nothing on them: 18 of 21 either way.
+and the total did not move: 18 of 21 either way. Not the same eighteen, though.
+Which pictures those are, and how the three mistakes change hands, is in the next
+section but one.
 
-- TO FILL IN: the five mistakes it was most sure about on the new images, with
-  the pictures, and what in each image pushed it the wrong way. These come from
-  the web model, so they need section 13, the export, to have run first: before
-  that the checker found no `docs/` model and printed no mistakes at all.
+### Which eighteen, and which three (18/21 is not the same eighteen)
+
+`check.py` says 18/21 for both models, but not the same eighteen pictures. A cell
+in Colab loaded `results/run_model.pt` and `results/clean_model.pt`, prepared each
+of the 21 new images with the repository's own `prepare`, and printed both
+answers:
+
+    run wrong 3/21, clean wrong 3/21
+
+| new image | really | `run` says | `clean` says |
+|---|---|---|---|
+| `amethyst/44db3aaf-5cdf-...JPG` | amethyst | **rose_quartz** | amethyst |
+| `amethyst/a95f9f93-5117-...JPG` | amethyst | **rose_quartz** | amethyst |
+| `rose_quartz/IMG_3069.JPG` | rose_quartz | **aventurine** | rose_quartz |
+| `citrine/2788e4fa-a7ad-...JPG` | citrine | citrine | **amethyst** |
+| `citrine/58f05f6d-77f2-...JPG` | citrine | citrine | **rose_quartz** |
+| `citrine/6dc1dd3c-0216-...JPG` | citrine | citrine | **rose_quartz** |
+
+Fifteen of the 21 are right in both runs, and no picture is wrong in both: the
+cell printed "the two disagree" six times and "both wrong" never. Cleaning traded
+three right answers for three wrong ones, so the matching total is a coincidence
+of counts, not the same eighteen pictures. Class by class on the new images:
+
+| class | `run` | `clean` |
+|---|---|---|
+| amethyst | 3/5 | 5/5 |
+| aventurine | 5/5 | 5/5 |
+| citrine | 5/5 | 2/5 |
+| rose_quartz | 5/6 | 6/6 |
+
+The `clean` row is the same matrix `check.py` printed for the exported model
+(citrine: one amethyst, two citrine, two rose_quartz), and the two agree because
+they are the same model: `selftest.json` says the ONNX file and the saved PyTorch
+weights answer within 0.000002 of each other.
+
+It is the same boundary, moved to the other side. Every pair `run` got wrong on
+the downloaded test set had rose quartz in it (amethyst/rose_quartz 4 and
+aventurine/rose_quartz 4, its two biggest pairs; citrine was perfect at 30/30).
+On the new images it calls two amethysts rose quartz; after cleaning those three
+are right, and three citrines have gone over to rose quartz and amethyst in their
+place.
+
+My guess at why, written as a guess and not as a measurement: the rule took 83 of
+138 aventurine pictures and 58 of 150 rose_quartz, but only 17 of 150 citrine, so
+citrine is now a larger share of a much smaller collection and the pictures that
+used to hold the citrine boundary are the ones that went. Measuring it would need
+a run on the same split as before; as it is, 21 new pictures with one picture
+worth 4.8% cannot separate a real change of behaviour from noise.
+
+### The exported model, and the three mistakes it was sure about (section 13)
+
+Section 13 in Colab, 14 October 2026. `src/export_web.py --tag clean` wrote the
+three files the page needs:
+
+    wrote .../docs/model.onnx       44.8 MB
+    wrote .../docs/model.json       amethyst, aventurine, citrine, rose_quartz
+    wrote .../docs/selftest.json    3 images, ONNX agrees with PyTorch
+                                    (largest gap 0.000002)
+
+and then `check.py` on that exported model, in `results/check.txt`:
+
+    ok       4 classes: amethyst, aventurine, citrine, rose_quartz
+    ok       model.onnx is 44.8 MB, 11,178,564 parameters
+             input [1, 3, 224, 224], prepared as: shorter side 256, centre
+             224 x 224, mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]
+    warning  docs/model.onnx is not committed. Your published page will not
+             have a model until you commit and push it.
+    ok       yes, they agree (largest gap 0.0000)
+
+    accuracy on your new images: 18/21 = 85.7%
+
+    rows are what it really is, columns are what the model said
+                    amethyst aventuri  citrine rose_qua
+      amethyst             5        0        0        0
+      aventurine           0        5        0        0
+      citrine              1        0        2        2
+      rose_quartz          0        0        0        6
+
+That one warning is not a bug, it is the state of the work: the three files are
+on Drive, and `docs/` in the repository still holds only `index.html` and
+`app.js`. Section 15's `to_my_computer.zip` brings them home, and they have to be
+committed and pushed before the published page can load a model. The appendix of
+the long report is this output, so run `check.py` once more after the commit and
+the appendix will not carry the warning.
+
+Three mistakes, not five. `check.py` prints the five it was most sure about and
+this model only made three, so those three are the whole list. All three are a
+photograph of one small stone, in flat light, on a plain pale background:
+
+- said rose_quartz (54%), really citrine:
+  `data/new_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG`. One small
+  stone on grey speckled granite, and it is the pale end of citrine: milky white
+  with a faint yellow patch at the left end, and the wet-looking grey paving
+  around it is nearly as pale as the stone, so the whole frame is cream and
+  grey. Nothing in the picture is pink, but "pale stone, low colour" is what
+  rose_quartz looks like in the downloads, and the flat light has taken the
+  yellow away. Colour is the only thing separating citrine from rose_quartz in a
+  picture like this, and the colour is washed out.
+- said rose_quartz (51%), really citrine:
+  `data/new_images/citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG`. One amber
+  stone on white paper, underexposed: the paper reads light grey and the amber
+  reads pale. 51% is a coin toss, and the reason is the one above.
+- said amethyst (32%), really citrine:
+  `data/new_images/citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG`. One pale
+  yellow stone on light grey paper, small in the frame, low contrast, most of
+  the picture empty background. 32% out of four classes is close to guessing
+  (chance is 25%), and I cannot point at anything purple in the picture. This
+  one reads as an image the model had almost no information from, rather than an
+  image that fooled it in a particular way.
+The three the earlier model got wrong instead, on the same 21 pictures (the
+`run` column of the table above):
+
+- `amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG` -> rose_quartz. A single
+  amethyst crystal, deep violet over the left half and white over the top right,
+  on pale pinkish-white paper: the largest pale area in the frame is the crystal
+  itself.
+- `amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG` -> rose_quartz. An amethyst
+  pendant, milky pale lilac and polished, with a silver chain, on grey speckled
+  granite.
+- `rose_quartz/IMG_3069.JPG` -> aventurine. A pale lavender polished cabochon
+  with a bright white highlight, on a grey surface in dim light with a hard
+  shadow to the right; aventurine in the downloads is also a smooth translucent
+  quartz pebble, so the shape is no help and the colour is pale.
+
+All six mistakes of the two models together, three each and never the same
+picture, are the same shot: one small stone, flat light, a plain white or grey
+background, the stone filling little of the frame, its colour washed out. The one
+citrine picture the cleaned model does get right,
+`data/new_images/citrine/f16efa23-d300-480c-8469-5d39aecf5957.JPG`, has three
+stones, warm light, saturated honey colour and hard shadows.
+
+For the report these three need to be pictures, so copy them out of
+`data/new_images/citrine/` into `long_report/figures/` with a name that says what
+the model called them.
+
 - TO FILL IN: what is different about the new images: background, lighting,
-  angle, distance, what else is in the frame. (I write this one myself.)
+  angle, distance, what else is in the frame. (I write this one myself.) What I
+  can see in the seven pictures I looked at, to write it from: the backgrounds
+  are white or light grey paper, grey speckled granite paving, and for one a
+  plain grey surface with a hard shadow; the light is indoor and uneven, three
+  of the seven are dark enough that white paper reads grey, and one is under a
+  warm lamp; the angle is from above at arm's length and the stone sits small in
+  the middle of the frame, where the downloads are mostly close-ups that fill it;
+  what else is in the frame is a silver chain and clasp, paper texture, sheet
+  shadows and granite speckle; and four of the 21 are stored sideways (EXIF
+  orientation 6).

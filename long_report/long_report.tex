@@ -34,17 +34,115 @@
 apart: shape, colour, texture, background, or something else.}
 
 \subsection*{Images per category}
-\fillin{How many images you got for each category.}
+Asked \texttt{collect.py} for 150 images in each of four categories. Before any
+cleaning, in \texttt{data/raw}:
+
+\begin{center}\footnotesize
+\begin{tabular}{lrr}
+\toprule
+class & asked for & came back \\
+\midrule
+amethyst & 150 & 134 \\
+aventurine & 150 & 138 \\
+citrine & 150 & 150 \\
+rose\_quartz & 150 & 150 \\
+\midrule
+total & 600 & 572 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Amethyst and aventurine came back short because \texttt{collect.py} skips a link
+that does not open, is not an image, or is too small to use, and counts what it
+skipped. The 134, 138, 150, 150 are the \texttt{downloaded} column of
+\texttt{clean.py count} (\texttt{outputs/clean\_count.txt}), the counts as they
+were before anything was removed; the 21 images for Problem 5, five in each class
+and six rose quartz, are printed by \texttt{check.py} in the Appendix. Every
+image is stored as \texttt{data/raw/<class name>/0001.jpg} onwards, and
+\texttt{data/clean} was a copy of \texttt{data/raw} until \texttt{clean.py
+remove} started moving files out of it.
 
 % ---------------------------------------------------------------------------
 \section*{Problem 2. Preparing an image}
 
-\sidebyside{figures/prepare_original.jpg}{\fillin{the image as downloaded}}
-           {figures/prepare_result.png}{\fillin{what prepare\_image made of it}}
+\sidebyside{figures/prepare_original.jpg}{as downloaded: a rose quartz heart on a
+            stand, with a sphere and two towers behind it}
+           {figures/prepare_result.png}{what prepare\_image made of it: the middle
+            224 \(\times\) 224 square, with the heart filling it}
 
-\fillin{What was cut off, and an image where the crop cut off part of the
-thing you care about.}
+\texttt{prepare\_image} resizes the shorter side to 256 and keeps the middle
+224 \(\times\) 224 square. Measured with \texttt{src/show\_prepare.py} on
+\texttt{data/new\_images/aventurine/IMG\_3068.JPG}, one of the photographs taken
+by hand for this assignment, 4032 \(\times\) 3024:
 
+\begin{center}\footnotesize
+\begin{tabular}{ll}
+\toprule
+step & result \\
+\midrule
+on disk & 4032 \(\times\) 3024 \\
+after Resize(256) & 341 \(\times\) 256 \\
+square kept & x 58..282, y 16..240 \\
+cut off, in the 341 \(\times\) 256 picture & 58 left, 59 right, 16 top, 16 bottom \\
+cut off, back in the original photo & 686 left, 698 right, 189 top, 189 bottom \\
+kept & 57.5\% of the area \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+It throws away 34.3\% of the width and 12.5\% of the height: 686 pixels on each
+side of that photo, even though the stone is nowhere near those edges. That the
+rectangle drawn on the picture is the rectangle the model gets is measured, not
+assumed: the same box through ToTensor and Normalize differs from
+\texttt{prepare\_image} by 0.0e+00, and \texttt{prepare\_image} differs from
+torchvision's own ImageNet recipe for ResNet18 by 0.0e+00.
+
+An image where the crop cut off part of the thing I care about:
+\texttt{data/new\_images/rose\_quartz/9dacd40a-f98e-4312-a62d-78c4fd3a0a4b.JPG},
+900 \(\times\) 1600. Resize gives 256 \(\times\) 455 and the square keeps
+y 116..340, so 116 rows go from above and 115 from below: 50.8\% of the height,
+408 and 404 pixels of the original, and only 43.1\% of the area survives. The
+stone reaches the top of the square, so its edge is thrown away.
+
+A second case, found with \texttt{show\_prepare.py --scan data/new\_images
+--sheet}: the contact sheet draws the 15 crops that throw most away, and
+\texttt{data/new\_images/rose\_quartz/ea7f4b76-efcc-4973-814e-a7afe9273198.JPG},
+1500 \(\times\) 2000, keeps 57.5\% of its area while the point of the heart sits
+below the bottom edge of the square: the tip of the stone never reaches the
+model. The sheet found four pieces the crop cuts through, all of them in these
+21 photos.
+
+\picturefile{figures/prepare_cropbox.png}
+\picturefile{figures/prepare_side_by_side.png}
+\picturefile[0.9\linewidth]{figures/prepare_sheet.png}
+
+Looking for such a case needed the drawings and not a number. Three cheap ways of
+guessing "did the crop cut the stone" were tried on the 21 photos, and all three
+put a photo whose stone is safely inside the square above the one that is really
+cut. By how unlike the plain background the band outside the square is: 9dacd40a
+scores 24.8\%, eighth of 21, while \texttt{aventurine/IMG\_3197.JPG}, a stone
+lying in a palm, scores 84.3\% and first. The same measurement as the longest
+unbroken run along the edge of the square puts 9dacd40a tenth at 5.6\% and the
+palm first at 33.9\%. How busy the crop line is against how busy the inside is
+gives 9dacd40a 5.83 against 6.73 for the palm. All three ways chose the palm and
+a cardboard photo because what crosses their crop line is skin and a brightness
+gradient, not stone. So \texttt{--scan} reports the crop's own geometry and says
+that the drawing decides, and the reasoning is kept in its docstring instead of
+shipping a number that would have put the wrong photo in this report.
+
+Four of the 21 photos are also stored sideways. \texttt{show\_prepare.py --scan
+data/new\_images} reports an orientation other than 1 for
+\texttt{amethyst/IMG\_3200.JPG}, \texttt{aventurine/IMG\_3196.JPG},
+\texttt{rose\_quartz/IMG\_3069.JPG} and \texttt{rose\_quartz/IMG\_3194.JPG}: the
+camera stored those landscape, with a note in the file saying "turn 90 degrees
+before showing". \texttt{Image.open(...).convert("RGB")} does not apply the note,
+so \texttt{prepare\_image} cuts the middle out of a turned picture; none of the
+tests uses a picture with EXIF data, so they pass while those four reach the model
+sideways. The page will not even agree with itself here, because
+\texttt{docs/app.js} loads an upload into an \texttt{<img>} and a browser applies
+the note by itself, so the browser turns the photo and Python does not. The self
+test badge cannot catch it either: \texttt{selftest.json} holds three already
+resized square pictures with no EXIF in them.
 % ---------------------------------------------------------------------------
 \section*{Problem 3. First training runs}
 
@@ -53,73 +151,384 @@ thing you care about.}
 \toprule
 tag & start & trained & epochs & lr & trainable parameters & train acc. & test acc. \\
 \midrule
-\multicolumn{8}{l}{\fillin{one row per run, as run.py printed it}} \\
+run & ImageNet & all layers & 10 & 0.0001 & 11,178,564 & 100.0\% & 92.2\% \\
+scratch & random & all layers & 10 & 0.0001 & 11,178,564 & 99.6\% & 82.6\% \\
+frozen & ImageNet & last layer & 10 & 0.001 & 2,052 & 97.2\% & 88.7\% \\
+lr1e-3 & ImageNet & all layers & 10 & 0.001 & 11,178,564 & 96.7\% & 84.3\% \\
+clean & ImageNet & all layers & 10 & 0.0001 & 11,178,564 & 100.0\% & 100.0\% \\
 \bottomrule
 \end{tabular}
 \end{center}
 
+The first four rows are comparable with each other: they are the same code on the
+same \texttt{data/clean}, which at that point was still identical to
+\texttt{data/raw}, so all four test accuracies are measured on the same 115
+images, 457 train and 115 test out of 572. The fifth row, \texttt{clean}, is not
+comparable with them: it is the plain \texttt{run} settings again (ImageNet
+start, all layers, 10 epochs, lr 1e-4) on the same collection after the 198
+removals of Problem 4, so 374 images and a different split, 299 train and 75
+test. Only the data changed, which is what makes it a before-and-after pair with
+\texttt{run}, and it is the pair Problems 4 and 5 compare.
+
+One test image is 0.87\% of 115. \texttt{run.py} seeds the split but not the
+shuffling or the new last layer's initial weights, so the same command does not
+print the same number twice: running the first three commands again moved test
+accuracy by +2.6 (+3 images), +1.7 (+2) and +3.5 (+4) points. Differences below
+about four test images are therefore not evidence of anything, which makes
+\texttt{run} (106/115) and \texttt{frozen} (102/115) a tie, and pretraining
+against no pretraining (106 against 95) not one.
+
 \picturefile{figures/run_curves.png}
 
-\fillin{Did the loss go down? Did it keep going down, or flatten out?}
+The train loss falls every epoch in the \texttt{run} curve, 0.8494, 0.1486,
+0.0485, down to 0.0054 at epoch 10, and it does not flatten: it keeps going down.
+Test loss is a different story. It falls to 0.2505 at epoch 4 and then drifts up
+to 0.2822 by epoch 10, and test accuracy stops improving at epoch 4 as well
+(92.2\%) and stays there for epochs 5 to 10. Epochs 5 to 10 bought nothing on
+pictures the model had not seen. In the \texttt{scratch} curve test loss never
+settles below about 0.52 and jumps to 1.2557 at epoch 7 while train accuracy
+reaches 98.9\%: that is a network fitting its training set.
 
-\fillin{The gap between train and test accuracy, and what it means.}
+100.0\% train against 92.2\% test is a gap of 7.8 points, which is all 457
+training images right against 9 of 115 test images wrong. It means the model can
+memorise 457 pictures of four visually distinct stones, and that the test number
+is the one that says something about pictures it has not seen.
 
 \begin{center}\picturefile[0.5\linewidth]{figures/run_confusion.png}\end{center}
 
-\fillin{Which two categories it mixes up most, and whether that surprised you.}
+The nine wrong test images are all in the matrix below, printed from
+\texttt{results/run\_model.pt} by \texttt{src/show\_confusion.py --tag run} (the
+same split, seed 0, 115 pictures, so the picture \texttt{run\_confusion.png} and
+these numbers agree):
 
-\fillin{How far apart the test accuracies are, starting from ImageNet and from
-random numbers, and why you think that is.}
+\begin{center}\footnotesize
+\begin{verbatim}
+                 amethyst   aventurine      citrine  rose_quartz      total
+amethyst                23            2            0            2         27
+aventurine               0           25            1            2         28
+citrine                  0            0           30            0         30
+rose_quartz              2            0            0           28         30
+                        25           27           31           32        115
+\end{verbatim}
+\end{center}
 
-\fillin{How close training only the last layer gets to training all of them.}
+Recall per class: amethyst 23/27 (85\%), aventurine 25/28 (89\%), citrine 30/30
+(100\%), rose\_quartz 28/30 (93\%). No single direction is ahead: 2 is the
+largest count and four directions reach it, so which pair looks "most" mixed up
+depends on whether the two directions of a pair are added. Added, the two biggest
+pairs both have rose quartz in them, amethyst/rose\_quartz 4 and
+aventurine/rose\_quartz 4, against amethyst/aventurine 2 and aventurine/citrine 1.
+Citrine is never the true class of a mistake, and it ends with one more
+prediction than it has pictures, 31 against 30.
+
+My answer to "which two categories, and did it surprise you":
+
+\begin{quote}
+The categories that got mixed up and surprised me was amethyst turning out as
+aventurine twice. That is because purple is very different from green, so I
+thought they wouldn't get mixed. Aventurine was mixed up for rose quartz also
+twice but that surprised me less compared to the amethyst turning out as
+aventurine, because rose quartz can be lighter in color, which makes it more
+similar to the light green of aventurine. I wasn't surprised about amethyst and
+rose quartz to get mixed up due to their similar colors.
+\end{quote}
+
+Amethyst with rose quartz is what it mixes up most, 4 of the 9 mistakes through
+both of its directions, and that is the pair I was not surprised about.
+
+Same code, same data, same epochs and learning rate: 92.2\% starting from
+ImageNet against 82.6\% starting from random numbers, 11 test images apart, and
+the \texttt{scratch} test loss rises while its train accuracy approaches 100\%.
+The pretrained features already carry most of what separates coloured quartz; the
+random network has to learn all of it from 457 photographs.
+
+Training only the last layer, 2,052 of 11,178,564 parameters
+(2,052 / 11,178,564 = 0.018\%, 5,445 times fewer), reaches 88.7\% against 92.2\%
+for training everything, and takes 0.1 minutes instead of 0.3. That is within
+the four-image noise of the best run, with a smaller train/test gap (97.2 against
+100.0) and a smoother curve.
+
+A fourth setting, \texttt{lr1e-3}, is the default run with the learning rate ten
+times larger: 84.3\% against 92.2\%, and an erratic test loss, 16.8645 at epoch
+1, 1.8993 at epoch 4 and 1.4221 at epoch 9, where the run at 0.0001 keeps test
+loss under 0.33 the whole way. A learning rate big enough to pull one fresh layer
+into place is too big when all 11 million parameters can move.
 
 \subsection*{Output of the runs}
 \outputfile{outputs/run_output.txt}
 \outputfile{outputs/scratch_output.txt}
 \outputfile{outputs/frozen_output.txt}
-% One more line like these for the setting you chose, named by its tag.
-\fillin{the output of the run with your own setting}
+\outputfile{outputs/lr1e-3_output.txt}
 
 % ---------------------------------------------------------------------------
 \section*{Problem 4. Cleaning}
 
 \subsection*{My rule}
-\fillin{Your rule, in one or two sentences, as you wrote it before you
-started.}
+Written down before any \texttt{clean.py remove} ran, while
+\texttt{data/removed/} was still empty, and not tidied afterwards:
+
+\begin{quote}
+My rules:
+
+I remove images that don't show a crystal at all
+
+I remove images that show drawings
+
+I remove images that show jewellery where the crystal is not predominant
+
+I remove images that has text and that take much space in the photo.
+
+I remove images that don't show clearly the crystal or not in the right
+direction.
+
+I remove images that has more than one type of crystal
+
+I remove images that show the wrong crystal.
+\end{quote}
+
+Seven clauses. \texttt{clean.py remove} takes one \texttt{--reason} per clause and
+\texttt{clean.py count} groups by that string, so the shorter string written into
+the log is named with each clause below.
 
 \subsection*{Three kinds of junk}
-\fillin{Three kinds of junk, with one picture of each.}
+Mostly unrelated objects: clothes, car accessories, logos, drawings, and with
+them characters and the wrong crystal. Three kinds, each with one of the files
+that went to \texttt{data/removed/}:
 
-% For example: \picturefile[0.3\linewidth]{figures/junk_1.jpg}
+\begin{itemize}
+\item not a crystal at all (clothes, car accessories, logos, characters), removed
+      by "The image doesn't show a crystal at all": \texttt{aventurine/0102.jpg}
+\item a drawing rather than a photograph, removed by "The image is a drawing":
+      \texttt{amethyst/0118.jpg}
+\item the wrong crystal, removed by "The image shows the wrong crystal":
+      \texttt{aventurine/0110.jpg}
+\end{itemize}
+
+\fillin{pictures: copy aventurine/0102.jpg, amethyst/0118.jpg and
+aventurine/0110.jpg out of data/removed/ into figures/junk\_1.jpg, junk\_2.jpg
+and junk\_3.jpg, then uncomment the three lines below}
+
+% \picturefile[0.3\linewidth]{figures/junk_1.jpg}
+% \picturefile[0.3\linewidth]{figures/junk_2.jpg}
+% \picturefile[0.3\linewidth]{figures/junk_3.jpg}
 
 \subsection*{What I removed}
 \outputfile{outputs/clean_count.txt}
 
-\fillin{How many near copies it found, and what you did with them.}
+The suspect pass found 27 pairs of images above 0.95 similarity. 16 of those pairs
+were settled by my own rule, because both halves were junk under one of the seven
+clauses and had already gone: that is the whole amethyst tail, where
+\texttt{0123}, \texttt{0124}, \texttt{0126}, \texttt{0127} and \texttt{0128} are
+near copies of each other, so the run removed under "The image doesn't show a
+crystal at all" took the duplicates with it. The other nine groups, 19 pictures,
+were still in \texttt{data/clean} and I decided them one by one on the copies
+sheet, keeping one picture of each group and removing the rest under one new
+reason, "The image is a near copy of another picture":
 
-\fillin{Of the first 20 suspects in each class, how many you removed. Whether
-the suspects included junk you had missed, and whether you found junk it did
-not list.}
+\begin{center}\footnotesize
+\begin{tabular}{ll}
+\toprule
+kept & the near copies removed \\
+\midrule
+\texttt{citrine/0100.jpg} & \texttt{citrine/0018.jpg} \\
+\texttt{citrine/0149.jpg} & \texttt{citrine/0032.jpg} \\
+\texttt{citrine/0006.jpg} & \texttt{citrine/0069.jpg} \\
+\texttt{citrine/0050.jpg} & \texttt{citrine/0099.jpg} \\
+\texttt{citrine/0083.jpg} & \texttt{citrine/0041.jpg} \\
+\texttt{rose\_quartz/0144.jpg} & \texttt{rose\_quartz/0150.jpg} \\
+\texttt{amethyst/0033.jpg} & \texttt{amethyst/0055.jpg} \\
+\texttt{amethyst/0022.jpg} & \texttt{amethyst/0031.jpg} \\
+\texttt{aventurine/0134.jpg} & \texttt{aventurine/0123.jpg}, \texttt{aventurine/0132.jpg} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Ten images removed, one kept of each group, decided on 13 October 2026: 27 pairs
+above 0.95, 16 of them already gone as junk by my own rule, nine groups left, one
+picture kept from each and the other ten removed.
+
+The suspect pass ran on all 572 images before any removal, so these numbers are
+about the data as downloaded. Each sheet draws the 32 images of a class that look
+least like the rest of their class, and \texttt{suspects.csv} carries a row for
+every image with its rank, rank 1 being the least typical. Removals by rank:
+
+\begin{center}\footnotesize
+\begin{tabular}{lrrrr}
+\toprule
+class & removed by my rule & of those, rank 1--20 & rank 21--32 & rank 33 and later \\
+\midrule
+amethyst & 38 & 11 & 6 & 21 \\
+aventurine & 81 & 15 & 9 & 57 \\
+citrine & 12 & 4 & 0 & 8 \\
+rose\_quartz & 57 & 15 & 6 & 36 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The first 20 of each class went by: amethyst no crystal 5, jewellery 3, drawing 1,
+unclear 1, wrong crystal 1; aventurine no crystal 9, wrong crystal 2, jewellery 1,
+more than one 1, unclear 1, text 1; citrine text 2, more than one 2; rose\_quartz
+no crystal 5, jewellery 4, more than one 4, wrong crystal 1, text 1.
+
+The images that look least like the rest of their class are mostly junk by my rule
+too, most strongly in aventurine and rose\_quartz, which are also the two classes
+my rule removed most from. Citrine is where the two views disagree most, 4 of 20
+of the first suspects were removed, and aventurine is where I went furthest on my
+own: 57 of its 81 removals sit at rank 33 or later, in pictures the sheet never
+showed me. "Removed but not on the suspect list at all" is always 0 and says
+nothing, because every one of the 572 images has a rank; the number that answers
+"did you find junk it did not list" is that rank 33 and later column, 21, 57, 8
+and 36.
 
 \subsection*{Before and after cleaning}
 \outputfile{outputs/compare.txt}
 
-\fillin{The test accuracy and the accuracy on your new images, before and
-after. If a number went down, why you think it did.}
+Nothing went down, but the pair of test numbers is not as big as it looks. 92.2\%
+was 9 wrong of 115; 100\% is 0 wrong of 75, so after cleaning one test image is
+worth 1.3\% instead of 0.87\%, the 198 removals took 28 images out of the test set
+(aventurine's share of it fell from 28 to 11), and the cleaned test set is by
+construction the part of the collection that survived my own rule of throwing
+away the pictures the model was getting wrong. Some of the 7.8 points is a better
+model and some of it is a kinder exam, and these two numbers cannot tell those
+apart. Nor can 100\% of 75 be anything more than 75 pictures out of 75:
+\texttt{run.py} printed "no mistakes to plot, which is suspicious. Check your
+split." for this run, because with nothing wrong on the test set there is no
+mistake picture to draw, so this run has no \texttt{clean\_worst.png}. The
+training set also fell from 457 to 299 images, a third smaller, and the test
+accuracy went up anyway.
+
+The fair comparison is the row that did not change: the same 21 photographs from
+a different source, 18/21 before and 18/21 after, which is the pair of numbers
+Problem 5 is built on. Cleaning moved the number of right answers by nothing at
+all, and the next section shows that it did not leave the pictures alone either.
 
 % ---------------------------------------------------------------------------
 \section*{Problem 5. Images from a new source}
 
-\fillin{Where your new images came from, and why you are sure none of them are
-among your downloads.}
+Photographs I took myself for this assignment, with my own phone, saved as JPEG
+because the phone's HEIC files cannot be read by the code: 21 of them, five in
+each class and six rose\_quartz, in \texttt{data/new\_images/<class>/}. One of
+them, \texttt{data/new\_images/aventurine/IMG\_3068.JPG}, is the photograph
+measured in Problem 2.
+
+They cannot be among the downloads: they are photographs of objects in front of
+me, taken by me, while the four categories were downloaded from a search engine,
+and a search cannot return a photograph that never existed on the web. The
+overlap check tests that instead of assuming it: every new image is described and
+compared with all 572 downloaded files, including the 198 that moved to
+\texttt{data/removed/}, and the closest any of the 21 comes to any of them is
+0.85, under the 0.95 the tool calls a near copy. The tool prints 570 rather than
+572 because it hashes every file and counts each picture once, and two of the 572
+downloaded files are byte-for-byte copies of another file in the set.
 
 \outputfile{outputs/overlap.txt}
 
-\fillin{The accuracy on your downloaded test set and on your new images, side
-by side.}
+\begin{center}\footnotesize
+\begin{tabular}{lrr}
+\toprule
+run & test accuracy & new images \\
+\midrule
+\texttt{run} & 92.2\% & 85.7\% (18/21) \\
+\texttt{clean} & 100.0\% & 85.7\% (18/21) \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\fillin{Five mistakes it was confident about, with the pictures. For each one,
-what in the image you think pushed it the wrong way.}
+The two test accuracies are measured on different pictures, because the split is
+drawn after cleaning, 92.2\% of 115 and then 100.0\% of 75 (Problem 4). The new
+images are the same 21 photographs for both rows and their total is the same too,
+18 of 21 either way.
+
+Not the same eighteen pictures. Loading both saved models and asking each of them
+about all 21 new images (the file named by the first eight characters of its
+name):
+
+\begin{center}\footnotesize
+\begin{tabular}{llll}
+\toprule
+new image & really & \texttt{run} says & \texttt{clean} says \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst & \textbf{rose\_quartz} & amethyst \\
+\texttt{amethyst/a95f9f93} & amethyst & \textbf{rose\_quartz} & amethyst \\
+\texttt{rose\_quartz/IMG\_3069} & rose\_quartz & \textbf{aventurine} & rose\_quartz \\
+\texttt{citrine/2788e4fa} & citrine & citrine & \textbf{amethyst} \\
+\texttt{citrine/58f05f6d} & citrine & citrine & \textbf{rose\_quartz} \\
+\texttt{citrine/6dc1dd3c} & citrine & citrine & \textbf{rose\_quartz} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Those six pictures are the only ones where the two models disagree, three each
+way, and no picture is wrong in both: 15 right in both, three wrong in each, so
+\texttt{run} is wrong on 3/21 and \texttt{clean} is wrong on 3/21. Cleaning traded
+three right answers for three wrong ones, one class for another:
+
+\begin{center}\footnotesize
+\begin{tabular}{lrr}
+\toprule
+class & \texttt{run} on the new images & \texttt{clean} on the new images \\
+\midrule
+amethyst & 3/5 & 5/5 \\
+aventurine & 5/5 & 5/5 \\
+citrine & 5/5 & 2/5 \\
+rose\_quartz & 5/6 & 6/6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+It is the same boundary, moved to the other side. Every pair \texttt{run} got
+wrong on the downloaded test set had rose quartz in it, amethyst/rose\_quartz 4
+and aventurine/rose\_quartz 4, its two biggest pairs, with citrine perfect at
+30/30. On the new images it calls two amethysts rose quartz; after cleaning those
+three answers are right, and three citrines have gone over to rose quartz and
+amethyst in their place. My guess at why, marked as a guess and not as a
+measurement: my rule took 83 of 138 aventurine pictures and 58 of 150
+rose\_quartz, but only 17 of 150 citrine, so citrine is a larger share of a much
+smaller collection and the pictures that held the citrine boundary are the ones
+that went. A run on the same split as before would settle it; 21 pictures, one of
+them worth 4.8\%, cannot.
+
+\texttt{check.py} prints the five mistakes it was most sure about, and the
+published model made three, so three is the whole list and not a selection. All
+three are one small stone, in flat light, on a plain pale background:
+
+\picturefile[0.32\linewidth]{figures/mistake_1_citrine_called_rose_quartz.jpg}\hfill
+\picturefile[0.32\linewidth]{figures/mistake_2_citrine_called_rose_quartz.jpg}\hfill
+\picturefile[0.32\linewidth]{figures/mistake_3_citrine_called_amethyst.jpg}
+
+{\small left to right: said rose quartz 54\%, said rose quartz 51\%, said amethyst
+32\%; all three really citrine.}
+
+\begin{itemize}
+\item \texttt{citrine/6dc1dd3c-0216-...JPG}, said rose\_quartz (54\%). One small
+stone on grey speckled granite, and it is the pale end of citrine: milky white
+with a faint yellow patch at one end, with the wet-looking grey paving around it
+nearly as pale as the stone, so the whole frame is cream and grey. Nothing in the
+picture is pink, but "pale stone, little colour" is what rose\_quartz looks like
+in the downloads, and the flat light has taken the yellow away. Colour is the only
+thing separating citrine from rose\_quartz in a picture like this, and the colour
+is washed out.
+\item \texttt{citrine/58f05f6d-77f2-...JPG}, said rose\_quartz (51\%). One amber
+stone on white paper, underexposed, so the paper reads light grey and the amber
+reads pale. 51\% is a coin toss, for the reason above.
+\item \texttt{citrine/2788e4fa-a7ad-...JPG}, said amethyst (32\%). One pale yellow
+stone on light grey paper, small in the frame, low contrast, most of the picture
+empty background. 32\% out of four classes is close to guessing and there is
+nothing purple in the picture: this one reads as an image the model had almost no
+information from, rather than an image that fooled it in a particular way.
+\end{itemize}
+
+The three the earlier model got wrong instead are the three other wrong answers in
+the table above: two amethysts called rose quartz, one a crystal deep violet over
+half of it and white over the other half on pale pinkish paper, one a milky pale
+lilac pendant with a silver chain on grey speckled granite; and one rose quartz
+called aventurine, a pale lavender cabochon with a bright white highlight on a
+grey surface, where aventurine in the downloads is also a smooth translucent
+pebble, so the shape is no help. All six mistakes of the two models together are
+the same shot: one small stone, flat light, a plain white or grey background, the
+stone filling little of the frame, its colour washed out. The one citrine picture
+the cleaned model does get right, \texttt{citrine/f16efa23}, has three stones,
+warm light, saturated honey colour and hard shadows.
 
 \fillin{What is different about your new images: background, lighting, angle,
 distance, what else is in the frame.}
