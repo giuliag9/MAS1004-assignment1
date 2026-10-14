@@ -27,11 +27,29 @@
 \section*{Problem 1. Categories and images}
 
 \subsection*{Why these categories}
-\fillin{Why these categories, and why you care about them.}
+Four varieties of quartz: amethyst, citrine, rose quartz and aventurine. A
+variety of quartz is the same crystal with a different colour and a different
+inclusion inside it, so the four are close to the same shape and differ in
+colour and in what shows through the stone. That is what makes them worth
+telling apart rather than being obviously different objects: a wrong answer
+here is a wrong judgement of colour and translucency between stones that are
+otherwise alike, and I can see in the picture whether the model was right.
+They are also things I can photograph myself, which Problem 5 needs.
+
+I checked the four against \texttt{imagenet\_classes.txt}, the 1,000 categories
+ResNet18 already tells apart: none of the four is in it, the only entries that
+share a word with them being "stone wall" and "ruddy turnstone", and nothing in
+the list is a piece of polished quartz. So the last layer has to be replaced
+and these four categories have to be learned from features that were trained on
+something else.
 
 \subsection*{What I expected the model to use}
-\fillin{What you thought, before training, the model would use to tell them
-apart: shape, colour, texture, background, or something else.}
+Colour, above all, written down before training: purple is very different from
+green, so I thought amethyst and aventurine would not get mixed up, and rose
+quartz can be lighter in color, which makes it more similar to the light green
+of aventurine, so I expected rose quartz and aventurine to be the pair that
+does get mixed up. Shape I expected to be little help, because the pictures are
+polished pieces, all of them roundish pebbles with no points to go by.
 
 \subsection*{Images per category}
 Asked \texttt{collect.py} for 150 images in each of four categories. Before any

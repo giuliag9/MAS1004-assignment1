@@ -657,4 +657,37 @@ the model called them.
   the middle of the frame, where the downloads are mostly close-ups that fill it;
   what else is in the frame is a silver chain and clasp, paper texture, sheet
   shadows and granite speckle; and four of the 21 are stored sideways (EXIF
+## What is still missing before the PDF (state on 14 October 2026)
+
+`long_report/long_report.tex` was completed for Problems 1 to 5, and committed
+and pushed (commit `c9e0f9e`). What is still a red `\fillin` box:
+
+| box | who fills it |
+|---|---|
+| the three junk pictures, `figures/junk_1..3.jpg` | agent: copy one picture of each kind of junk out of `data/removed/` |
+| what is different about the new images (Problem 5) | the student, from the "TO FILL IN" note above |
+| the GitHub Pages address (Problem 6) | agent, after `docs/model.onnx` is pushed and Pages is on |
+| what the page says for something that is none of the categories (Problem 6) | agent, running the exported model on a picture that is none of the four |
+| all of Problem 7 | the student makes the guesses and chooses the changes; the agent makes the changes and reads the answers off the exported model |
+
+Pictures and outputs still missing from `long_report/`, which come out of
+`to_my_computer.zip` (section 15 of the notebook) and out of `data/removed/`:
+
+- `figures/run_curves.png`, `figures/run_confusion.png`
+- the curves of the other runs the report refers to, `scratch_curves.png`,
+  `frozen_curves.png`, `lr1e-3_curves.png`, `clean_curves.png`, and
+  `clean_confusion.png`: AGENTS.md asks for the pictures of every run the report
+  refers to, and the report refers to all five rows of the table.
+- `outputs/run_output.txt`, `scratch_output.txt`, `frozen_output.txt`,
+  `lr1e-3_output.txt`, `clean_count.txt`, `compare.txt`, `overlap.txt`,
+  `check.txt`
+- `figures/junk_1.jpg`, `junk_2.jpg`, `junk_3.jpg`
+
+Order of work: Colab section 13 once more (`check.py` last, so `check.txt` is the
+final one), then section 15, take `to_my_computer.zip` back to the computer,
+unzip it in the repository folder, copy what is needed into `long_report/`,
+commit and push `docs/model.onnx`, `docs/model.json` and `docs/selftest.json`,
+turn on Pages and put the address in, then compile the `long_report` folder on
+Overleaf with XeLaTeX and look for red text in the PDF. XeLaTeX is not installed
+on the Mac and AGENTS.md says not to install it.
   orientation 6).
