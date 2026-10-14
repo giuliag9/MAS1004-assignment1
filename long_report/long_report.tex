@@ -639,23 +639,99 @@ mask product was rose\_quartz (92.2\%), and a beige mug was rose\_quartz
 \section*{Problem 7. What the model looks at}
 
 % Copy this subsection once for every guess.
-\subsection*{Guess 1}
+\subsection*{Guess 1: colour separates amethyst from aventurine}
 
-\fillin{The guess, and what in your images or your model's mistakes made you
-think of it.}
+My guess, in my words as I gave it: ``I'll start from my original guess on what
+the model would look at to distinguish the crystal. I mentioned I expect it to
+look at colors. From my images, amethyst and aventurine were not mistaken in the
+current model. So my first guess is that if we lower the saturation on amethyst
+and aventurine the model will have more problems to distinguish them.''
 
-\fillin{The change you chose, and why it tests the guess.}
+The change: the saturation of all ten of my new amethyst and aventurine photos
+lowered to 0\%, which leaves the light and dark, the shape and the texture of
+each photo as they were and takes the colour away completely, so that I can
+test the model with the absence of colour. Ten photos, five of each class, and
+all ten originals are answered right by the page.
 
-My request to the agent, word for word:
+My requests to the agent, word for word:
 \begin{quote}
-\fillin{the request}
+make a copy of each image in data/new\_images/amethyst and
+data/new\_images/aventurine with lowered saturation and save the copies,
+respectively, in data/changed/less\_saturation\_amethyst and
+data/changed/less\_saturation\_aventurine
+\end{quote}
+and, asked by how much:
+\begin{quote}
+to 0\% , so we can test with the absence of color.
 \end{quote}
 
-% One \sidebyside for every image you changed.
-\sidebyside{figures/guess1_original_1.jpg}{\fillin{original: the model's answer}}
-           {figures/guess1_changed_1.jpg}{\fillin{changed: the model's answer}}
+The agent wrote the change as a cell that I ran on Colab, where the images are:
+Pillow's \texttt{ImageEnhance.Color(image).enhance(0.0)} on each photo,
+written to \texttt{data/changed/less\_saturation\_<class>/} under the same file
+name, with the originals left as they were. I uploaded every original and every
+changed photo to my published page and read its first two answers off it:
 
-\fillin{What the results say about the guess.}
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & original & saturation 0\% \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 96.7\%, rose quartz 2.4\% & amethyst 84.6\%, aventurine 7.9\% \\
+\texttt{amethyst/a95f9f93} & amethyst 86.9\%, rose quartz 8.1\% & amethyst 77.0\%, aventurine 14.3\% \\
+\texttt{amethyst/IMG_3072} & amethyst 80.2\%, rose quartz 16.7\% & \textbf{aventurine 45.5\%}, amethyst 36.4\% \\
+\texttt{amethyst/IMG_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 40.8\%, aventurine 30.6\% \\
+\texttt{amethyst/IMG_3200} & amethyst 94.8\%, rose quartz 2.3\% & \textbf{aventurine 45.6\%}, amethyst 42.8\% \\
+\texttt{aventurine/59ad40f0} & aventurine 99.3\%, amethyst 0.4\% & aventurine 62.9\%, amethyst 23.7\% \\
+\texttt{aventurine/aba4d635} & aventurine 97.3\%, amethyst 1.7\% & aventurine 82.1\%, amethyst 12.5\% \\
+\texttt{aventurine/IMG_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 51.5\%, rose quartz 33.7\% \\
+\texttt{aventurine/IMG_3196} & aventurine 80.9\%, rose quartz 13.3\% & \textbf{rose quartz 47.1\%}, aventurine 44.6\% \\
+\texttt{aventurine/IMG_3197} & aventurine 88.7\%, rose quartz 9.9\% & \textbf{rose quartz 62.3\%}, aventurine 34.6\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The originals are 10 of 10 right; with the colour taken away, 6 of 10 are still
+right, and the probability of the right answer is lower for all ten. The four
+that changed: two amethysts became aventurine, and two aventurines became rose
+quartz.
+
+% One \sidebyside for every image you changed. The pictures are scaled down for
+% the report.
+\sidebyside{figures/guess1_original_amethyst_44db3aaf.jpg}{amethyst/44db3aaf, original: amethyst 96.7\%, rose quartz 2.4\%}
+           {figures/guess1_changed_amethyst_44db3aaf.jpg}{saturation 0\%: amethyst 84.6\%, aventurine 7.9\%}
+\sidebyside{figures/guess1_original_amethyst_a95f9f93.jpg}{amethyst/a95f9f93, original: amethyst 86.9\%, rose quartz 8.1\%}
+           {figures/guess1_changed_amethyst_a95f9f93.jpg}{saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3072.jpg}{amethyst/IMG_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
+           {figures/guess1_changed_amethyst_IMG_3072.jpg}{saturation 0\%: \textbf{aventurine 45.5\%}, amethyst 36.4\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3089.jpg}{amethyst/IMG_3089, original: amethyst 90.5\%, aventurine 5.2\%}
+           {figures/guess1_changed_amethyst_IMG_3089.jpg}{saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3200.jpg}{amethyst/IMG_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
+           {figures/guess1_changed_amethyst_IMG_3200.jpg}{saturation 0\%: \textbf{aventurine 45.6\%}, amethyst 42.8\%}
+\sidebyside{figures/guess1_original_aventurine_59ad40f0.jpg}{aventurine/59ad40f0, original: aventurine 99.3\%, amethyst 0.4\%}
+           {figures/guess1_changed_aventurine_59ad40f0.jpg}{saturation 0\%: aventurine 62.9\%, amethyst 23.7\%}
+\sidebyside{figures/guess1_original_aventurine_aba4d635.jpg}{aventurine/aba4d635, original: aventurine 97.3\%, amethyst 1.7\%}
+           {figures/guess1_changed_aventurine_aba4d635.jpg}{saturation 0\%: aventurine 82.1\%, amethyst 12.5\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3068.jpg}{aventurine/IMG_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
+           {figures/guess1_changed_aventurine_IMG_3068.jpg}{saturation 0\%: aventurine 51.5\%, rose quartz 33.7\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3196.jpg}{aventurine/IMG_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
+           {figures/guess1_changed_aventurine_IMG_3196.jpg}{saturation 0\%: \textbf{rose quartz 47.1\%}, aventurine 44.6\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3197.jpg}{aventurine/IMG_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
+           {figures/guess1_changed_aventurine_IMG_3197.jpg}{saturation 0\%: \textbf{rose quartz 62.3\%}, aventurine 34.6\%}
+
+What the results say about the guess, in my words: From these results I can
+observe two things. First, the cases in which the 0\% saturation changed the
+model's answer as I thought were only amethyst to aventurine, and not
+aventurine to amethyst: the only two times the answer changed for aventurine,
+it went to rose quartz and not to amethyst. Second, by looking at the changed
+images I realised that the aventurine images that were called rose quartz at
+0\% saturation were paler than the others, meaning that in the original the
+colour was lighter, paler, less full. At the same time the amethyst images that
+were called aventurine at 0\% saturation also showed some paler parts and
+appeared less full, but still darker than the aventurine images that were
+called rose quartz. Overall the answers change a bit after removing the colour,
+but not as much as I expected, which makes me think that colour is considered,
+but it is not the determining element for the model to tell the crystals
+apart.
 
 \subsection*{What I now think the model uses}
 \fillin{What you now think the model uses to tell your categories apart, and
