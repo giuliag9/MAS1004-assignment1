@@ -733,6 +733,100 @@ but not as much as I expected, which makes me think that colour is considered,
 but it is not the determining element for the model to tell the crystals
 apart.
 
+\subsection*{Guess 2: transparency, aventurine pale but dark}
+
+My guess, in my words as I gave it: ``Given what I observed from the first
+guess, color is not the determinant element for the model. I start to think
+that transparency also is important when guessing the crystals. As I mentioned
+in the first guess, 0\% saturation aventurine that were guessed to be rose quartz
+were paler and less full in color, while the amethyst 0\% saturation that were
+guessed to be aventurine also were less full, paler but overall darker. Which
+makes me think that for the model aventurine is dark, but also pale, while rose
+quartz is pale but lighter. If I think of the mistakes made, the first one was
+of data/new\_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG being
+guessed as rose quartz, and in fact the crystal in the photo is less full in
+color, and lighter. To check this, the transparency of the images should be
+lowered. In particular my guess to check if transparency plays a role in how
+the model distinguishes the crystals, is that if we lower the transparency of
+the images of amethyst we turned to 0\% saturation, since they're dark, they
+would be guessed as aventurine (pale but dark).''
+
+The change: a photo has no setting for how see-through the stone is, and the
+transparency setting a picture file can have is removed by
+\texttt{prepare\_image} when it converts the picture to RGB. So I chose to
+convey less transparency by lowering the contrast to 50\%, on the whole picture,
+on the three amethyst photos that were still called amethyst at 0\% saturation.
+Lowering the contrast moves every part of the picture halfway towards its
+average grey, so the crystal becomes paler and less full; I chose 50\% as a
+compromise, to see the crystal paler without its dark parts getting too much
+lighter.
+
+My requests to the agent, word for word:
+\begin{quote}
+So make a copy of
+data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
+and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with lower transparency
+and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst
+\end{quote}
+and, after the agent explained that a picture has no transparency setting the
+model would see:
+\begin{quote}
+Since there is no transparency setting to change in the images, I think the
+best way to make the crystal paler and less full would be to lower contrast to
+50\%, this way it's enough to make the image paler but keeps the darkess of the
+crystal which in my guess is what determines aventurine (pale but dark). So make
+a copy of
+data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
+and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with contrast to 50\%
+and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst.
+Also maintain the whole picture of the images for this guess.
+\end{quote}
+
+The agent wrote the change as a cell that I ran on Colab: Pillow's
+\texttt{ImageEnhance.Contrast(image).enhance(0.5)} on each of the three 0\%
+saturation photos. The page's first two answers, next to the ones the same
+photos got at 0\% saturation in Guess 1:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & saturation 0\% & saturation 0\% and contrast 50\% \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 84.6\%, aventurine 7.9\% & \textbf{rose quartz 50.0\%}, amethyst 27.7\% \\
+\texttt{amethyst/a95f9f93} & amethyst 77.0\%, aventurine 14.3\% & \textbf{rose quartz 46.2\%}, aventurine 27.8\% \\
+\texttt{amethyst/IMG_3089} & amethyst 40.8\%, aventurine 30.6\% & \textbf{rose quartz 64.4\%}, aventurine 25.2\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three changed their answer, all three to rose quartz and none to aventurine;
+aventurine is second for two of them.
+
+\sidebyside{figures/guess1_changed_amethyst_44db3aaf.jpg}{44db3aaf, saturation 0\%: amethyst 84.6\%, aventurine 7.9\%}
+           {figures/guess2_changed_amethyst_44db3aaf.jpg}{and contrast 50\%: \textbf{rose quartz 50.0\%}, amethyst 27.7\%}
+\sidebyside{figures/guess1_changed_amethyst_a95f9f93.jpg}{a95f9f93, saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
+           {figures/guess2_changed_amethyst_a95f9f93.jpg}{and contrast 50\%: \textbf{rose quartz 46.2\%}, aventurine 27.8\%}
+\sidebyside{figures/guess1_changed_amethyst_IMG_3089.jpg}{IMG_3089, saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
+           {figures/guess2_changed_amethyst_IMG_3089.jpg}{and contrast 50\%: \textbf{rose quartz 64.4\%}, aventurine 25.2\%}
+
+What the results say about the guess, in my words: These results make me think
+that while lowering the contrast, the crystals also got lighter, and therefore
+closer to rose quartz rather than aventurine. Lowering the contrast and keeping
+the original darkness is difficult. However, these results seem to fit my idea
+that rose quartz is pale and light. Even if it did not separate amethyst from
+aventurine, transparency, which in this case was conveyed by lowering the
+contrast, seems to be considered by the model: all three images got a different
+answer from the one they had at 0\% saturation. It is also worth noticing that
+the lower contrast changed all three answers, but it was applied to the 0\%
+saturation images, not to the original ones. Overall, the results of the second
+guess make me think of two things. First, if rose quartz is light and pale, and
+the mistaken citrine is also light and pale, what does the model look at in the
+image to tell them apart, and why was the citrine called rose quartz? Perhaps
+transparency is not the answer. Second, there might be another factor that the
+model considers to tell the crystals apart, or a combination of factors.
+
 \subsection*{What I now think the model uses}
 \fillin{What you now think the model uses to tell your categories apart, and
 how sure you are.}
