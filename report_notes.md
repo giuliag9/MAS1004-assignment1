@@ -691,3 +691,20 @@ turn on Pages and put the address in, then compile the `long_report` folder on
 Overleaf with XeLaTeX and look for red text in the PDF. XeLaTeX is not installed
 on the Mac and AGENTS.md says not to install it.
   orientation 6).
+## Problem 6. The published page (14 October 2026)
+
+Address: https://giuliag9.github.io/MAS1004-assignment1/. The badge is green, on
+the computer and on the phone.
+
+Things that are none of the four categories, uploaded as photos, answers as the
+page showed them:
+
+- an adapter: rose_quartz 47.1%, then amethyst 43.7%
+- a yellow highlighter: aventurine 65.3%, then citrine 24.9%. Giulia expected
+  citrine first, because of the yellow colour.
+- a pink mask product: rose_quartz 92.2%
+- a beige mug: rose_quartz 79.4%
+
+Giulia's own crystals, shown on the page (percentages not written down yet): one
+amethyst was recognised as amethyst; another amethyst was called rose_quartz;
+an aventurine was called rose_quartz. Possible material for Problem 7.
