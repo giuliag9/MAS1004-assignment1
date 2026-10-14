@@ -1,0 +1,54 @@
+MAS1004 Assignment 1, checking your work
+
+Training images  (/content/drive/MyDrive/mas1004/assignment1/data/clean)
+------------------------------------------------------------------------
+  amethyst                        94 images
+  aventurine                      55 images
+  citrine                        133 images
+  rose_quartz                     92 images
+
+Your images from a new source  (/content/drive/MyDrive/mas1004/assignment1/data/new_images)
+-------------------------------------------------------------------------------------------
+  amethyst                         5 images
+  aventurine                       5 images
+  citrine                          5 images
+  rose_quartz                      6 images
+
+The same image appearing twice
+------------------------------
+  ok       no file appears twice byte for byte. Near copies (the same picture resized or re-saved) are only found by `python src/clean.py suspects` and `python src/clean.py overlap`.
+
+The model you exported for the web page
+---------------------------------------
+  ok       4 classes: amethyst, aventurine, citrine, rose_quartz
+  ok       model.onnx is 44.8 MB, 11,178,564 parameters
+           input [1, 3, 224, 224], prepared as: shorter side 256, centre 224 x 224, mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]
+  warning  docs/model.onnx is not committed. Your published page will not have a model until you commit and push it.
+
+Does the exported model give the answers Python gave?
+-----------------------------------------------------
+  ok       yes, they agree (largest gap 0.0000)
+
+Your images from a new source  (/content/drive/MyDrive/mas1004/assignment1/data/new_images)
+-------------------------------------------------------------------------------------------
+
+  accuracy on your new images: 18/21 = 85.7%
+
+  rows are what it really is, columns are what the model said
+                  amethyst aventuri  citrine rose_qua
+    amethyst             5        0        0        0
+    aventurine           0        5        0        0
+    citrine              1        0        2        2
+    rose_quartz          0        0        0        6
+
+  the mistakes it was most sure about:
+    6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG said rose_quartz (54%), really citrine
+    58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG said rose_quartz (51%), really citrine
+    2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG said amethyst (32%), really citrine
+
+Summary
+-------
+  nothing is broken
+  1 thing(s) worth a sentence in your report:
+    - docs/model.onnx is not committed. Your published page will not have a model until you commit and push it.
+

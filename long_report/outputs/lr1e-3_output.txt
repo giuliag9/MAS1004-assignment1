@@ -1,0 +1,31 @@
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 19 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 11,178,564 of them will be trained
+epoch   1/10  train loss 0.7630  train acc  75.1%  test loss 16.8645  test acc  64.3%
+epoch   2/10  train loss 0.4186  train acc  85.8%  test loss 0.6641  test acc  80.0%
+epoch   3/10  train loss 0.4512  train acc  86.7%  test loss 1.3179  test acc  80.0%
+epoch   4/10  train loss 0.6116  train acc  87.3%  test loss 1.8993  test acc  76.5%
+epoch   5/10  train loss 0.4776  train acc  83.4%  test loss 0.6656  test acc  74.8%
+epoch   6/10  train loss 0.3374  train acc  87.7%  test loss 0.4330  test acc  87.0%
+epoch   7/10  train loss 0.1688  train acc  94.1%  test loss 0.4516  test acc  86.1%
+epoch   8/10  train loss 0.1660  train acc  96.7%  test loss 0.5370  test acc  83.5%
+epoch   9/10  train loss 0.2274  train acc  93.2%  test loss 1.4221  test acc  68.7%
+epoch  10/10  train loss 0.2240  train acc  92.1%  test loss 0.5896  test acc  84.3%
+
+trained in 0.3 minutes
+train accuracy 96.7%
+test  accuracy 84.3%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/lr1e-3_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/lr1e-3_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/lr1e-3_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/lr1e-3_model.pt
+
+One line for your experiment table:
+| lr1e-3 | ImageNet | all layers | 10 | 0.001 | 11,178,564 | 96.7% | 84.3% |
+
+To put this model on your web page: python src/export_web.py --tag lr1e-3

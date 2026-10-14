@@ -1,0 +1,35 @@
+MAS1004 Assignment 1, checking your work
+
+Training images  (/content/drive/MyDrive/mas1004/assignment1/data/clean)
+------------------------------------------------------------------------
+  amethyst                        94 images
+  aventurine                      55 images
+  citrine                        133 images
+  rose_quartz                     92 images
+
+Your images from a new source  (/content/drive/MyDrive/mas1004/assignment1/data/new_images)
+-------------------------------------------------------------------------------------------
+  amethyst                         5 images
+  aventurine                       5 images
+  citrine                          5 images
+  rose_quartz                      6 images
+
+The same image appearing twice
+------------------------------
+  ok       no file appears twice byte for byte. Near copies (the same picture resized or re-saved) are only found by `python src/clean.py suspects` and `python src/clean.py overlap`.
+
+The model you exported for the web page
+---------------------------------------
+  PROBLEM  docs/ is missing model.onnx, model.json, selftest.json. Run src/run.py and then src/export_web.py first.
+
+Your saved runs on your new images  (/content/drive/MyDrive/mas1004/assignment1/data/new_images)
+------------------------------------------------------------------------------------------------
+  run               test accuracy   new images
+  run                       92.2%        85.7%   (18/21)
+  clean                    100.0%        85.7%   (18/21)
+
+Summary
+-------
+  1 thing(s) to fix:
+    - docs/ is missing model.onnx, model.json, selftest.json. Run src/run.py and then src/export_web.py first.
+

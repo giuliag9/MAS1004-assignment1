@@ -1,0 +1,31 @@
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 17 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 11,178,564 of them will be trained
+epoch   1/10  train loss 0.8494  train acc  64.8%  test loss 0.6067  test acc  80.9%
+epoch   2/10  train loss 0.1486  train acc  96.5%  test loss 0.3769  test acc  87.0%
+epoch   3/10  train loss 0.0485  train acc  99.3%  test loss 0.2537  test acc  91.3%
+epoch   4/10  train loss 0.0615  train acc  99.1%  test loss 0.2505  test acc  92.2%
+epoch   5/10  train loss 0.0172  train acc  99.8%  test loss 0.2826  test acc  90.4%
+epoch   6/10  train loss 0.0164  train acc 100.0%  test loss 0.2754  test acc  92.2%
+epoch   7/10  train loss 0.0100  train acc 100.0%  test loss 0.2938  test acc  92.2%
+epoch   8/10  train loss 0.0091  train acc 100.0%  test loss 0.3091  test acc  92.2%
+epoch   9/10  train loss 0.0078  train acc 100.0%  test loss 0.3218  test acc  92.2%
+epoch  10/10  train loss 0.0054  train acc 100.0%  test loss 0.2822  test acc  92.2%
+
+trained in 0.3 minutes
+train accuracy 100.0%
+test  accuracy 92.2%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_model.pt
+
+One line for your experiment table:
+| run | ImageNet | all layers | 10 | 0.0001 | 11,178,564 | 100.0% | 92.2% |
+
+To put this model on your web page: python src/export_web.py --tag run

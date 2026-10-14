@@ -1,0 +1,31 @@
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 19 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 2,052 of them will be trained
+epoch   1/10  train loss 1.2926  train acc  40.0%  test loss 1.0710  test acc  53.9%
+epoch   2/10  train loss 0.9113  train acc  71.8%  test loss 0.8902  test acc  68.7%
+epoch   3/10  train loss 0.6955  train acc  81.6%  test loss 0.6744  test acc  84.3%
+epoch   4/10  train loss 0.5789  train acc  86.4%  test loss 0.6253  test acc  82.6%
+epoch   5/10  train loss 0.5232  train acc  85.8%  test loss 0.5379  test acc  87.0%
+epoch   6/10  train loss 0.4312  train acc  91.7%  test loss 0.5049  test acc  87.8%
+epoch   7/10  train loss 0.3673  train acc  92.6%  test loss 0.4909  test acc  89.6%
+epoch   8/10  train loss 0.3617  train acc  91.0%  test loss 0.4995  test acc  87.0%
+epoch   9/10  train loss 0.3320  train acc  90.6%  test loss 0.4328  test acc  90.4%
+epoch  10/10  train loss 0.3211  train acc  92.6%  test loss 0.4390  test acc  88.7%
+
+trained in 0.1 minutes
+train accuracy 97.2%
+test  accuracy 88.7%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_model.pt
+
+One line for your experiment table:
+| frozen | ImageNet | last layer | 10 | 0.001 | 2,052 | 97.2% | 88.7% |
+
+To put this model on your web page: python src/export_web.py --tag frozen

@@ -1,0 +1,17 @@
+class                    downloaded  removed   kept  other
+amethyst                        134       40     94      0
+aventurine                      138       83     55      0
+citrine                         150       17    133      0
+rose_quartz                     150       58     92      0
+
+reasons
+    86  The image doesn't show a crystal at all
+    25  The image shows the wrong crystal
+    25  The image has text and that take much space of the photo
+    22  The image shows jewelry where the crystal is not predominant
+    18  The image has more than one type of crystal
+    10  The image doesn't show clearly the crystal, or not in the right direction
+    10  The image is a near copy of another picture
+     2  The image is a drawing
+
+"other" is images that are in data/raw but neither in data/clean nor removed with `clean.py remove`, for example ones you deleted by hand. Their reasons are not recorded.

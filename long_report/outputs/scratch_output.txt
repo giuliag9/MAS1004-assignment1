@@ -1,0 +1,31 @@
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 19 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 11,178,564 of them will be trained
+epoch   1/10  train loss 0.8704  train acc  61.3%  test loss 0.7225  test acc  67.8%
+epoch   2/10  train loss 0.5431  train acc  82.7%  test loss 0.5934  test acc  73.9%
+epoch   3/10  train loss 0.5083  train acc  81.6%  test loss 0.5800  test acc  78.3%
+epoch   4/10  train loss 0.3594  train acc  85.6%  test loss 0.6284  test acc  77.4%
+epoch   5/10  train loss 0.2784  train acc  90.8%  test loss 0.6710  test acc  74.8%
+epoch   6/10  train loss 0.2291  train acc  92.1%  test loss 0.5744  test acc  76.5%
+epoch   7/10  train loss 0.2603  train acc  95.4%  test loss 1.2557  test acc  67.0%
+epoch   8/10  train loss 0.2057  train acc  94.5%  test loss 0.6075  test acc  84.3%
+epoch   9/10  train loss 0.1623  train acc  96.1%  test loss 0.5257  test acc  79.1%
+epoch  10/10  train loss 0.0759  train acc  98.9%  test loss 0.6717  test acc  82.6%
+
+trained in 0.3 minutes
+train accuracy 99.6%
+test  accuracy 82.6%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_model.pt
+
+One line for your experiment table:
+| scratch | random | all layers | 10 | 0.0001 | 11,178,564 | 99.6% | 82.6% |
+
+To put this model on your web page: python src/export_web.py --tag scratch
