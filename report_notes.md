@@ -782,3 +782,20 @@ save the copies in data/changed/less_saturation_less_transparency_amethyst"
 Not made yet: an image's alpha channel is dropped by prepare_image's
 convert("RGB"), so "transparency" has to be turned into a change to the pixels
 (brightness or contrast, and how much). Asked Giulia to choose.
+
+Second request, word for word: "Since there is no transparency setting to
+change in the images, I think the best way to make the crystal paler and less
+full would be to lower contrast to 50%, this way it's enough to make the image
+paler but keeps the darkess of the crystal which in my guess is what determines
+aventurine (pale but dark). So make a copy of
+data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG and
+data/changed/less_saturation_amethyst/IMG_3089.JPG with contrast to 50% and save
+the copies in data/changed/less_saturation_less_transparency_amethyst. Also
+maintain the whole picture of the images for this guess."
+
+Made with Pillow's ImageEnhance.Contrast(...).enhance(0.5), run as a Colab cell.
+It moves every pixel halfway towards the picture's average grey: tested on one
+picture, the spread of brightness (standard deviation) went from 44.5 to 22.3
+and the average stayed at 154.6. So a dark stone on a light background comes
+out lighter, and the background a little darker.
