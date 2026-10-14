@@ -1,0 +1,102 @@
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 17 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 11,178,564 of them will be trained
+/content/drive/MyDrive/mas1004/assignment1/src/train.py:127: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  losses.append(float(loss))
+epoch   1/10  train loss 0.8230  train acc  65.0%  test loss 0.5497  test acc  84.3%
+epoch   2/10  train loss 0.1493  train acc  97.6%  test loss 0.3013  test acc  91.3%
+epoch   3/10  train loss 0.0564  train acc  99.8%  test loss 0.3036  test acc  88.7%
+epoch   4/10  train loss 0.0268  train acc 100.0%  test loss 0.2705  test acc  87.0%
+epoch   5/10  train loss 0.0141  train acc 100.0%  test loss 0.2626  test acc  89.6%
+epoch   6/10  train loss 0.0551  train acc  99.8%  test loss 0.2851  test acc  90.4%
+epoch   7/10  train loss 0.0199  train acc 100.0%  test loss 0.2632  test acc  91.3%
+epoch   8/10  train loss 0.0127  train acc 100.0%  test loss 0.2936  test acc  89.6%
+epoch   9/10  train loss 0.0074  train acc 100.0%  test loss 0.2620  test acc  91.3%
+epoch  10/10  train loss 0.0089  train acc 100.0%  test loss 0.2572  test acc  89.6%
+
+trained in 0.3 minutes
+train accuracy 100.0%
+test  accuracy 89.6%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/run_model.pt
+
+One line for your experiment table:
+| run | ImageNet | all layers | 10 | 0.0001 | 11,178,564 | 100.0% | 89.6% |
+
+To put this model on your web page: python src/export_web.py --tag run
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 17 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 11,178,564 of them will be trained
+/content/drive/MyDrive/mas1004/assignment1/src/train.py:127: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  losses.append(float(loss))
+epoch   1/10  train loss 0.8317  train acc  68.1%  test loss 0.8228  test acc  71.3%
+epoch   2/10  train loss 0.6004  train acc  75.9%  test loss 0.6312  test acc  72.2%
+epoch   3/10  train loss 0.4126  train acc  85.8%  test loss 0.5793  test acc  77.4%
+epoch   4/10  train loss 0.3719  train acc  88.4%  test loss 0.4506  test acc  80.9%
+epoch   5/10  train loss 0.2555  train acc  90.8%  test loss 0.6168  test acc  78.3%
+epoch   6/10  train loss 0.2748  train acc  94.3%  test loss 0.8744  test acc  71.3%
+epoch   7/10  train loss 0.2409  train acc  90.8%  test loss 0.7762  test acc  81.7%
+epoch   8/10  train loss 0.1704  train acc  95.8%  test loss 0.6489  test acc  83.5%
+epoch   9/10  train loss 0.0924  train acc  97.6%  test loss 0.5353  test acc  84.3%
+epoch  10/10  train loss 0.0610  train acc  98.7%  test loss 0.6912  test acc  80.9%
+
+trained in 0.3 minutes
+train accuracy 100.0%
+test  accuracy 80.9%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/scratch_model.pt
+
+One line for your experiment table:
+| scratch | random | all layers | 10 | 0.0001 | 11,178,564 | 100.0% | 80.9% |
+
+To put this model on your web page: python src/export_web.py --tag scratch
+reading /content/drive/MyDrive/mas1004/assignment1/data/clean
+572 images, 4 classes, read in 17 s
+  amethyst                 134
+  aventurine               138
+  citrine                  150
+  rose_quartz              150
+training on 457, testing on 115
+model has 11,178,564 parameters, 2,052 of them will be trained
+/content/drive/MyDrive/mas1004/assignment1/src/train.py:127: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  losses.append(float(loss))
+epoch   1/10  train loss 1.2975  train acc  38.1%  test loss 1.0235  test acc  67.8%
+epoch   2/10  train loss 0.9246  train acc  70.9%  test loss 0.7974  test acc  79.1%
+epoch   3/10  train loss 0.7215  train acc  80.1%  test loss 0.6948  test acc  81.7%
+epoch   4/10  train loss 0.5778  train acc  85.3%  test loss 0.5952  test acc  84.3%
+epoch   5/10  train loss 0.5307  train acc  86.9%  test loss 0.5509  test acc  86.1%
+epoch   6/10  train loss 0.4672  train acc  89.5%  test loss 0.5060  test acc  86.1%
+epoch   7/10  train loss 0.4013  train acc  91.5%  test loss 0.4750  test acc  87.0%
+epoch   8/10  train loss 0.3658  train acc  91.5%  test loss 0.4738  test acc  87.8%
+epoch   9/10  train loss 0.3396  train acc  92.6%  test loss 0.4316  test acc  86.1%
+epoch  10/10  train loss 0.3364  train acc  93.7%  test loss 0.4312  test acc  85.2%
+
+trained in 0.1 minutes
+train accuracy 96.3%
+test  accuracy 85.2%
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_curves.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_confusion.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_worst.png
+wrote /content/drive/MyDrive/mas1004/assignment1/results/frozen_model.pt
+
+One line for your experiment table:
+| frozen | ImageNet | last layer | 10 | 0.001 | 2,052 | 96.3% | 85.2% |
+
+To put this model on your web page: python src/export_web.py
