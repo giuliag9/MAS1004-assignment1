@@ -141,9 +141,19 @@ Source: the four "One line for your experiment table" blocks, saved in
 | scratch | random | all layers | 10 | 0.0001 | 11,178,564 | 99.6% | 82.6% |
 | frozen | ImageNet | last layer | 10 | 0.001 | 2,052 | 97.2% | 88.7% |
 | lr1e-3 | ImageNet | all layers | 10 | 0.001 | 11,178,564 | 96.7% | 84.3% |
+| clean | ImageNet | all layers | 10 | 0.0001 | 11,178,564 | 100.0% | 100.0% |
 
 Data: 572 images, 4 classes, amethyst 134 / aventurine 138 / citrine 150 /
 rose_quartz 150. Split 457 train / 115 test.
+
+The `clean` row at the bottom is not comparable with the four above, and it is
+the one the Problems 4 and 5 comparison uses. It is the plain `run.py` settings
+again (ImageNet start, all layers, 10 epochs, lr 1e-4, the same defaults as
+`run`) on `data/clean` after all 198 removals: 374 images, amethyst 94 /
+aventurine 55 / citrine 133 / rose_quartz 92, split by the same seed-0 splitter
+into 299 train and 75 test. Only the data changed, which is what makes it a
+before-and-after pair with `run`; the 75 test images are not the 115 of the
+other rows, because the split is drawn from the images that are present.
 
 ## The split, and why the four rows are comparable
 
@@ -412,13 +422,47 @@ For the report, in one sentence: the suspect pass found 27 pairs of images above
 0.95 similarity, 16 of them already removed as junk by my own rule, and of the
 remaining nine groups I kept a single picture each and removed the other ten.
 
-### Still to fill in for Problem 4
+### Test accuracy before and after cleaning (box 6)
 
-- The class and reason tables are in the section above, from
-  `results/clean_count.txt`, and every class's `other` column is 0.
-- The first 20 suspects per class, and the junk the suspect sheets never showed
-  me, are in the section above, from the Colab run of 13 October 2026.
-- The near copies are decided and written above.
+Both from Colab on 13 October 2026, in `results/clean_output.txt` and
+`results/compare.txt`:
+
+| tag | data | train | test | train accuracy | test accuracy |
+|---|---|---|---|---|---|
+| `run` | before cleaning, 572 images | 457 | 115 | 100.0% | 92.2% |
+| `clean` | after 198 removals, 374 images | 299 | 75 | 100.0% | 100.0% |
+
+and on the 21 new images, which are the same for both rows, from
+`python src/check.py --compare run clean`:
+
+    run               test accuracy   new images
+    run                       92.2%        85.7%   (18/21)
+    clean                    100.0%        85.7%   (18/21)
+
+So the answer to the box is one sentence: the downloaded-test accuracy went from
+92.2% to 100.0%, and the accuracy on my own new photographs did not move at all,
+18 of 21 both times.
+
+The two test accuracies are measured on different pictures, and the gap is
+smaller than it looks:
+
+- 92.2% was 9 wrong of 115; 100% is 0 wrong of 75. After cleaning one test image
+  is worth 1.3%, not 0.87%, and 198 removals took 116 images out of citrine,
+  aventurine and amethyst and 28 test images out of the test set (aventurine's
+  part of it fell from 28 to 11).
+- The cleaned test set is an easier exam by construction: it is the part of the
+  collection that survived my own rule of throwing away the pictures the model
+  was getting wrong, and there is no junk left in it. Some of the 7.8 points is
+  a better model and some of it is a kinder exam, and these two numbers cannot
+  tell those apart.
+- The fair comparison is the row that did not change: the same 21 photographs
+  from a different source, 18/21 before and 18/21 after. Cleaning the training
+  data did not change how the model behaves on pictures it has never seen.
+- 100% of 75 is 75/75 and no more. `run.py` printed "no mistakes to plot, which
+  is suspicious. Check your split.", because with nothing wrong on the test set
+  there is no mistake picture to draw, so this run has no `clean_worst.png`.
+- The training set also fell from 457 to 299 images, a third smaller, and the
+  test accuracy went up anyway: that is the size of what was removed.
 
 ## Problem 5. Images from a new source
 
@@ -451,11 +495,22 @@ The tool prints 570 rather than 572 because it hashes every file and counts each
 picture once; two of the 572 downloaded files are byte-for-byte copies of
 another file in the set.
 
-- TO FILL IN: accuracy on the downloaded test set and on the new images, side by
-  side, from `check.py --compare run clean`.
+Accuracy on the downloaded test set and on the new images, side by side, from
+`python src/check.py --compare run clean` (`results/compare.txt`):
+
+    run               test accuracy   new images
+    run                       92.2%        85.7%   (18/21)
+    clean                    100.0%        85.7%   (18/21)
+
+The two test accuracies are measured on different sets of pictures, because the
+split is drawn after cleaning; that pair, and why it is not the fair comparison,
+is in the section "Test accuracy before and after cleaning (box 6)": 92.2% of
+115, then 100.0% of 75. The new images are the same 21 photographs for both rows,
+and cleaning changed nothing on them: 18 of 21 either way.
+
 - TO FILL IN: the five mistakes it was most sure about on the new images, with
-  the pictures, and what in each image pushed it the wrong way.
+  the pictures, and what in each image pushed it the wrong way. These come from
+  the web model, so they need section 13, the export, to have run first: before
+  that the checker found no `docs/` model and printed no mistakes at all.
 - TO FILL IN: what is different about the new images: background, lighting,
-  angle, distance, what else is in the frame.
-- TO FILL IN: test accuracy (and accuracy on the new images) before cleaning
-  92.2% and after, from `check.py --compare run clean`.
+  angle, distance, what else is in the frame. (I write this one myself.)
