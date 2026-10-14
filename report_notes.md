@@ -799,3 +799,7 @@ It moves every pixel halfway towards the picture's average grey: tested on one
 picture, the spread of brightness (standard deviation) went from 44.5 to 22.3
 and the average stayed at 154.6. So a dark stone on a light background comes
 out lighter, and the background a little darker.
+
+Giulia's clarification of why 50%, word for word: "what I meant is that 50%
+contrast I think it's a good compromise point to see the crystal paler but not
+have its dark parts getting too much lighter."
