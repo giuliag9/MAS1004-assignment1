@@ -808,6 +808,6 @@ have its dark parts getting too much lighter."
 
 | photo | saturation 0% (Guess 1) | saturation 0% and contrast 50% |
 |---|---|---|
-| amethyst/44db3aaf | amethyst 84.6%, aventurine 7.9% | rose_quartz 96.7%, amethyst 27.7% (adds to more than 100%: being re-checked) |
+| amethyst/44db3aaf | amethyst 84.6%, aventurine 7.9% | rose_quartz 50.0%, amethyst 27.7% (re-checked: first typed as 96.7%) |
 | amethyst/a95f9f93 | amethyst 77.0%, aventurine 14.3% | rose_quartz 46.2%, aventurine 27.8% |
 | amethyst/IMG_3089 | amethyst 40.8%, aventurine 30.6% | rose_quartz 64.4%, aventurine 25.2% |
