@@ -708,3 +708,10 @@ page showed them:
 Giulia's own crystals, shown on the page (percentages not written down yet): one
 amethyst was recognised as amethyst; another amethyst was called rose_quartz;
 an aventurine was called rose_quartz. Possible material for Problem 7.
+
+## Before the final version (Giulia's request, 14 October 2026)
+
+After Problem 7, and before the PDF is made, go through the whole long report
+with Giulia, section by section: every number next to the output it comes from,
+and every step we did, in simple words, so that she knows and can explain all of
+it. Nothing in the long report is final until that walk-through is done.
