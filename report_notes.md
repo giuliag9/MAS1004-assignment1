@@ -830,3 +830,31 @@ Still to do, in order:
 5. Bring this branch, claude/epic-clarke-c92agm, into main (ask her first).
 6. PDF on Overleaf with XeLaTeX, and look for red text.
 7. The short report, which she writes on her own; the agent does not touch it.
+
+## Problem 7, Guess 3 (15 October 2026), as Giulia gave it
+
+"Given the previous guesses results, I think color and transparency are in a way
+considered by the model, even if not in the way I expected them. At this point
+is good to consider the case of the 3 mistakes of citrine of my images. Starting
+from the one I mentioned, citrine 6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG was
+guessed as rose quartz, and these crystals are generally light and pale. As I
+previously said, the images of citrine in clean, are more vivid in color than my
+own photos, which I think is an important element that makes the images in clean
+different from mine. In the first guess I focused on color, and observed if it's
+absence (so a 0% saturation) could impact the model's guessing, and overall,
+there were some changes, even for the images that were guessed correctly
+(guessed with less percentage). This makes me still want to keep color in
+consideration for a guess. Therefore, it would be interesting to test the
+opposite of what I did in the first guess, meaning instead of reducing color,
+enhancing it. Since both citrine and rose quartz are pale, the aspect that is
+different in them is color and them being mistaken could be linked to the color
+not being vivid. So, my third guess is that if citrine has higher saturation the
+model would have less problem recognizing it. If this guess turned to be true,
+it would confirm the reason for the mistake in my images."
+
+First request, word for word: "So make a copy of each image in
+data/new_images/citrine with higher saturation (70%) and save the copies in
+data/changed/saturated_citrine"
+
+Not made yet: asked whether "70%" means 70% more colour (factor 1.7) or another
+amount.
