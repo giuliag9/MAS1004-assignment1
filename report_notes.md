@@ -917,3 +917,11 @@ the upright picture (left, top, right, bottom):
 6dc1dd3c 0.322, 0.394, 0.633, 0.656; 58f05f6d 0.417, 0.441, 0.627, 0.599;
 2788e4fa 0.426, 0.497, 0.632, 0.652. A square, so that the page's centre crop
 keeps all of it.
+
+### Guess 4: the page's answers, as Giulia read them off the page
+
+| photo | saturated (Guess 3) | saturated and cut |
+|---|---|---|
+| citrine/6dc1dd3c | rose_quartz 37.7%, aventurine 31.5% | citrine 75.3%, aventurine 12.0% |
+| citrine/58f05f6d | rose_quartz 54.7%, aventurine 18.0% | citrine 99.6%, amethyst 0.3% |
+| citrine/2788e4fa | rose_quartz 33.0%, amethyst 25.1% | citrine 97.9%, amethyst 0.9% |
