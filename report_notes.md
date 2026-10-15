@@ -858,3 +858,12 @@ data/changed/saturated_citrine"
 
 Not made yet: asked whether "70%" means 70% more colour (factor 1.7) or another
 amount.
+
+Amount, word for word: "yes 70% more color."
+Prediction, word for word: "If my guess is right the 3 wrong will turn right and
+the other 2 right ones will stay right with higher percentages."
+
+Made with Pillow's ImageEnhance.Color(...).enhance(1.7) as a Colab cell, on the
+whole picture, EXIF kept. Tested here on a copy of 6dc1dd3c: the average
+saturation (HSV, 0-255) went from 12.3 to 20.5, so a pale stone gains only a
+little colour.
