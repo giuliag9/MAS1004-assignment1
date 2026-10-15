@@ -827,6 +827,112 @@ image to tell them apart, and why was the citrine called rose quartz? Perhaps
 transparency is not the answer. Second, there might be another factor that the
 model considers to tell the crystals apart, or a combination of factors.
 
+\subsection*{Guess 3: more colour would help the pale citrines}
+
+My guess, in my words as I gave it: ``Given the previous guesses results, I
+think color and transparency are in a way considered by the model, even if not
+in the way I expected them. At this point is good to consider the case of the 3
+mistakes of citrine of my images. Starting from the one I mentioned, citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG was guessed as rose quartz, and these
+crystals are generally light and pale. As I previously said, the images of
+citrine in clean, are more vivid in color than my own photos, which I think is
+an important element that makes the images in clean different from mine. In the
+first guess I focused on color, and observed if its absence (so a 0\%
+saturation) could impact the model's guessing, and overall, there were some
+changes, even for the images that were guessed correctly (guessed with less
+percentage). This makes me still want to keep color in consideration for a
+guess. Therefore, it would be interesting to test the opposite of what I did in
+the first guess, meaning instead of reducing color, enhancing it. Since both
+citrine and rose quartz are pale, the aspect that is different in them is color
+and them being mistaken could be linked to the color not being vivid. So, my
+third guess is that if citrine has higher saturation the model would have less
+problem recognizing it. If this guess turned to be true, it would confirm the
+reason for the mistake in my images.''
+
+What I expected, written before I saw the results: ``If my guess is right the
+3 wrong will turn right and the other 2 right ones will stay right with higher
+percentages.''
+
+The change: 70\% more colour (saturation 170\% on the scale of Guess 1, where
+100\% is the photo as it is), on the whole picture, on all five of my new
+citrine photos: the three the model gets wrong and the two it gets right.
+
+My requests to the agent, word for word:
+\begin{quote}
+So make a copy of each image in data/new\_images/citrine with higher saturation
+(70\%) and save the copies in data/changed/saturated\_citrine
+\end{quote}
+and, asked whether 70\% meant 70\% more colour:
+\begin{quote}
+yes 70\% more color.
+\end{quote}
+
+The agent wrote the change as a cell that I ran on Colab: Pillow's
+\texttt{ImageEnhance.Color(image).enhance(1.7)} on each photo. Raising the
+saturation strengthens the colour that is there and cannot add colour to parts
+that are white or grey. The page's first two answers:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & original & saturation +70\% \\
+\midrule
+\texttt{citrine/6dc1dd3c} & rose quartz 52.8\%, aventurine 26.5\% & rose quartz 37.7\%, aventurine 31.5\% \\
+\texttt{citrine/58f05f6d} & rose quartz 49.1\%, aventurine 22.4\% & rose quartz 54.7\%, aventurine 18.0\% \\
+\texttt{citrine/2788e4fa} & rose quartz 31.0\%, amethyst 29.8\% & rose quartz 33.0\%, amethyst 25.1\% \\
+\texttt{citrine/08f618d6} & citrine 89.5\%, aventurine 4.7\% & citrine 96.2\%, aventurine 2.1\% \\
+\texttt{citrine/f16efa23} & citrine 59.9\%, amethyst 25.1\% & citrine 94.1\%, amethyst 4.1\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two that were right stayed right and became more sure, \texttt{f16efa23}
+from 59.9\% to 94.1\%. The three that were wrong stayed wrong, all three still
+rose quartz, and citrine is not among the first two answers for any of them.
+
+The page's numbers for the three originals are close to, but not the same as,
+the ones \texttt{check.py} printed in Problem 5 (54\%, 51\% and 32\%), and for
+\texttt{2788e4fa} the order of the first two even changes: \texttt{check.py}
+said amethyst, the page says rose quartz 31.0\% with amethyst 29.8\% second. The
+page shrinks a photo in the browser (\texttt{resizeShorterSide} in
+\texttt{docs/app.js}) and Python shrinks it with Pillow, so the 224
+\(\times\) 224 picture the model gets differs very slightly. The green badge
+cannot see this, because its test pictures in \texttt{selftest.json} are already
+224 \(\times\) 224. A photo the model is unsure about can change its answer with
+a change too small to see.
+
+\sidebyside{figures/guess3_original_citrine_6dc1dd3c.jpg}{citrine/6dc1dd3c, original: rose quartz 52.8\%, aventurine 26.5\%}
+           {figures/guess3_changed_citrine_6dc1dd3c.jpg}{saturation +70\%: rose quartz 37.7\%, aventurine 31.5\%}
+\sidebyside{figures/guess3_original_citrine_58f05f6d.jpg}{citrine/58f05f6d, original: rose quartz 49.1\%, aventurine 22.4\%}
+           {figures/guess3_changed_citrine_58f05f6d.jpg}{saturation +70\%: rose quartz 54.7\%, aventurine 18.0\%}
+\sidebyside{figures/guess3_original_citrine_2788e4fa.jpg}{citrine/2788e4fa, original: rose quartz 31.0\%, amethyst 29.8\%}
+           {figures/guess3_changed_citrine_2788e4fa.jpg}{saturation +70\%: rose quartz 33.0\%, amethyst 25.1\%}
+\sidebyside{figures/guess3_original_citrine_08f618d6.jpg}{citrine/08f618d6, original: citrine 89.5\%, aventurine 4.7\%}
+           {figures/guess3_changed_citrine_08f618d6.jpg}{saturation +70\%: citrine 96.2\%, aventurine 2.1\%}
+\sidebyside{figures/guess3_original_citrine_f16efa23.jpg}{citrine/f16efa23, original: citrine 59.9\%, amethyst 25.1\%}
+           {figures/guess3_changed_citrine_f16efa23.jpg}{saturation +70\%: citrine 94.1\%, amethyst 4.1\%}
+
+What the results say about the guess, in my words: Once again, the results do
+not confirm my guess completely; in fact they only confirmed my guess for the
+images of citrine that were already guessed right. However, the results give me
+more insight about where I should put my attention in understanding what the
+model looks at to distinguish the crystals, in particular what in those 3 images
+of citrine is different from the others. As the saturation was increased, other
+colours in the image also became more evident. In particular, it is possible to
+notice that the background's colour is also more vivid. In the saturated image
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG the granite background shows more hues
+that can resemble pink, but also a slight green. In the saturated image
+58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG, due to the type of light, the
+background looks more pink too. The same happens in the saturated image
+2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG. In fact, the results show that for the
+saturated images 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG and
+2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG the model is surer about its answer
+``rose quartz'', while for 6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG the first
+answer, rose quartz, decreases to 37.7\% as aventurine rises to 31.5\%.
+Therefore, the conclusion I draw from the results of the third guess is that the
+colour of the background, also influenced by light, can influence the model's
+answer in some situations.
+
 \subsection*{What I now think the model uses}
 \fillin{What you now think the model uses to tell your categories apart, and
 how sure you are.}
