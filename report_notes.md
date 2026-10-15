@@ -954,3 +954,30 @@ stones, its side 1.5 times the longer side, moved inside the picture where it
 would stick out). Boxes for the 15 amethyst, aventurine and citrine photos
 chosen on the small upright report copies; the 6 rose quartz photos are not
 here yet.
+
+The 21 squares used (left, top, right, bottom, fractions of the upright picture),
+after Giulia asked for a95f9f93 to be moved lower so the stone is not cut:
+
+```
+    "amethyst/44db3aaf": (0.062, 0.263, 0.828, 0.837),
+    "amethyst/IMG_3072": (0.215, 0.244, 0.785, 0.706),
+    "amethyst/IMG_3089": (0.135, 0.128, 0.885, 0.863),
+    "amethyst/IMG_3200": (0.277, 0.357, 0.713, 0.683),
+    "amethyst/a95f9f93": (0.248, 0.398, 0.748, 0.772),
+    "aventurine/59ad40f0": (0.222, 0.331, 0.688, 0.679),
+    "aventurine/IMG_3068": (0.367, 0.340, 0.623, 0.680),
+    "aventurine/IMG_3196": (0.350, 0.410, 0.590, 0.590),
+    "aventurine/IMG_3197": (0.325, 0.309, 0.655, 0.631),
+    "aventurine/aba4d635": (0.040, 0.300, 0.840, 0.900),
+    "citrine/08f618d6": (0.247, 0.151, 0.922, 0.839),
+    "citrine/2788e4fa": (0.426, 0.497, 0.632, 0.652),
+    "citrine/58f05f6d": (0.417, 0.441, 0.627, 0.599),
+    "citrine/6dc1dd3c": (0.322, 0.394, 0.633, 0.656),
+    "citrine/f16efa23": (0.155, 0.274, 0.785, 0.746),
+    "rose_quartz/2270e0ff": (0.209, 0.325, 0.636, 0.645),
+    "rose_quartz/9dacd40a": (0.000, 0.144, 1.000, 0.706),
+    "rose_quartz/IMG_3069": (0.214, 0.376, 0.731, 0.764),
+    "rose_quartz/IMG_3194": (0.286, 0.359, 0.699, 0.669),
+    "rose_quartz/IMG_3204": (0.154, 0.166, 0.941, 0.774),
+    "rose_quartz/ea7f4b76": (0.023, 0.263, 0.848, 0.881),
+```
