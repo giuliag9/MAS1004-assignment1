@@ -887,3 +887,33 @@ Python with Pillow's bilinear resize, so the 224 x 224 pictures the model gets
 differ slightly. The self-test badge cannot see this, because selftest.json
 holds pictures that are already 224 x 224. 2788e4fa is a near tie, so a slight
 difference flips its top answer.
+
+## Problem 7, Guess 4 (15 October 2026), as Giulia gave it
+
+"From the third guess I concluded that the color of background can be a factor
+that influences the model. Given all the previous guesses, I start to consider
+more and more the idea that the model uses a combination of elements to guess
+the crystals. The images that were still guessed wrong also had another thing in
+common: the crystals are small. Additionally, the two citrine images that are
+guessed right are the only two with more than one crystal in them. To check both
+background and size at the same time, the images could be cut so that the
+crystal occupies the most part of the image, and has little background. My
+guess would be that if we cut the background from the images of citrine, making
+the crystal the main object in the image, the model could guess them correctly."
+
+Request, word for word: "So make a copy of images
+data/changed/saturated_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG,
+data/changed/saturated_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG and
+data/changed/saturated_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG cut the
+background around the crystals and save the copies in
+data/changed/saturated_cut_citrine. In this case still work on the saturated
+version because I still think that saturation of the crystal plays a role."
+
+How the crop was chosen: the stone was found in the small upright report copy of
+each saturated photo (guess3_changed_citrine_*.jpg), and a square was drawn
+around it, centred on the stone, its side 1.5 times the stone's longer side, so
+the stone fills most of it with a thin border of background. As fractions of
+the upright picture (left, top, right, bottom):
+6dc1dd3c 0.322, 0.394, 0.633, 0.656; 58f05f6d 0.417, 0.441, 0.627, 0.599;
+2788e4fa 0.426, 0.497, 0.632, 0.652. A square, so that the page's centre crop
+keeps all of it.
