@@ -827,6 +827,9 @@ Still to do, in order:
 2. Problem 7 "What I now think the model uses", in her words (last red box).
 3. Her name and student ID at the top of long_report.tex.
 4. The walk-through of the whole long report with her (see above).
+4b. (Before the walk-through) Problem 7 Guess 5: Giulia reads the 21 cut pictures
+   and the 6 rose quartz originals off the page and sends the answers; then her
+   conclusion for Guess 5 and her final answer for Problem 7.
 5. Bring this branch, claude/epic-clarke-c92agm, into main (ask her first).
 6. PDF on Overleaf with XeLaTeX, and look for red text.
 7. The short report, which she writes on her own; the agent does not touch it.
@@ -981,3 +984,8 @@ after Giulia asked for a95f9f93 to be moved lower so the stone is not cut:
     "rose_quartz/IMG_3204": (0.154, 0.166, 0.941, 0.774),
     "rose_quartz/ea7f4b76": (0.023, 0.263, 0.848, 0.881),
 ```
+
+Status at the end of 15 October 2026: the 21 originals (guess5_original_*) and
+the 21 cut pictures (guess5_changed_*) are on GitHub. Waiting for Giulia's 27
+answers from the page (21 cut, 6 rose quartz originals), then her Guess 5
+conclusion and her final answer for Problem 7, then her name and student ID.
