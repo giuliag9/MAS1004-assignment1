@@ -933,6 +933,73 @@ Therefore, the conclusion I draw from the results of the third guess is that the
 colour of the background, also influenced by light, can influence the model's
 answer in some situations.
 
+\subsection*{Guess 4: the stone's size and the background}
+
+My guess, in my words as I gave it: ``From the third guess I concluded that the
+color of background can be a factor that influences the model. Given all the
+previous guesses, I start to consider more and more the idea that the model uses
+a combination of elements to guess the crystals. The images that were still
+guessed wrong also had another thing in common: the crystals are small.
+Additionally, the two citrine images that are guessed right are the only two
+with more than one crystal in them. To check both background and size at the
+same time, the images could be cut so that the crystal occupies the most part of
+the image, and has little background. My guess would be that if we cut the
+background from the images of citrine, making the crystal the main object in the
+image, the model could guess them correctly.''
+
+The change: the three citrines that were still wrong in Guess 3, in their
+saturated versions, cut to a square around the stone, centred on it, its side
+1.5 times the stone's longer side, so that the stone fills most of the picture
+with a thin border of background. The square is the shape the model looks at,
+so the page keeps all of the cut picture.
+
+My request to the agent, word for word:
+\begin{quote}
+So make a copy of images
+data/changed/saturated\_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG,
+data/changed/saturated\_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG and
+data/changed/saturated\_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG cut the
+background around the crystals and save the copies in
+data/changed/saturated\_cut\_citrine. In this case still work on the saturated
+version because I still think that saturation of the crystal plays a role.
+\end{quote}
+
+The agent found the stone in each picture, chose the square, showed me the three
+cut pictures before they were made, and wrote the cut as a cell that I ran on
+Colab. The page's first two answers, next to the ones the same saturated
+pictures got in Guess 3:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & saturated & saturated and cut \\
+\midrule
+\texttt{citrine/6dc1dd3c} & rose quartz 37.7\%, aventurine 31.5\% & \textbf{citrine 75.3\%}, aventurine 12.0\% \\
+\texttt{citrine/58f05f6d} & rose quartz 54.7\%, aventurine 18.0\% & \textbf{citrine 99.6\%}, amethyst 0.3\% \\
+\texttt{citrine/2788e4fa} & rose quartz 33.0\%, amethyst 25.1\% & \textbf{citrine 97.9\%}, amethyst 0.9\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three changed from rose quartz to citrine, two of them above 97\%. The
+pictures were both saturated and cut, so these three results alone cannot
+separate the two changes; but in Guess 3 the same three pictures, saturated and
+not cut, were all still rose quartz.
+
+\sidebyside{figures/guess3_changed_citrine_6dc1dd3c.jpg}{6dc1dd3c, saturated: rose quartz 37.7\%, aventurine 31.5\%}
+           {figures/guess4_changed_citrine_6dc1dd3c.jpg}{saturated and cut: citrine 75.3\%, aventurine 12.0\%}
+\sidebyside{figures/guess3_changed_citrine_58f05f6d.jpg}{58f05f6d, saturated: rose quartz 54.7\%, aventurine 18.0\%}
+           {figures/guess4_changed_citrine_58f05f6d.jpg}{saturated and cut: citrine 99.6\%, amethyst 0.3\%}
+\sidebyside{figures/guess3_changed_citrine_2788e4fa.jpg}{2788e4fa, saturated: rose quartz 33.0\%, amethyst 25.1\%}
+           {figures/guess4_changed_citrine_2788e4fa.jpg}{saturated and cut: citrine 97.9\%, amethyst 0.9\%}
+
+What the results say about the guess, in my words: These results are the first
+in which my guess was completely right. I can therefore assume that cutting the
+background and making the crystal the main object of the image is an important
+element that the model considers in order to answer correctly. The answers on
+the cut images are so accurate that it makes me wonder whether it plays a bigger
+role than colour (considering it was done on saturated images).
+
 \subsection*{What I now think the model uses}
 \fillin{What you now think the model uses to tell your categories apart, and
 how sure you are.}
