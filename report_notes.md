@@ -925,3 +925,32 @@ keeps all of it.
 | citrine/6dc1dd3c | rose_quartz 37.7%, aventurine 31.5% | citrine 75.3%, aventurine 12.0% |
 | citrine/58f05f6d | rose_quartz 54.7%, aventurine 18.0% | citrine 99.6%, amethyst 0.3% |
 | citrine/2788e4fa | rose_quartz 33.0%, amethyst 25.1% | citrine 97.9%, amethyst 0.9% |
+
+## Problem 7, Guess 5 (15 October 2026), as Giulia gave it
+
+"At this point, i think a final check should be done, with a 5th guess. Guess 4
+showed that making the crystal bigger, and cutting the background was important
+for the model to guess, finally, the 3 citrine correclty. However, in those
+images the color also was saturated from the previous guess. So it could be
+interesting to test the cutting generally on the images. In particular,
+applying the cut to all of my original images. Since the other crystals were
+guessed right, observing how only the cut affects the results can be useful to
+understand how much cutting the background and making the crystal the main
+object in the image is taken in consideration from the model. Also, because the
+images are original, so with normal saturation, observing the results of the 3
+citrine, can give an idea of whether cut plays a bigger role than color. So my
+5th guess is that if we cut the background from my original images, making the
+crystals the main object in the image, the 3 citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG, 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG,
+and 2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG would still be guessed correctly,
+and all the other images (that were previously guessed right) would also be
+guessed right and more accurately."
+
+Request, word for word: "So make a copy of each image in data/new_images cut
+the background around the crystals and save the copies in data/changed/cut"
+
+The same rule as Guess 4 (a square centred on the stone, or on the group of
+stones, its side 1.5 times the longer side, moved inside the picture where it
+would stick out). Boxes for the 15 amethyst, aventurine and citrine photos
+chosen on the small upright report copies; the 6 rose quartz photos are not
+here yet.
