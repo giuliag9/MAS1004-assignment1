@@ -867,3 +867,23 @@ Made with Pillow's ImageEnhance.Color(...).enhance(1.7) as a Colab cell, on the
 whole picture, EXIF kept. Tested here on a copy of 6dc1dd3c: the average
 saturation (HSV, 0-255) went from 12.3 to 20.5, so a pale stone gains only a
 little colour.
+
+### Guess 3: the page's answers, as Giulia read them off the page
+
+| photo | original | saturation +70% |
+|---|---|---|
+| citrine/6dc1dd3c (wrong in check.py) | rose_quartz 52.8%, aventurine 26.5% | rose_quartz 37.7%, aventurine 31.5% |
+| citrine/58f05f6d (wrong in check.py) | rose_quartz 49.1%, aventurine 22.4% | rose_quartz 54.7%, aventurine 18.0% |
+| citrine/2788e4fa (wrong in check.py) | rose_quartz 31.0%, amethyst 29.8% | rose_quartz 33.0%, amethyst 25.1% |
+| citrine/08f618d6 (right) | citrine 89.5%, aventurine 4.7% | citrine 96.2%, aventurine 2.1% |
+| citrine/f16efa23 (right) | citrine 59.9%, amethyst 25.1% | citrine 94.1%, amethyst 4.1% |
+
+The page and check.py do not give exactly the same numbers for the same
+photo: check.py printed 6dc1dd3c rose_quartz 54%, 58f05f6d rose_quartz 51%,
+2788e4fa amethyst 32%; the page gives 52.8%, 49.1%, and for 2788e4fa rose_quartz
+31.0% with amethyst 29.8% second. The page shrinks a photo in the browser
+(docs/app.js, resizeShorterSide, halving steps with the canvas's own smoothing),
+Python with Pillow's bilinear resize, so the 224 x 224 pictures the model gets
+differ slightly. The self-test badge cannot see this, because selftest.json
+holds pictures that are already 224 x 224. 2788e4fa is a near tie, so a slight
+difference flips its top answer.
