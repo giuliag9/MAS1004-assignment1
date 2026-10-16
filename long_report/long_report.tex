@@ -397,131 +397,64 @@ answers on them, but, as Problem 5 shows, it changed which photos were right.
 % ---------------------------------------------------------------------------
 \section*{Problem 5. Images from a new source}
 
-Photographs of crystals taken for this assignment, by me and by family members
-and friends I asked for them, saved as JPEG because the phones' HEIC files
-cannot be read by the code: 21 of them, five in
-each class and six rose\_quartz, in \texttt{data/new\_images/<class>/}. One of
-them, \texttt{data/new\_images/aventurine/IMG\_3068.JPG}, is the photograph
-measured in Problem 2.
+My new images are 21 photographs of crystals, five of each class and six of rose
+quartz, taken for this assignment by me and by family members and friends I asked
+for them. They are saved as JPEG, because the code cannot read the phones' HEIC
+files, in \texttt{data/new\_images/<class>/}.
 
-They cannot be among the downloads: they were never online, because they were
-taken for this purpose, while the four categories were downloaded from a search engine,
-and a search cannot return a photograph that never existed on the web. The
-overlap check tests that instead of assuming it: every new image is described and
-compared with all 572 downloaded files, including the 198 that moved to
-\texttt{data/removed/}, and the closest any of the 21 comes to any of them is
-0.85, under the 0.95 the tool calls a near copy. The tool prints 570 rather than
-572 because it hashes every file and counts each picture once, and two of the 572
-downloaded files are byte-for-byte copies of another file in the set.
+I am sure none of them is among my downloads, because they were never online:
+they were taken for this purpose, and the downloads come from a web search. The
+overlap check confirms it: it compared each of my 21 photos with all the
+downloaded images, and none of them is a near copy (the closest any of them comes
+is 0.85, and near copies are above 0.95).
 
 \outputfile{outputs/overlap.txt}
 
-\begin{center}\footnotesize
-\begin{tabular}{lrr}
-\toprule
-run & test accuracy & new images \\
-\midrule
-\texttt{run} & 92.2\% & 85.7\% (18/21) \\
-\texttt{clean} & 100.0\% & 85.7\% (18/21) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The two test accuracies are measured on different pictures, because the split is
-drawn after cleaning, 92.2\% of 115 and then 100.0\% of 75 (Problem 4). The new
-images are the same 21 photographs for both rows and their total is the same too,
-18 of 21 either way.
-
-Not the same eighteen pictures. Loading both saved models and asking each of them
-about all 21 new images (the file named by the first eight characters of its
-name):
-
-\begin{center}\footnotesize
-\begin{tabular}{llll}
-\toprule
-new image & really & \texttt{run} says & \texttt{clean} says \\
-\midrule
-\texttt{amethyst/44db3aaf} & amethyst & \textbf{rose\_quartz} & amethyst \\
-\texttt{amethyst/a95f9f93} & amethyst & \textbf{rose\_quartz} & amethyst \\
-\texttt{rose\_quartz/IMG\_3069} & rose\_quartz & \textbf{aventurine} & rose\_quartz \\
-\texttt{citrine/2788e4fa} & citrine & citrine & \textbf{amethyst} \\
-\texttt{citrine/58f05f6d} & citrine & citrine & \textbf{rose\_quartz} \\
-\texttt{citrine/6dc1dd3c} & citrine & citrine & \textbf{rose\_quartz} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Those six pictures are the only ones where the two models disagree, three each
-way, and no picture is wrong in both: 15 right in both, three wrong in each, so
-\texttt{run} is wrong on 3/21 and \texttt{clean} is wrong on 3/21. Cleaning traded
-three right answers for three wrong ones, one class for another:
+The accuracy on the downloaded test set and on my new images, side by side:
 
 \begin{center}\footnotesize
 \begin{tabular}{lrr}
 \toprule
-class & \texttt{run} on the new images & \texttt{clean} on the new images \\
+run & downloaded test set & my new images \\
 \midrule
-amethyst & 3/5 & 5/5 \\
-aventurine & 5/5 & 5/5 \\
-citrine & 5/5 & 2/5 \\
-rose\_quartz & 5/6 & 6/6 \\
+\texttt{run} (before cleaning) & 92.2\% & 85.7\% (18/21) \\
+\texttt{clean} (after cleaning) & 100.0\% & 85.7\% (18/21) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-It is the same boundary, moved to the other side. Every pair \texttt{run} got
-wrong on the downloaded test set had rose quartz in it, amethyst/rose\_quartz 4
-and aventurine/rose\_quartz 4, its two biggest pairs, with citrine perfect at
-30/30. On the new images it calls two amethysts rose quartz; after cleaning those
-three answers are right, and three citrines have gone over to rose quartz and
-amethyst in their place. My guess at why, marked as a guess and not as a
-measurement: my rule took 83 of 138 aventurine pictures and 58 of 150
-rose\_quartz, but only 17 of 150 citrine, so citrine is a larger share of a much
-smaller collection and the pictures that held the citrine boundary are the ones
-that went. A run on the same split as before would settle it; 21 pictures, one of
-them worth 4.8\%, cannot.
+The two test accuracies are measured on different test sets (115 images before
+cleaning, 75 after; see Problem 4), while the new images are the same 21 photos
+for both. On my new images both models get 18 of 21 right, less than on the
+downloaded test set.
 
-\texttt{check.py} prints the five mistakes it was most sure about, and the
-published model made three, so three is the whole list and not a selection. All
-three are one small stone, in flat light, on a plain pale background:
+\subsection*{The mistakes it was confident about}
+
+\texttt{check.py} lists the five mistakes the published model was most sure
+about; on my new images it made only three, so these are all of them. All three
+are citrines:
 
 \picturefile[0.32\linewidth]{figures/mistake_1_citrine_called_rose_quartz.jpg}\hfill
 \picturefile[0.32\linewidth]{figures/mistake_2_citrine_called_rose_quartz.jpg}\hfill
 \picturefile[0.32\linewidth]{figures/mistake_3_citrine_called_amethyst.jpg}
 
-{\small left to right: said rose quartz 54\%, said rose quartz 51\%, said amethyst
-32\%; all three really citrine.}
+{\small left to right: \texttt{6dc1dd3c} said rose quartz 54\%,
+\texttt{58f05f6d} said rose quartz 51\%, \texttt{2788e4fa} said amethyst 32\%;
+all three really citrine.}
+
+What I think pushed each of them the wrong way:
 
 \begin{itemize}
-\item \texttt{citrine/6dc1dd3c-0216-...JPG}, said rose\_quartz (54\%). One small
-stone on grey speckled granite, and it is the pale end of citrine: milky white
-with a faint yellow patch at one end, with the wet-looking grey paving around it
-nearly as pale as the stone, so the whole frame is cream and grey. Nothing in the
-picture is pink, but "pale stone, little colour" is what rose\_quartz looks like
-in the downloads, and the flat light has taken the yellow away. Colour is the only
-thing separating citrine from rose\_quartz in a picture like this, and the colour
-is washed out.
-\item \texttt{citrine/58f05f6d-77f2-...JPG}, said rose\_quartz (51\%). One amber
-stone on white paper, underexposed, so the paper reads light grey and the amber
-reads pale. 51\% is a coin toss, for the reason above.
-\item \texttt{citrine/2788e4fa-a7ad-...JPG}, said amethyst (32\%). One pale yellow
-stone on light grey paper, small in the frame, low contrast, most of the picture
-empty background. 32\% out of four classes is close to guessing and there is
-nothing purple in the picture: this one reads as an image the model had almost no
-information from, rather than an image that fooled it in a particular way.
+\item \texttt{citrine/6dc1dd3c}: the crystal is pale, less full in colour and
+small in size, and the background has colour hues in it, so it could affect the
+model's answer.
+\item \texttt{citrine/58f05f6d}: the crystal is small, the light is dark and the
+background has pink colour hues in it.
+\item \texttt{citrine/2788e4fa}: similarly to \texttt{58f05f6d}, the crystal is
+small and the light is dark; however, its colour is fuller.
 \end{itemize}
 
-The three the earlier model got wrong instead are the three other wrong answers in
-the table above: two amethysts called rose quartz, one a crystal deep violet over
-half of it and white over the other half on pale pinkish paper, one a milky pale
-lilac pendant with a silver chain on grey speckled granite; and one rose quartz
-called aventurine, a pale lavender cabochon with a bright white highlight on a
-grey surface, where aventurine in the downloads is also a smooth translucent
-pebble, so the shape is no help. All six mistakes of the two models together are
-the same shot: one small stone, flat light, a plain white or grey background, the
-stone filling little of the frame, its colour washed out. The one citrine picture
-the cleaned model does get right, \texttt{citrine/f16efa23}, has three stones,
-warm light, saturated honey colour and hard shadows.
+\subsection*{What is different about my new images}
 
 Compared with the downloads, my new images are less saturated, and their
 colours are sometimes less vivid. The crystals are smaller, usually in the
