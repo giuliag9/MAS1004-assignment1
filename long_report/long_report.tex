@@ -79,15 +79,24 @@ remove} started moving files out of it.
 % ---------------------------------------------------------------------------
 \section*{Problem 2. Preparing an image}
 
-\sidebyside{figures/prepare_original.jpg}{as downloaded: a rose quartz heart on a
-            stand, with a sphere and two towers behind it}
+\sidebyside{figures/prepare_original.jpg}{as downloaded (\texttt{rose\_quartz/0060}):
+            a rose quartz heart on a stand, with a sphere and two towers behind it}
            {figures/prepare_result.png}{what prepare\_image made of it: the middle
-            224 \(\times\) 224 square, with the heart filling it}
+            224 \(\times\) 224 square}
 
-\texttt{prepare\_image} resizes the shorter side to 256 and keeps the middle
-224 \(\times\) 224 square. Measured with \texttt{src/show\_prepare.py} on
-\texttt{data/new\_images/aventurine/IMG\_3068.JPG}, one of the photographs taken
-by hand for this assignment, 4032 \(\times\) 3024:
+\texttt{prepare\_image} prepares every photo the way ResNet18 expects: it shrinks
+the photo so that its shorter side is 256 pixels, keeps only the middle
+224 \(\times\) 224 square, and scales the colours. Everything outside that square
+is thrown away.
+
+An image where the crop cut off part of the thing I care about is the one above,
+\texttt{rose\_quartz/0060}. The red square below is what the model keeps: the
+bottom of the heart and the top of the tall tower are cut off.
+
+\begin{center}\picturefile[0.4\linewidth]{figures/prepare_cropbox.png}\end{center}
+
+How much is thrown away depends on the shape of the photo. For one of my own
+photos, \texttt{aventurine/IMG\_3068.JPG} (4032 \(\times\) 3024), the numbers are:
 
 \begin{center}\footnotesize
 \begin{tabular}{ll}
@@ -95,40 +104,16 @@ by hand for this assignment, 4032 \(\times\) 3024:
 step & result \\
 \midrule
 on disk & 4032 \(\times\) 3024 \\
-after Resize(256) & 341 \(\times\) 256 \\
+after shrinking the shorter side to 256 & 341 \(\times\) 256 \\
 square kept & x 58..282, y 16..240 \\
 cut off, in the 341 \(\times\) 256 picture & 58 left, 59 right, 16 top, 16 bottom \\
-cut off, back in the original photo & 686 left, 698 right, 189 top, 189 bottom \\
 kept & 57.5\% of the area \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-It throws away 34.3\% of the width and 12.5\% of the height: 686 pixels on each
-side of that photo, even though the stone is nowhere near those edges. That the
-rectangle drawn on the picture is the rectangle the model gets is measured, not
-assumed: the same box through ToTensor and Normalize differs from
-\texttt{prepare\_image} by 0.0e+00, and \texttt{prepare\_image} differs from
-torchvision's own ImageNet recipe for ResNet18 by 0.0e+00.
-
-An image where the crop cut off part of the thing I care about:
-\texttt{data/new\_images/rose\_quartz/9dacd40a-f98e-4312-a62d-78c4fd3a0a4b.JPG},
-900 \(\times\) 1600. Resize gives 256 \(\times\) 455 and the square keeps
-y 116..340, so 116 rows go from above and 115 from below: 50.8\% of the height,
-408 and 404 pixels of the original, and only 43.1\% of the area survives. The
-stone reaches the top of the square, so its edge is thrown away.
-
-A second case, found with \texttt{show\_prepare.py --scan data/new\_images
---sheet}: the contact sheet draws the 15 crops that throw most away, and
-\texttt{data/new\_images/rose\_quartz/ea7f4b76-efcc-4973-814e-a7afe9273198.JPG},
-1500 \(\times\) 2000, keeps 57.5\% of its area while the point of the heart sits
-below the bottom edge of the square: the tip of the stone never reaches the
-model. The sheet found four pieces the crop cuts through, all of them in these
-21 photos.
-
-\picturefile{figures/prepare_cropbox.png}
-\picturefile{figures/prepare_side_by_side.png}
-\picturefile[0.9\linewidth]{figures/prepare_sheet.png}
+So 42.5\% of that photo never reaches the model, mostly from the left and right
+sides; there the stone is in the middle, so it is not cut.
 
 Four of my 21 photos are stored sideways: \texttt{amethyst/IMG\_3200},
 \texttt{aventurine/IMG\_3196}, \texttt{rose\_quartz/IMG\_3069} and
