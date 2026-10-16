@@ -271,22 +271,21 @@ I remove images that has more than one type of crystal
 I remove images that show the wrong crystal.
 \end{quote}
 
-Seven clauses. \texttt{clean.py remove} takes one \texttt{--reason} per clause and
-\texttt{clean.py count} groups by that string, so the shorter string written into
-the log is named with each clause below.
+How I cleaned, in order: I wrote these rules first. Then I went through all
+572 downloaded images myself and listed every image that broke a rule, next to
+the rule it broke. Then I looked at the suspect sheets and the near copies. In
+the end I removed only the images on my list (188) and the near copies (10),
+each with its reason, using \texttt{clean.py remove}.
 
 \subsection*{Three kinds of junk}
-Mostly unrelated objects: clothes, car accessories, logos, drawings, and with
-them characters and the wrong crystal. Three kinds, each with one of the files
-that went to \texttt{data/removed/}:
+Mostly unrelated objects: clothes, car accessories, logos, drawings, and also
+characters and the wrong crystal. Three kinds, each with one of the removed
+files:
 
 \begin{itemize}
-\item not a crystal at all (clothes, car accessories, logos, characters), removed
-      by "The image doesn't show a crystal at all": \texttt{aventurine/0102.jpg}
-\item a drawing rather than a photograph, removed by "The image is a drawing":
-      \texttt{amethyst/0118.jpg}
-\item the wrong crystal, removed by "The image shows the wrong crystal":
-      \texttt{aventurine/0110.jpg}
+\item not a crystal at all: \texttt{aventurine/0102.jpg}, a logo (left)
+\item a drawing rather than a photograph: \texttt{amethyst/0118.jpg} (middle)
+\item the wrong crystal: \texttt{aventurine/0110.jpg}, red stones (right)
 \end{itemize}
 
 \picturefile[0.3\linewidth]{figures/junk_1.jpg}\hfill
@@ -296,15 +295,15 @@ that went to \texttt{data/removed/}:
 \subsection*{What I removed}
 \outputfile{outputs/clean_count.txt}
 
-The suspect pass found 27 pairs of images above 0.95 similarity. 16 of those pairs
-were settled by my own rule, because both halves were junk under one of the seven
-clauses and had already gone: that is the whole amethyst tail, where
-\texttt{0123}, \texttt{0124}, \texttt{0126}, \texttt{0127} and \texttt{0128} are
-near copies of each other, so the run removed under "The image doesn't show a
-crystal at all" took the duplicates with it. The other nine groups, 19 pictures,
-were still in \texttt{data/clean} and I decided them one by one on the copies
-sheet, keeping one picture of each group and removing the rest under one new
-reason, "The image is a near copy of another picture":
+198 of the 572 images were removed and 374 kept. Aventurine changed most (83 of
+138 removed), because its search returned many bracelets, beads and other
+jewellery, and citrine least (17 of 150).
+
+\subsection*{Near copies}
+The tool found 27 pairs of near copies. In 16 of them both pictures had already
+been removed because they broke one of my rules. For the other 9 groups I kept
+one picture and removed the other 10, with the reason ``The image is a near copy
+of another picture'':
 
 \begin{center}\footnotesize
 \begin{tabular}{ll}
@@ -324,19 +323,16 @@ kept & the near copies removed \\
 \end{tabular}
 \end{center}
 
-Ten images removed, one kept of each group, decided on 13 October 2026: 27 pairs
-above 0.95, 16 of them already gone as junk by my own rule, nine groups left, one
-picture kept from each and the other ten removed.
-
-The suspect pass ran on all 572 images before any removal, so these numbers are
-about the data as downloaded. Each sheet draws the 32 images of a class that look
-least like the rest of their class, and \texttt{suspects.csv} carries a row for
-every image with its rank, rank 1 being the least typical. Removals by rank:
+\subsection*{The suspects}
+Each suspect sheet shows the 32 images of a class that look least like the rest
+of that class (\texttt{outputs/suspects.csv} gives every image its rank, rank 1
+being the least typical). This table shows, for the images I removed by my
+rules, where they were on that ranking:
 
 \begin{center}\footnotesize
 \begin{tabular}{lrrrr}
 \toprule
-class & removed by my rule & of those, rank 1--20 & rank 21--32 & rank 33 and later \\
+class & removed by my rules & rank 1--20 & rank 21--32 & rank 33 and later \\
 \midrule
 amethyst & 38 & 11 & 6 & 21 \\
 aventurine & 81 & 15 & 9 & 57 \\
@@ -346,35 +342,29 @@ rose\_quartz & 57 & 15 & 6 & 36 \\
 \end{tabular}
 \end{center}
 
-The first 20 of each class went by: amethyst no crystal 5, jewellery 3, drawing 1,
-unclear 1, wrong crystal 1; aventurine no crystal 9, wrong crystal 2, jewellery 1,
-more than one 1, unclear 1, text 1; citrine text 2, more than one 2; rose\_quartz
-no crystal 5, jewellery 4, more than one 4, wrong crystal 1, text 1.
+Of the first 20 suspects in each class, I removed 11 amethyst, 15 aventurine, 4
+citrine and 15 rose quartz.
 
-Did the suspects include junk I had missed when I looked myself? Yes, some of
-them were images I thought were ok when I first went through them.
+Did the suspects include junk I had missed when I looked myself? No. I had
+already listed every image that broke my rules, and I removed only those and the
+near copies. The suspect sheets also showed images that the tool found unusual
+but that I had judged ok when I first went through them, because they did not
+break my rules, so I kept them. For example, \texttt{amethyst/0107.jpg} was on
+the amethyst suspect sheet, which gave it 8\% amethyst, but it did not break any
+of my rules, so it is still in \texttt{data/clean}.
 
-Not every suspect was removed. When I made my rules, I also went through all the
-downloaded images and listed the ones to remove next to the rule they broke, so
-an image was removed because it broke a rule, not because it was a suspect. For
-example, \texttt{amethyst/0107.jpg} was on the amethyst suspect sheet, which
-gave it 8\% amethyst, but it did not break any of my rules, so it is still in
-\texttt{data/clean}.
-
-The images that look least like the rest of their class are mostly junk by my rule
-too, most strongly in aventurine and rose\_quartz, which are also the two classes
-my rule removed most from. Citrine is where the two views disagree most, 4 of 20
-of the first suspects were removed, and aventurine is where I went furthest on my
-own: 57 of its 81 removals sit at rank 33 or later, in pictures the sheet never
-showed me. "Removed but not on the suspect list at all" is always 0 and says
-nothing, because every one of the 572 images has a rank; the number that answers
-"did you find junk it did not list" is that rank 33 and later column, 21, 57, 8
-and 36.
+Did I find junk that the suspect sheets did not list? Yes, a lot: the last column
+of the table counts the images I removed that were not on the sheets at all
+(rank 33 and later), for example 57 of the 81 aventurine images I removed.
 
 \subsection*{Before and after cleaning}
 \outputfile{outputs/compare.txt}
 
-The \texttt{clean} run, its curves and its confusion matrix on the 75 test
+(The line about \texttt{docs/} missing the model was printed because the model
+had not been exported yet at that point; it was exported afterwards, see the
+Appendix.)
+
+The \texttt{clean} run, its curves and its confusion matrix on its 75 test
 images:
 
 \picturefile[0.8\linewidth]{figures/clean_curves.png}
@@ -382,24 +372,18 @@ images:
 
 \outputfile{outputs/clean_output.txt}
 
-Nothing went down, but the pair of test numbers is not as big as it looks. 92.2\%
-was 9 wrong of 115; 100\% is 0 wrong of 75, so after cleaning one test image is
-worth 1.3\% instead of 0.87\%, the 198 removals took 28 images out of the test set
-(aventurine's share of it fell from 28 to 11), and the cleaned test set is the part of the
-collection that survived my rule, so the unusual pictures that are hardest to
-classify are mostly gone from it. Some of the 7.8 points is a better
-model and some of it is a kinder exam, and these two numbers cannot tell those
-apart. Nor can 100\% of 75 be anything more than 75 pictures out of 75:
-\texttt{run.py} printed "no mistakes to plot, which is suspicious. Check your
-split." for this run, because with nothing wrong on the test set there is no
-mistake picture to draw, so this run has no \texttt{clean\_worst.png}. The
-training set also fell from 457 to 299 images, a third smaller, and the test
-accuracy went up anyway.
+The test accuracy went from 92.2\% (9 wrong of 115) to 100.0\% (0 wrong of 75).
+Nothing went down, but this gain is smaller than it looks. The test set after
+cleaning is smaller (75 images instead of 115) and easier, because the unusual
+pictures that are hardest to classify were mostly removed by my rules. So part of
+the gain may come from a better model and part from an easier test, and these two
+numbers cannot tell them apart. (With no mistakes on the test set,
+\texttt{run.py} printed ``no mistakes to plot, which is suspicious. Check your
+split.'' and drew no picture of mistakes for this run.)
 
-The fair comparison is the row that did not change: the same 21 photographs from
-a different source, 18/21 before and 18/21 after, which is the pair of numbers
-Problem 5 is built on. Cleaning moved the number of right answers by nothing at
-all, and the next section shows that it did not leave the pictures alone either.
+The fair comparison is on my 21 new photos, which did not change: 18 of 21 right
+before cleaning and 18 of 21 after. Cleaning did not change the number of right
+answers on them, but, as Problem 5 shows, it changed which photos were right.
 
 % ---------------------------------------------------------------------------
 \section*{Problem 5. Images from a new source}
@@ -539,8 +523,7 @@ My guess at why cleaning did not make the model better on my new images: some
 of the photos I removed because they broke my rules may have looked more like
 my own photos, and the ones that remained look even more different from my
 photos. Not all of the removed images were obvious junk. The images I removed are the
-ones that broke my rules, plus the near copies I chose to remove, and some of
-them were images I had thought were ok when I first went through them. Not every
+ones that broke my rules, plus the near copies I chose to remove. Not every
 suspect was removed: some of the images the tool listed as least like the rest
 of their category did not break my rules, so I kept them. However, when I check the removed images, they do not necessarily look like my
 photos. What I can see is that in the clean images the colours are more vivid
