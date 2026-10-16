@@ -741,10 +741,9 @@ and, asked whether 70\% meant 70\% more colour:
 yes 70\% more color.
 \end{quote}
 
-The agent wrote the change as a cell that I ran on Colab: Pillow's
-\texttt{ImageEnhance.Color(image).enhance(1.7)} on each photo. Raising the
-saturation strengthens the colour that is there and cannot add colour to parts
-that are white or grey. The page's first two answers:
+The agent wrote the change as a short piece of code that I ran on Colab. Raising
+the saturation makes the colour that is already there stronger; it cannot add
+colour to parts that are white or grey. My web page's first two answers:
 
 \begin{center}\footnotesize
 \begin{tabular}{lll}
@@ -764,16 +763,15 @@ The two that were right stayed right and became more sure, \texttt{f16efa23}
 from 59.9\% to 94.1\%. The three that were wrong stayed wrong, all three still
 rose quartz, and citrine is not among the first two answers for any of them.
 
-The page's numbers for the three originals are close to, but not the same as,
-the ones \texttt{check.py} printed in Problem 5 (54\%, 51\% and 32\%), and for
-\texttt{2788e4fa} the order of the first two even changes: \texttt{check.py}
-said amethyst, the page says rose quartz 31.0\% with amethyst 29.8\% second. The
-page shrinks a photo in the browser (\texttt{resizeShorterSide} in
-\texttt{docs/app.js}) and Python shrinks it with Pillow, so the 224
-\(\times\) 224 picture the model gets differs very slightly. The green badge
-cannot see this, because its test pictures in \texttt{selftest.json} are already
-224 \(\times\) 224. A photo the model is unsure about can change its answer with
-a change too small to see.
+The page's numbers for the three originals are close to, but not exactly the
+same as, the ones \texttt{check.py} printed in Problem 5 (54\%, 51\% and 32\%).
+For \texttt{2788e4fa} the order of the first two even changes: \texttt{check.py}
+said amethyst, the page says rose quartz 31.0\% with amethyst 29.8\% second. Before
+the model looks at a photo, the photo is shrunk to a small square; the web page
+and Python shrink it in slightly different ways, so the model gets an almost, but
+not exactly, identical picture. The green badge cannot notice this, because its
+test pictures are already small squares. When the model is unsure, as it is
+here, such a tiny difference is enough to swap its first two answers.
 
 \sidebyside{figures/guess3_original_citrine_6dc1dd3c.jpg}{citrine/6dc1dd3c, original: rose quartz 52.8\%, aventurine 26.5\%}
            {figures/guess3_changed_citrine_6dc1dd3c.jpg}{saturation +70\%: rose quartz 37.7\%, aventurine 31.5\%}
