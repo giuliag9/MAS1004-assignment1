@@ -148,78 +148,52 @@ clean & ImageNet & all layers & 10 & 0.0001 & 11,178,564 & 100.0\% & 100.0\% \\
 \end{tabular}
 \end{center}
 
-The first four rows are comparable with each other: they are the same code on the
-same \texttt{data/clean}, which at that point was still identical to
-\texttt{data/raw}, so all four test accuracies are measured on the same 115
-images, 457 train and 115 test out of 572. The fifth row, \texttt{clean}, is not
-comparable with them: it is the plain \texttt{run} settings again (ImageNet
-start, all layers, 10 epochs, lr 1e-4) on the same collection after the 198
-removals of Problem 4, so 374 images and a different split, 299 train and 75
-test. Only the data changed, which is what makes it a before-and-after pair with
-\texttt{run}, and it is the pair Problems 4 and 5 compare.
+The first four rows were trained before any cleaning, on the same 572 images
+split the same way: 457 for training and 115 for testing. So their test
+accuracies can be compared with each other. The fifth row, \texttt{clean}, uses
+the same settings as \texttt{run}, but after the cleaning of Problem 4: 374
+images, 299 for training and 75 for testing. It is compared with \texttt{run} in
+Problems 4 and 5.
 
-One test image is 0.87\% of 115. \texttt{run.py} seeds the split but not the
-shuffling or the new last layer's initial weights, so the same command does not
-print the same number twice: running the first three commands again moved test
-accuracy by +2.6 (+3 images), +1.7 (+2) and +3.5 (+4) points. Differences below
-about four test images are therefore not evidence of anything, which makes
-\texttt{run} (106/115) and \texttt{frozen} (102/115) a tie, and pretraining
-against no pretraining (106 against 95) not one.
-
-The first attempt, the same three commands run once before, with the same split
-and only a warning in \texttt{train.py} that was fixed afterwards (the loss was
-turned into a number without \texttt{.detach()}, which changes what is logged,
-not what is trained), printed 89.6\%, 80.9\% and 85.2\% test accuracy
-(103, 93 and 98 of 115). The table uses the second attempt. Its output, as
-printed on Colab:
+With 115 test images, one image is 0.87\%. Training twice with the same settings
+does not give exactly the same result, because the order of the images and the
+starting values of the new last layer are random. I ran the first three
+commands twice (the first attempt's output is below; the table uses the second),
+and the test accuracy changed by 2.6, 1.7 and 3.5 points, that is 3, 2 and 4
+test images. So a difference of up to about four test images between two runs
+does not mean much.
 
 \outputfile{outputs/first_attempt_output.txt}
 
+\subsection*{The loss curve}
+
 \picturefile{figures/run_curves.png}
 
-The train loss in the \texttt{run} curve goes down from 0.8494 at epoch 1 to
-0.0054 at epoch 10, with one small rise at epoch 4 (0.0485 to 0.0615). From
-epoch 5 on it is below 0.02 and keeps going down only slowly. Test loss is a
-different story. It falls to 0.2505 at epoch 4, rises to 0.3218 at epoch 9 and
-ends at 0.2822, and test accuracy stops improving at epoch 4 as well: 92.2\% at
-epoch 4, 90.4\% at epoch 5, and 92.2\% again for epochs 6 to 10. Epochs 5 to 10 bought nothing on
-pictures the model had not seen. In the \texttt{scratch} curve test loss never
-settles below about 0.52 and jumps to 1.2557 at epoch 7, while train accuracy keeps rising, to 98.9\% at
-epoch 10: that is a network fitting its training set.
+In the \texttt{run} curve the training loss goes down from 0.8494 at epoch 1 to
+0.0054 at epoch 10, with one small rise at epoch 4 (0.0485 to 0.0615). After
+epoch 5 it is below 0.02 and goes down only slowly, so it flattens out. The test
+loss is lowest at epoch 4 (0.2505) and then goes up a little, ending at 0.2822.
+The test accuracy reaches 92.2\% at epoch 4 and does not improve after that.
 
-100.0\% train against 92.2\% test is a gap of 7.8 points, which is all 457
-training images right against 9 of 115 test images wrong. It means the model can
-memorise 457 pictures of four visually distinct stones, and that the test number
-is the one that says something about pictures it has not seen.
+\subsection*{The gap between train and test accuracy}
+
+The train accuracy is 100.0\% and the test accuracy 92.2\%, a gap of 7.8 points:
+all 457 training images are right, while 9 of the 115 test images are wrong. The
+model has learned its training images by heart; the test accuracy is the number
+that says how well it does on pictures it has not seen.
+
+\subsection*{The confusion matrix}
 
 \begin{center}\picturefile[0.5\linewidth]{figures/run_confusion.png}\end{center}
 
-The nine wrong test images are all in the matrix below, printed from
-\texttt{results/run\_model.pt} by \texttt{src/show\_confusion.py --tag run} (the
-same split, seed 0, 115 pictures, so the picture \texttt{run\_confusion.png} and
-these numbers agree):
+Rows are what the image really is, columns what the model said. Citrine is
+always right (30 of 30). The 9 mistakes are: amethyst called aventurine 2 times
+and rose quartz 2 times, aventurine called rose quartz 2 times and citrine once,
+and rose quartz called amethyst 2 times. Counting both directions, the pairs
+mixed up most are amethyst with rose quartz (4) and aventurine with rose quartz
+(4).
 
-\begin{center}\footnotesize
-\begin{verbatim}
-                 amethyst   aventurine      citrine  rose_quartz      total
-amethyst                23            2            0            2         27
-aventurine               0           25            1            2         28
-citrine                  0            0           30            0         30
-rose_quartz              2            0            0           28         30
-                        25           27           31           32        115
-\end{verbatim}
-\end{center}
-
-Recall per class: amethyst 23/27 (85\%), aventurine 25/28 (89\%), citrine 30/30
-(100\%), rose\_quartz 28/30 (93\%). No single direction is ahead: 2 is the
-largest count and four directions reach it, so which pair looks "most" mixed up
-depends on whether the two directions of a pair are added. Added, the two biggest
-pairs both have rose quartz in them, amethyst/rose\_quartz 4 and
-aventurine/rose\_quartz 4, against amethyst/aventurine 2 and aventurine/citrine 1.
-Citrine is never the true class of a mistake, and it ends with one more
-prediction than it has pictures, 31 against 30.
-
-My answer to "which two categories, and did it surprise you":
+My answer to ``which two categories, and did it surprise you'':
 
 \begin{quote}
 The categories that got mixed up and surprised me was amethyst turning out as
@@ -231,27 +205,30 @@ similar to the light green of aventurine. I wasn't surprised about amethyst and
 rose quartz to get mixed up due to their similar colors.
 \end{quote}
 
-Amethyst with rose quartz and aventurine with rose quartz are tied as the pairs
-it mixes up most, 4 of the 9 mistakes each through both directions.
-Amethyst with rose quartz is the pair I was not surprised about.
+\subsection*{Starting from ImageNet against starting from random numbers}
 
-Same code, same data, same epochs and learning rate: 92.2\% starting from
-ImageNet against 82.6\% starting from random numbers, 11 test images apart, and
-the \texttt{scratch} test loss rises while its train accuracy approaches 100\%.
-The pretrained features already carry most of what separates coloured quartz; the
-random network has to learn all of it from 457 photographs.
+With the same images, code and number of epochs, starting from ImageNet gives
+92.2\% and starting from random numbers 82.6\%: 9.6 points, 11 test images
+apart, more than the noise of about four images. The ImageNet model has already
+learned, from millions of photos, to see colours, edges and textures, so it only
+has to learn how my four stones differ. The random model has to learn all of
+that from my 457 training images, and its test loss goes up and down (1.2557 at
+epoch 7) while its train accuracy keeps rising.
 
-Training only the last layer, 2,052 of 11,178,564 parameters
-(2,052 / 11,178,564 = 0.018\%, 5,445 times fewer), reaches 88.7\% against 92.2\%
-for training everything, and takes 0.1 minutes instead of 0.3. That is within
-the four-image noise of the best run, with a smaller train/test gap (97.2 against
-100.0) and a smoother curve.
+\subsection*{Training only the last layer}
 
-A fourth setting, \texttt{lr1e-3}, is the default run with the learning rate ten
-times larger: 84.3\% against 92.2\%, and an erratic test loss, 16.8645 at epoch
-1, 1.8993 at epoch 4 and 1.4221 at epoch 9, where the run at 0.0001 starts at 0.6067 and keeps
-test loss under 0.33 from epoch 3 on. A learning rate big enough to pull one fresh layer
-into place is too big when all 11 million parameters can move.
+Training only the new last layer changes 2,052 of the 11,178,564 parameters, about
+0.02\%. It reaches 88.7\%, against 92.2\% when all layers are trained: 3.5 points,
+4 test images, which is within the noise. It also trains faster (0.1 minutes
+instead of 0.3).
+
+\subsection*{My own setting: a larger learning rate}
+
+\texttt{lr1e-3} is the same as \texttt{run} with a learning rate ten times
+larger (0.001 instead of 0.0001). It reaches only 84.3\%, and its test loss jumps
+around (16.8645 at epoch 1, 1.8993 at epoch 4, 1.4221 at epoch 9). A learning rate
+that works for training one new layer is too large when all the layers are
+trained.
 
 The curves of the other three runs, \texttt{scratch}, \texttt{frozen} and
 \texttt{lr1e-3}, top to bottom:
