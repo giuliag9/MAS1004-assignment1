@@ -17,8 +17,8 @@
 \usepackage{mas1004}
 
 \reporttitle{Assignment 1: Long report}
-\studentname{Your name}
-\studentid{Your student ID}
+\studentname{Garatti Giulia}
+\studentid{20241184}
 
 \begin{document}
 \makeheader
@@ -34,7 +34,7 @@ They are also things I can photograph myself, which Problem 5 needs.
 
 I checked the four against \texttt{imagenet\_classes.txt}, the 1,000 categories
 ResNet18 already tells apart: none of the four is in it, the only entries that
-share a word with them being "stone wall" and "ruddy turnstone", and nothing in
+share a word with them being ``stone wall'' and ``ruddy turnstone'', and nothing in
 the list is a piece of polished quartz. So the last layer has to be replaced
 and these four categories have to be learned from features that were trained on
 something else.
@@ -532,10 +532,10 @@ all ten originals are answered right by the page.
 
 My requests to the agent, word for word:
 \begin{quote}
-make a copy of each image in data/new\_images/amethyst and
-data/new\_images/aventurine with lowered saturation and save the copies,
-respectively, in data/changed/less\_saturation\_amethyst and
-data/changed/less\_saturation\_aventurine
+make a copy of each image in \path{data/new_images/amethyst} and
+\path{data/new_images/aventurine} with lowered saturation and save the copies,
+respectively, in \path{data/changed/less_saturation_amethyst} and
+\path{data/changed/less_saturation_aventurine}
 \end{quote}
 and, asked by how much:
 \begin{quote}
@@ -619,7 +619,7 @@ were paler and less full in color, while the amethyst 0\% saturation that were
 guessed to be aventurine also were less full, paler but overall darker. Which
 makes me think that for the model aventurine is dark, but also pale, while rose
 quartz is pale but lighter. If I think of the mistakes made, the first one was
-of data/new\_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG being
+of \path{data/new_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e}.JPG being
 guessed as rose quartz, and in fact the crystal in the photo is less full in
 color, and lighter. To check this, the transparency of the images should be
 lowered. In particular my guess to check if transparency plays a role in how
@@ -639,10 +639,10 @@ lighter.
 My requests to the agent, word for word:
 \begin{quote}
 So make a copy of
-data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
-data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
-and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with lower transparency
-and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst
+\path{data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3}.JPG,
+\path{data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc}.JPG
+and \path{data/changed/less_saturation_amethyst/IMG_3089}.JPG with lower transparency
+and save the copies in \path{data/changed/less_saturation_less_transparency_amethyst}
 \end{quote}
 and, after the agent explained that a picture has no transparency setting the
 model would see:
@@ -652,10 +652,10 @@ best way to make the crystal paler and less full would be to lower contrast to
 50\%, this way it's enough to make the image paler but keeps the darkess of the
 crystal which in my guess is what determines aventurine (pale but dark). So make
 a copy of
-data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
-data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
-and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with contrast to 50\%
-and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst.
+\path{data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3}.JPG,
+\path{data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc}.JPG
+and \path{data/changed/less_saturation_amethyst/IMG_3089}.JPG with contrast to 50\%
+and save the copies in \path{data/changed/less_saturation_less_transparency_amethyst}.
 Also maintain the whole picture of the images for this guess.
 \end{quote}
 
@@ -733,8 +733,8 @@ citrine photos: the three the model gets wrong and the two it gets right.
 
 My requests to the agent, word for word:
 \begin{quote}
-So make a copy of each image in data/new\_images/citrine with higher saturation
-(70\%) and save the copies in data/changed/saturated\_citrine
+So make a copy of each image in \path{data/new_images/citrine} with higher saturation
+(70\%) and save the copies in \path{data/changed/saturated_citrine}
 \end{quote}
 and, asked whether 70\% meant 70\% more colour:
 \begin{quote}
@@ -828,11 +828,11 @@ square, so it sees all of the cut picture.
 My request to the agent, word for word:
 \begin{quote}
 So make a copy of images
-data/changed/saturated\_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG,
-data/changed/saturated\_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG and
-data/changed/saturated\_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG cut the
+\path{data/changed/saturated_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e}.JPG,
+\path{data/changed/saturated_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c}.JPG and
+\path{data/changed/saturated_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e}.JPG cut the
 background around the crystals and save the copies in
-data/changed/saturated\_cut\_citrine. In this case still work on the saturated
+\path{data/changed/saturated_cut_citrine}. In this case still work on the saturated
 version because I still think that saturation of the crystal plays a role.
 \end{quote}
 
@@ -900,8 +900,8 @@ before they were made, and on my request moved the square for
 
 My request to the agent, word for word:
 \begin{quote}
-So make a copy of each image in data/new\_images cut the background around the
-crystals and save the copies in data/changed/cut
+So make a copy of each image in \path{data/new_images} cut the background around the
+crystals and save the copies in \path{data/changed/cut}
 \end{quote}
 and, after the preview:
 \begin{quote}
