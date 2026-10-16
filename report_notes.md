@@ -989,3 +989,34 @@ Status at the end of 15 October 2026: the 21 originals (guess5_original_*) and
 the 21 cut pictures (guess5_changed_*) are on GitHub. Waiting for Giulia's 27
 answers from the page (21 cut, 6 rose quartz originals), then her Guess 5
 conclusion and her final answer for Problem 7, then her name and student ID.
+
+### Guess 5: the page's answers, as Giulia read them off the page (16 October 2026)
+
+| photo | original | cut |
+|---|---|---|
+| amethyst/44db3aaf | amethyst 96.7%, rose_quartz 2.4% | amethyst 87.0%, rose_quartz 10.5% |
+| amethyst/a95f9f93 | amethyst 86.9%, rose_quartz 8.1% | amethyst 93.3%, rose_quartz 3.7% |
+| amethyst/IMG_3072 | amethyst 80.2%, rose_quartz 16.7% | amethyst 62.1%, rose_quartz 29.2% |
+| amethyst/IMG_3089 | amethyst 90.5%, aventurine 5.2% | amethyst 88.7%, aventurine 8.9% |
+| amethyst/IMG_3200 | amethyst 94.8%, rose_quartz 2.3% | amethyst 91.1%, rose_quartz 5.7% |
+| aventurine/59ad40f0 | aventurine 99.3%, amethyst 0.4% | aventurine 99.9%, rose_quartz 0.1% |
+| aventurine/aba4d635 | aventurine 97.3%, amethyst 1.7% | aventurine 98.8%, amethyst 0.7% |
+| aventurine/IMG_3068 | aventurine 75.2%, rose_quartz 15.6% | aventurine 95.9%, rose_quartz 3.3% |
+| aventurine/IMG_3196 | aventurine 80.9%, rose_quartz 13.3% | aventurine 98.8%, rose_quartz 0.7% |
+| aventurine/IMG_3197 | aventurine 88.7%, rose_quartz 9.9% | aventurine 98.5%, rose_quartz 1.4% |
+| citrine/6dc1dd3c | rose_quartz 52.8%, aventurine 26.5% | citrine 48.0%, ? 23.5% (second class not given yet) |
+| citrine/08f618d6 | citrine 89.5%, aventurine 4.7% | citrine 94.5%, aventurine 2.4% |
+| citrine/58f05f6d | rose_quartz 49.1%, aventurine 22.4% | citrine 97.2%, amethyst 2.2% |
+| citrine/2788e4fa | rose_quartz 31.0%, amethyst 29.8% | citrine 90.1%, amethyst 6.4% |
+| citrine/f16efa23 | citrine 59.9%, amethyst 25.1% | citrine 85.9%, aventurine 6.8% |
+| rose_quartz/9dacd40a | rose_quartz 99.8%, aventurine 0.1% | rose_quartz 99.9%, aventurine 0.1% |
+| rose_quartz/2270e0ff | rose_quartz 95.3%, aventurine 2.9% | rose_quartz 97.6%, aventurine 1.8% |
+| rose_quartz/ea7f4b76 | rose_quartz 99.7%, amethyst 0.2% | rose_quartz 99.8%, aventurine 0.1% |
+| rose_quartz/IMG_3069 | rose_quartz 47.0%, amethyst 34.8% | rose_quartz 53.3%, aventurine 31.9% |
+| rose_quartz/IMG_3194 | rose_quartz 91.4%, aventurine 6.9% | rose_quartz 99.1%, aventurine 0.8% |
+| rose_quartz/IMG_3204 | rose_quartz 76.7%, aventurine 22.2% | rose_quartz 63.2%, aventurine 35.7% |
+
+Originals (amethyst and aventurine from Guess 1, citrine from Guess 3, rose
+quartz read on 16 October): 18 of 21 right on the page. Cut: 21 of 21 right.
+Of the 18 that were right before, 13 are more sure after the cut and 5 less
+(amethyst 44db3aaf, IMG_3072, IMG_3089, IMG_3200; rose quartz IMG_3204).
