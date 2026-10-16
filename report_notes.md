@@ -1004,7 +1004,7 @@ conclusion and her final answer for Problem 7, then her name and student ID.
 | aventurine/IMG_3068 | aventurine 75.2%, rose_quartz 15.6% | aventurine 95.9%, rose_quartz 3.3% |
 | aventurine/IMG_3196 | aventurine 80.9%, rose_quartz 13.3% | aventurine 98.8%, rose_quartz 0.7% |
 | aventurine/IMG_3197 | aventurine 88.7%, rose_quartz 9.9% | aventurine 98.5%, rose_quartz 1.4% |
-| citrine/6dc1dd3c | rose_quartz 52.8%, aventurine 26.5% | citrine 48.0%, ? 23.5% (second class not given yet) |
+| citrine/6dc1dd3c | rose_quartz 52.8%, aventurine 26.5% | citrine 48.0%, rose_quartz 23.5% |
 | citrine/08f618d6 | citrine 89.5%, aventurine 4.7% | citrine 94.5%, aventurine 2.4% |
 | citrine/58f05f6d | rose_quartz 49.1%, aventurine 22.4% | citrine 97.2%, amethyst 2.2% |
 | citrine/2788e4fa | rose_quartz 31.0%, amethyst 29.8% | citrine 90.1%, amethyst 6.4% |
