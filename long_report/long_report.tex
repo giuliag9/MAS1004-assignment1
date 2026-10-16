@@ -542,11 +542,10 @@ and, asked by how much:
 to 0\% , so we can test with the absence of color.
 \end{quote}
 
-The agent wrote the change as a cell that I ran on Colab, where the images are:
-Pillow's \texttt{ImageEnhance.Color(image).enhance(0.0)} on each photo,
-written to \texttt{data/changed/less\_saturation\_<class>/} under the same file
-name, with the originals left as they were. I uploaded every original and every
-changed photo to my published page and read its first two answers off it:
+The agent wrote the change as a short piece of code that I ran on Colab, where
+my photos are; it made the changed copies and left the originals as they were. I
+uploaded every original and every changed photo to my web page and wrote down its
+first two answers:
 
 \begin{center}\footnotesize
 \begin{tabular}{lll}
@@ -555,14 +554,14 @@ photo & original & saturation 0\% \\
 \midrule
 \texttt{amethyst/44db3aaf} & amethyst 96.7\%, rose quartz 2.4\% & amethyst 84.6\%, aventurine 7.9\% \\
 \texttt{amethyst/a95f9f93} & amethyst 86.9\%, rose quartz 8.1\% & amethyst 77.0\%, aventurine 14.3\% \\
-\texttt{amethyst/IMG_3072} & amethyst 80.2\%, rose quartz 16.7\% & \textbf{aventurine 45.5\%}, amethyst 36.4\% \\
-\texttt{amethyst/IMG_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 40.8\%, aventurine 30.6\% \\
-\texttt{amethyst/IMG_3200} & amethyst 94.8\%, rose quartz 2.3\% & \textbf{aventurine 45.6\%}, amethyst 42.8\% \\
+\texttt{amethyst/IMG\_3072} & amethyst 80.2\%, rose quartz 16.7\% & \textbf{aventurine 45.5\%}, amethyst 36.4\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 40.8\%, aventurine 30.6\% \\
+\texttt{amethyst/IMG\_3200} & amethyst 94.8\%, rose quartz 2.3\% & \textbf{aventurine 45.6\%}, amethyst 42.8\% \\
 \texttt{aventurine/59ad40f0} & aventurine 99.3\%, amethyst 0.4\% & aventurine 62.9\%, amethyst 23.7\% \\
 \texttt{aventurine/aba4d635} & aventurine 97.3\%, amethyst 1.7\% & aventurine 82.1\%, amethyst 12.5\% \\
-\texttt{aventurine/IMG_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 51.5\%, rose quartz 33.7\% \\
-\texttt{aventurine/IMG_3196} & aventurine 80.9\%, rose quartz 13.3\% & \textbf{rose quartz 47.1\%}, aventurine 44.6\% \\
-\texttt{aventurine/IMG_3197} & aventurine 88.7\%, rose quartz 9.9\% & \textbf{rose quartz 62.3\%}, aventurine 34.6\% \\
+\texttt{aventurine/IMG\_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 51.5\%, rose quartz 33.7\% \\
+\texttt{aventurine/IMG\_3196} & aventurine 80.9\%, rose quartz 13.3\% & \textbf{rose quartz 47.1\%}, aventurine 44.6\% \\
+\texttt{aventurine/IMG\_3197} & aventurine 88.7\%, rose quartz 9.9\% & \textbf{rose quartz 62.3\%}, aventurine 34.6\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -578,21 +577,21 @@ quartz.
            {figures/guess1_changed_amethyst_44db3aaf.jpg}{saturation 0\%: amethyst 84.6\%, aventurine 7.9\%}
 \sidebyside{figures/guess1_original_amethyst_a95f9f93.jpg}{amethyst/a95f9f93, original: amethyst 86.9\%, rose quartz 8.1\%}
            {figures/guess1_changed_amethyst_a95f9f93.jpg}{saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
-\sidebyside{figures/guess1_original_amethyst_IMG_3072.jpg}{amethyst/IMG_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3072.jpg}{amethyst/IMG\_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
            {figures/guess1_changed_amethyst_IMG_3072.jpg}{saturation 0\%: \textbf{aventurine 45.5\%}, amethyst 36.4\%}
-\sidebyside{figures/guess1_original_amethyst_IMG_3089.jpg}{amethyst/IMG_3089, original: amethyst 90.5\%, aventurine 5.2\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3089.jpg}{amethyst/IMG\_3089, original: amethyst 90.5\%, aventurine 5.2\%}
            {figures/guess1_changed_amethyst_IMG_3089.jpg}{saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
-\sidebyside{figures/guess1_original_amethyst_IMG_3200.jpg}{amethyst/IMG_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3200.jpg}{amethyst/IMG\_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
            {figures/guess1_changed_amethyst_IMG_3200.jpg}{saturation 0\%: \textbf{aventurine 45.6\%}, amethyst 42.8\%}
 \sidebyside{figures/guess1_original_aventurine_59ad40f0.jpg}{aventurine/59ad40f0, original: aventurine 99.3\%, amethyst 0.4\%}
            {figures/guess1_changed_aventurine_59ad40f0.jpg}{saturation 0\%: aventurine 62.9\%, amethyst 23.7\%}
 \sidebyside{figures/guess1_original_aventurine_aba4d635.jpg}{aventurine/aba4d635, original: aventurine 97.3\%, amethyst 1.7\%}
            {figures/guess1_changed_aventurine_aba4d635.jpg}{saturation 0\%: aventurine 82.1\%, amethyst 12.5\%}
-\sidebyside{figures/guess1_original_aventurine_IMG_3068.jpg}{aventurine/IMG_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3068.jpg}{aventurine/IMG\_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
            {figures/guess1_changed_aventurine_IMG_3068.jpg}{saturation 0\%: aventurine 51.5\%, rose quartz 33.7\%}
-\sidebyside{figures/guess1_original_aventurine_IMG_3196.jpg}{aventurine/IMG_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3196.jpg}{aventurine/IMG\_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
            {figures/guess1_changed_aventurine_IMG_3196.jpg}{saturation 0\%: \textbf{rose quartz 47.1\%}, aventurine 44.6\%}
-\sidebyside{figures/guess1_original_aventurine_IMG_3197.jpg}{aventurine/IMG_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3197.jpg}{aventurine/IMG\_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
            {figures/guess1_changed_aventurine_IMG_3197.jpg}{saturation 0\%: \textbf{rose quartz 62.3\%}, aventurine 34.6\%}
 
 What the results say about the guess, in my words: From these results I can
@@ -673,7 +672,7 @@ photo & saturation 0\% & saturation 0\% and contrast 50\% \\
 \midrule
 \texttt{amethyst/44db3aaf} & amethyst 84.6\%, aventurine 7.9\% & \textbf{rose quartz 50.0\%}, amethyst 27.7\% \\
 \texttt{amethyst/a95f9f93} & amethyst 77.0\%, aventurine 14.3\% & \textbf{rose quartz 46.2\%}, aventurine 27.8\% \\
-\texttt{amethyst/IMG_3089} & amethyst 40.8\%, aventurine 30.6\% & \textbf{rose quartz 64.4\%}, aventurine 25.2\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 40.8\%, aventurine 30.6\% & \textbf{rose quartz 64.4\%}, aventurine 25.2\% \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -685,7 +684,7 @@ aventurine is second for two of them.
            {figures/guess2_changed_amethyst_44db3aaf.jpg}{and contrast 50\%: \textbf{rose quartz 50.0\%}, amethyst 27.7\%}
 \sidebyside{figures/guess1_changed_amethyst_a95f9f93.jpg}{a95f9f93, saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
            {figures/guess2_changed_amethyst_a95f9f93.jpg}{and contrast 50\%: \textbf{rose quartz 46.2\%}, aventurine 27.8\%}
-\sidebyside{figures/guess1_changed_amethyst_IMG_3089.jpg}{IMG_3089, saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
+\sidebyside{figures/guess1_changed_amethyst_IMG_3089.jpg}{IMG\_3089, saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
            {figures/guess2_changed_amethyst_IMG_3089.jpg}{and contrast 50\%: \textbf{rose quartz 64.4\%}, aventurine 25.2\%}
 
 What the results say about the guess, in my words: These results make me think
