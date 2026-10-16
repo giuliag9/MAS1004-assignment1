@@ -627,14 +627,13 @@ the model distinguishes the crystals, is that if we lower the transparency of
 the images of amethyst we turned to 0\% saturation, since they're dark, they
 would be guessed as aventurine (pale but dark).''
 
-The change: a photo has no setting for how see-through the stone is, and the
-transparency setting a picture file can have is removed by
-\texttt{prepare\_image} when it converts the picture to RGB. So I chose to
-convey less transparency by lowering the contrast to 50\%, on the whole picture,
-on the three amethyst photos that were still called amethyst at 0\% saturation.
-Lowering the contrast moves every part of the picture halfway towards its
-average grey, so the crystal becomes paler and less full; I chose 50\% as a
-compromise, to see the crystal paler without its dark parts getting too much
+The change: a photo has no setting for how see-through a stone is (the
+``transparency'' setting a picture file can have is not seen by the model). So I
+chose to show less transparency by lowering the contrast to 50\%, on the whole
+picture, on the three amethyst photos that were still called amethyst at 0\%
+saturation. Lowering the contrast brings the light and dark parts of the picture
+closer to grey, so the crystal looks paler and less full. I chose 50\% as a
+compromise, to make the crystal paler without its dark parts getting too much
 lighter.
 
 My requests to the agent, word for word:
@@ -660,10 +659,9 @@ and save the copies in data/changed/less\_saturation\_less\_transparency\_amethy
 Also maintain the whole picture of the images for this guess.
 \end{quote}
 
-The agent wrote the change as a cell that I ran on Colab: Pillow's
-\texttt{ImageEnhance.Contrast(image).enhance(0.5)} on each of the three 0\%
-saturation photos. The page's first two answers, next to the ones the same
-photos got at 0\% saturation in Guess 1:
+The agent wrote the change as a short piece of code that I ran on Colab. My web
+page's first two answers, next to the ones the same photos got at 0\%
+saturation in Guess 1:
 
 \begin{center}\footnotesize
 \begin{tabular}{lll}
