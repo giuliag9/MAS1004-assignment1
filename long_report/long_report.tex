@@ -295,6 +295,10 @@ files:
 \subsection*{What I removed}
 \outputfile{outputs/clean_count.txt}
 
+Every removed file, with its reason, is listed in
+\texttt{outputs/removed\_log.csv}; the per-class numbers in this section are
+counted from it.
+
 198 of the 572 images were removed and 374 kept. Aventurine changed most (83 of
 138 removed), mostly images that did not show a crystal at all (45) or had a lot
 of text (16), and citrine least (17 of 150).
@@ -352,6 +356,11 @@ but that I had judged ok when I first went through them, because they did not
 break my rules, so I kept them. For example, \texttt{amethyst/0107.jpg} was on
 the amethyst suspect sheet, which gave it 8\% amethyst, but it did not break any
 of my rules, so it is still in \texttt{data/clean}.
+
+\picturefile{figures/suspects_amethyst.png}
+
+{\small The amethyst suspect sheet, as \texttt{clean.py suspects} drew it.
+\texttt{amethyst/0107.jpg} is number 8, a strand of amethyst beads.}
 
 Did I find junk that the suspect sheets did not list? Yes, a lot: the last column
 of the table counts the images I removed that were not on the sheets at all
