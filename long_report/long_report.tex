@@ -209,11 +209,13 @@ rose quartz to get mixed up due to their similar colors.
 
 With the same images, code and number of epochs, starting from ImageNet gives
 92.2\% and starting from random numbers 82.6\%: 9.6 points, 11 test images
-apart, more than the noise of about four images. The ImageNet model has already
-learned, from millions of photos, to see colours, edges and textures, so it only
-has to learn how my four stones differ. The random model has to learn all of
-that from my 457 training images, and its test loss goes up and down (1.2557 at
-epoch 7) while its train accuracy keeps rising.
+apart, more than the noise of about four images. Why I think that is: considering
+my categories, and that I expected the model to tell them apart by colour,
+starting from random numbers needs much longer to learn than starting from
+ImageNet, which is already trained on millions of images. In the same 10 epochs
+the random model only has my 457 training images to learn from, and its test
+loss goes up and down (1.2557 at epoch 7) while its train accuracy keeps
+rising.
 
 \subsection*{Training only the last layer}
 
