@@ -1000,6 +1000,150 @@ element that the model considers in order to answer correctly. The answers on
 the cut images are so accurate that it makes me wonder whether it plays a bigger
 role than colour (considering it was done on saturated images).
 
+\subsection*{Guess 5: the cut on its own, on all my photos}
+
+My guess, in my words as I gave it: ``At this point, I think a final check should
+be done, with a 5th guess. Guess 4 showed that making the crystal bigger, and
+cutting the background was important for the model to guess, finally, the 3
+citrine correctly. However, in those images the color also was saturated from
+the previous guess. So it could be interesting to test the cutting generally on
+the images. In particular, applying the cut to all of my original images. Since
+the other crystals were guessed right, observing how only the cut affects the
+results can be useful to understand how much cutting the background and making
+the crystal the main object in the image is taken in consideration from the
+model. Also, because the images are original, so with normal saturation,
+observing the results of the 3 citrine, can give an idea of whether cut plays a
+bigger role than color. So my 5th guess is that if we cut the background from my
+original images, making the crystals the main object in the image, the 3 citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG, 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG,
+and 2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG would still be guessed correctly,
+and all the other images (that were previously guessed right) would also be
+guessed right and more accurately.''
+
+The change: all 21 of my original photos, with their normal colour, cut by the
+same rule as Guess 4: a square centred on the stone, or on the group of stones
+when there are several, its side 1.5 times the longer side of the stone, moved
+inside the picture where it would stick out. The agent showed me all 21 cuts
+before they were made, and on my request moved the square for
+\texttt{amethyst/a95f9f93} lower, so that the stone is not cut.
+
+My request to the agent, word for word:
+\begin{quote}
+So make a copy of each image in data/new\_images cut the background around the
+crystals and save the copies in data/changed/cut
+\end{quote}
+and, after the preview:
+\begin{quote}
+yes, just change the cut on image a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG to
+make the cut a bit lower so that the crystal is not cut.
+\end{quote}
+The copies are in \texttt{data/changed/cut/<class>/}, one folder per class.
+The agent wrote the cut as a cell that I ran on Colab. The page's first two
+answers, the originals as the page answered them (amethyst and aventurine from
+Guess 1, citrine from Guess 3, rose quartz read for this guess):
+
+\begin{center}\scriptsize
+\begin{tabular}{lll}
+\toprule
+photo & original & cut \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 96.7\%, rose quartz 2.4\% & amethyst 87.0\%, rose quartz 10.5\% \\
+\texttt{amethyst/a95f9f93} & amethyst 86.9\%, rose quartz 8.1\% & amethyst 93.3\%, rose quartz 3.7\% \\
+\texttt{amethyst/IMG\_3072} & amethyst 80.2\%, rose quartz 16.7\% & amethyst 62.1\%, rose quartz 29.2\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 88.7\%, aventurine 8.9\% \\
+\texttt{amethyst/IMG\_3200} & amethyst 94.8\%, rose quartz 2.3\% & amethyst 91.1\%, rose quartz 5.7\% \\
+\texttt{aventurine/59ad40f0} & aventurine 99.3\%, amethyst 0.4\% & aventurine 99.9\%, rose quartz 0.1\% \\
+\texttt{aventurine/aba4d635} & aventurine 97.3\%, amethyst 1.7\% & aventurine 98.8\%, amethyst 0.7\% \\
+\texttt{aventurine/IMG\_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 95.9\%, rose quartz 3.3\% \\
+\texttt{aventurine/IMG\_3196} & aventurine 80.9\%, rose quartz 13.3\% & aventurine 98.8\%, rose quartz 0.7\% \\
+\texttt{aventurine/IMG\_3197} & aventurine 88.7\%, rose quartz 9.9\% & aventurine 98.5\%, rose quartz 1.4\% \\
+\texttt{citrine/6dc1dd3c} & rose quartz 52.8\%, aventurine 26.5\% & citrine 48.0\%, rose quartz 23.5\% \\
+\texttt{citrine/08f618d6} & citrine 89.5\%, aventurine 4.7\% & citrine 94.5\%, aventurine 2.4\% \\
+\texttt{citrine/58f05f6d} & rose quartz 49.1\%, aventurine 22.4\% & citrine 97.2\%, amethyst 2.2\% \\
+\texttt{citrine/2788e4fa} & rose quartz 31.0\%, amethyst 29.8\% & citrine 90.1\%, amethyst 6.4\% \\
+\texttt{citrine/f16efa23} & citrine 59.9\%, amethyst 25.1\% & citrine 85.9\%, aventurine 6.8\% \\
+\texttt{rose\_quartz/9dacd40a} & rose quartz 99.8\%, aventurine 0.1\% & rose quartz 99.9\%, aventurine 0.1\% \\
+\texttt{rose\_quartz/2270e0ff} & rose quartz 95.3\%, aventurine 2.9\% & rose quartz 97.6\%, aventurine 1.8\% \\
+\texttt{rose\_quartz/ea7f4b76} & rose quartz 99.7\%, amethyst 0.2\% & rose quartz 99.8\%, aventurine 0.1\% \\
+\texttt{rose\_quartz/IMG\_3069} & rose quartz 47.0\%, amethyst 34.8\% & rose quartz 53.3\%, aventurine 31.9\% \\
+\texttt{rose\_quartz/IMG\_3194} & rose quartz 91.4\%, aventurine 6.9\% & rose quartz 99.1\%, aventurine 0.8\% \\
+\texttt{rose\_quartz/IMG\_3204} & rose quartz 76.7\%, aventurine 22.2\% & rose quartz 63.2\%, aventurine 35.7\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The originals are 18 of 21 right on the page; the cut pictures are 21 of 21
+right. The three citrines that were wrong are right without any extra colour,
+\texttt{6dc1dd3c} at 48.0\% against 75.3\% when it was also saturated in Guess 4.
+Of the 18 photos that were right before, 13 are more sure after the cut and 5
+are less sure: four amethysts (\texttt{44db3aaf}, \texttt{IMG\_3072},
+\texttt{IMG\_3089}, \texttt{IMG\_3200}) and one rose quartz (\texttt{IMG\_3204}).
+
+\sidebyside{figures/guess5_original_amethyst_44db3aaf.jpg}{amethyst/44db3aaf, original: amethyst 96.7\%, rose quartz 2.4\%}
+           {figures/guess5_changed_amethyst_44db3aaf.jpg}{cut: amethyst 87.0\%, rose quartz 10.5\%}
+\sidebyside{figures/guess5_original_amethyst_a95f9f93.jpg}{amethyst/a95f9f93, original: amethyst 86.9\%, rose quartz 8.1\%}
+           {figures/guess5_changed_amethyst_a95f9f93.jpg}{cut: amethyst 93.3\%, rose quartz 3.7\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3072.jpg}{amethyst/IMG\_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
+           {figures/guess5_changed_amethyst_IMG_3072.jpg}{cut: amethyst 62.1\%, rose quartz 29.2\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3089.jpg}{amethyst/IMG\_3089, original: amethyst 90.5\%, aventurine 5.2\%}
+           {figures/guess5_changed_amethyst_IMG_3089.jpg}{cut: amethyst 88.7\%, aventurine 8.9\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3200.jpg}{amethyst/IMG\_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
+           {figures/guess5_changed_amethyst_IMG_3200.jpg}{cut: amethyst 91.1\%, rose quartz 5.7\%}
+\sidebyside{figures/guess5_original_aventurine_59ad40f0.jpg}{aventurine/59ad40f0, original: aventurine 99.3\%, amethyst 0.4\%}
+           {figures/guess5_changed_aventurine_59ad40f0.jpg}{cut: aventurine 99.9\%, rose quartz 0.1\%}
+\sidebyside{figures/guess5_original_aventurine_aba4d635.jpg}{aventurine/aba4d635, original: aventurine 97.3\%, amethyst 1.7\%}
+           {figures/guess5_changed_aventurine_aba4d635.jpg}{cut: aventurine 98.8\%, amethyst 0.7\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3068.jpg}{aventurine/IMG\_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
+           {figures/guess5_changed_aventurine_IMG_3068.jpg}{cut: aventurine 95.9\%, rose quartz 3.3\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3196.jpg}{aventurine/IMG\_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
+           {figures/guess5_changed_aventurine_IMG_3196.jpg}{cut: aventurine 98.8\%, rose quartz 0.7\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3197.jpg}{aventurine/IMG\_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
+           {figures/guess5_changed_aventurine_IMG_3197.jpg}{cut: aventurine 98.5\%, rose quartz 1.4\%}
+\sidebyside{figures/guess5_original_citrine_6dc1dd3c.jpg}{citrine/6dc1dd3c, original: rose quartz 52.8\%, aventurine 26.5\%}
+           {figures/guess5_changed_citrine_6dc1dd3c.jpg}{cut: citrine 48.0\%, rose quartz 23.5\%}
+\sidebyside{figures/guess5_original_citrine_08f618d6.jpg}{citrine/08f618d6, original: citrine 89.5\%, aventurine 4.7\%}
+           {figures/guess5_changed_citrine_08f618d6.jpg}{cut: citrine 94.5\%, aventurine 2.4\%}
+\sidebyside{figures/guess5_original_citrine_58f05f6d.jpg}{citrine/58f05f6d, original: rose quartz 49.1\%, aventurine 22.4\%}
+           {figures/guess5_changed_citrine_58f05f6d.jpg}{cut: citrine 97.2\%, amethyst 2.2\%}
+\sidebyside{figures/guess5_original_citrine_2788e4fa.jpg}{citrine/2788e4fa, original: rose quartz 31.0\%, amethyst 29.8\%}
+           {figures/guess5_changed_citrine_2788e4fa.jpg}{cut: citrine 90.1\%, amethyst 6.4\%}
+\sidebyside{figures/guess5_original_citrine_f16efa23.jpg}{citrine/f16efa23, original: citrine 59.9\%, amethyst 25.1\%}
+           {figures/guess5_changed_citrine_f16efa23.jpg}{cut: citrine 85.9\%, aventurine 6.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_9dacd40a.jpg}{rose quartz/9dacd40a, original: rose quartz 99.8\%, aventurine 0.1\%}
+           {figures/guess5_changed_rose_quartz_9dacd40a.jpg}{cut: rose quartz 99.9\%, aventurine 0.1\%}
+\sidebyside{figures/guess5_original_rose_quartz_2270e0ff.jpg}{rose quartz/2270e0ff, original: rose quartz 95.3\%, aventurine 2.9\%}
+           {figures/guess5_changed_rose_quartz_2270e0ff.jpg}{cut: rose quartz 97.6\%, aventurine 1.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_ea7f4b76.jpg}{rose quartz/ea7f4b76, original: rose quartz 99.7\%, amethyst 0.2\%}
+           {figures/guess5_changed_rose_quartz_ea7f4b76.jpg}{cut: rose quartz 99.8\%, aventurine 0.1\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3069.jpg}{rose quartz/IMG\_3069, original: rose quartz 47.0\%, amethyst 34.8\%}
+           {figures/guess5_changed_rose_quartz_IMG_3069.jpg}{cut: rose quartz 53.3\%, aventurine 31.9\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3194.jpg}{rose quartz/IMG\_3194, original: rose quartz 91.4\%, aventurine 6.9\%}
+           {figures/guess5_changed_rose_quartz_IMG_3194.jpg}{cut: rose quartz 99.1\%, aventurine 0.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3204.jpg}{rose quartz/IMG\_3204, original: rose quartz 76.7\%, aventurine 22.2\%}
+           {figures/guess5_changed_rose_quartz_IMG_3204.jpg}{cut: rose quartz 63.2\%, aventurine 35.7\%}
+
+What the results say about the guess, in my words: From these results I can
+observe two things. First, as I expected, the 3 wrong citrines were guessed
+correctly even without being more saturated, although with less accuracy. This
+means that cutting the background and making the crystal bigger in the image is
+important for the model to guess it correctly; in particular it plays a bigger
+role than colour, since in Guess 3 the 3 citrines were still guessed wrong when
+only the saturation was enhanced. Second, the crystals that were already guessed
+right were also guessed right, as expected, but not exactly as I imagined: not
+all the answers were more accurate. In particular, 4 amethysts were guessed with
+less accuracy and only one with more. This is important to give the right amount
+of importance to the cut (so to the size of the crystals and the absence of
+background). Considering the other factors that I observed in the previous
+guesses, such as transparency and colour, and my idea of a combination of
+elements, the reason why the 4 amethysts got a less accurate answer after the
+cut could be connected to the fact that the colour of amethyst is fuller and
+darker, which can have an effect on how useful the cut is to the model in that
+case. However, it is important to also mention that one of the rose quartz
+photos, IMG\_3204.jpg, also had less accuracy after the cut, but in this case
+the transparency and saturation of the crystal are different from amethyst.
+Therefore, it is possible that there is another element that the model looks at
+that is not among those I tried to test in my 5 guesses.
+
 \subsection*{What I now think the model uses}
 \fillin{What you now think the model uses to tell your categories apart, and
 how sure you are.}
