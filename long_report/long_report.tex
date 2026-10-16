@@ -130,33 +130,14 @@ model. The sheet found four pieces the crop cuts through, all of them in these
 \picturefile{figures/prepare_side_by_side.png}
 \picturefile[0.9\linewidth]{figures/prepare_sheet.png}
 
-Looking for such a case needed the drawings and not a number. Three cheap ways of
-guessing "did the crop cut the stone" were tried on the 21 photos, and all three
-put a photo whose stone is safely inside the square above the one that is really
-cut. By how unlike the plain background the band outside the square is: 9dacd40a
-scores 24.8\%, eighth of 21, while \texttt{aventurine/IMG\_3197.JPG}, a stone
-lying in a palm, scores 84.3\% and first. The same measurement as the longest
-unbroken run along the edge of the square puts 9dacd40a tenth at 5.6\% and the
-palm first at 33.9\%. How busy the crop line is against how busy the inside is
-gives 9dacd40a 5.83 against 6.73 for the palm. All three ways chose the palm and
-a cardboard photo because what crosses their crop line is skin and a brightness
-gradient, not stone. So \texttt{--scan} reports the crop's own geometry and says
-that the drawing decides, and the reasoning is kept in its docstring instead of
-shipping a number that would have put the wrong photo in this report.
-
-Four of the 21 photos are also stored sideways. \texttt{show\_prepare.py --scan
-data/new\_images} reports an orientation other than 1 for
-\texttt{amethyst/IMG\_3200.JPG}, \texttt{aventurine/IMG\_3196.JPG},
-\texttt{rose\_quartz/IMG\_3069.JPG} and \texttt{rose\_quartz/IMG\_3194.JPG}: the
-camera stored those landscape, with a note in the file saying "turn 90 degrees
-before showing". \texttt{Image.open(...).convert("RGB")} does not apply the note,
-so \texttt{prepare\_image} cuts the middle out of a turned picture; none of the
-tests uses a picture with EXIF data, so they pass while those four reach the model
-sideways. The page will not even agree with itself here, because
-\texttt{docs/app.js} loads an upload into an \texttt{<img>} and a browser applies
-the note by itself, so the browser turns the photo and Python does not. The self
-test badge cannot catch it either: \texttt{selftest.json} holds three already
-resized square pictures with no EXIF in them.
+Four of my 21 photos are stored sideways: \texttt{amethyst/IMG\_3200},
+\texttt{aventurine/IMG\_3196}, \texttt{rose\_quartz/IMG\_3069} and
+\texttt{rose\_quartz/IMG\_3194}. The phone saved them lying on their side, with a
+note in the file that says ``turn this photo before showing it''.
+\texttt{prepare\_image} does not read that note, so in Python the model sees these
+four photos turned on their side, while the web page does read it and shows them
+upright. For these four photos, Python and the page therefore do not see quite
+the same picture.
 % ---------------------------------------------------------------------------
 \section*{Problem 3. First training runs}
 

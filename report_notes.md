@@ -1020,3 +1020,9 @@ Originals (amethyst and aventurine from Guess 1, citrine from Guess 3, rose
 quartz read on 16 October): 18 of 21 right on the page. Cut: 21 of 21 right.
 Of the 18 that were right before, 13 are more sure after the cut and 5 less
 (amethyst 44db3aaf, IMG_3072, IMG_3089, IMG_3200; rose quartz IMG_3204).
+
+## Giulia's wish for the whole long report (16 October 2026)
+
+"overall i think the long report should be clear and not written in an
+overcomplex way". During the walk-through, simplify long or technical
+paragraphs, and remove agent-side detail that is not her work.
