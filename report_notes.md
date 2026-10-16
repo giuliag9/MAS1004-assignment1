@@ -691,3 +691,338 @@ turn on Pages and put the address in, then compile the `long_report` folder on
 Overleaf with XeLaTeX and look for red text in the PDF. XeLaTeX is not installed
 on the Mac and AGENTS.md says not to install it.
   orientation 6).
+## Problem 6. The published page (14 October 2026)
+
+Address: https://giuliag9.github.io/MAS1004-assignment1/. The badge is green, on
+the computer and on the phone.
+
+Things that are none of the four categories, uploaded as photos, answers as the
+page showed them:
+
+- an adapter: rose_quartz 47.1%, then amethyst 43.7%
+- a yellow highlighter: aventurine 65.3%, then citrine 24.9%. Giulia expected
+  citrine first, because of the yellow colour.
+- a pink mask product: rose_quartz 92.2%
+- a beige mug: rose_quartz 79.4%
+
+Giulia's own crystals, shown on the page (percentages not written down yet): one
+amethyst was recognised as amethyst; another amethyst was called rose_quartz;
+an aventurine was called rose_quartz. Possible material for Problem 7.
+
+## Before the final version (Giulia's request, 14 October 2026)
+
+After Problem 7, and before the PDF is made, go through the whole long report
+with Giulia, section by section: every number next to the output it comes from,
+and every step we did, in simple words, so that she knows and can explain all of
+it. Nothing in the long report is final until that walk-through is done.
+
+## Problem 7, Guess 1 (14 October 2026)
+
+Guess, in Giulia's words: "I'll start from my original guess on what the model
+would look at to distinguish the crystal. I mentioned I expect it to look at
+colors. from my images, amethyst and aventurine were not mistaken in the current
+model. So my first guess is that if we lower the saturation on amethyst and
+aventurine the model will have more problems to distinguish them."
+
+Request, word for word: "make a copy of each image in data/new_images/amethyst
+and data/new_images/aventurine with lowered saturation and save the copies,
+respectively, in data/changed/less_saturation_amethyst and
+data/changed/less_saturation_aventurine"
+
+Asked how much lower, word for word: "to 0% , so we can test with the absence of
+color."
+
+The change is run as a cell on Colab, where the images are: Pillow's
+ImageEnhance.Color(...).enhance(0.0) on the RGB image, the EXIF kept so that a
+sideways-stored photo is turned the same way as its original, JPEG quality 95.
+Tested here on two pictures: every pixel of the result has R = G = B.
+
+### Guess 1: the page's answers, as Giulia read them off the page
+
+| photo | original | saturation 0% |
+|---|---|---|
+| amethyst/44db3aaf | amethyst 96.7%, rose_quartz 2.4% | amethyst 84.6%, aventurine 7.9% |
+| amethyst/a95f9f93 | amethyst 86.9%, rose_quartz 8.1% | amethyst 77.0%, aventurine 14.3% |
+| amethyst/IMG_3072 | amethyst 80.2%, rose_quartz 16.7% | **aventurine 45.5%**, amethyst 36.4% |
+| amethyst/IMG_3089 | amethyst 90.5%, aventurine 5.2% | amethyst 40.8%, aventurine 30.6% |
+| amethyst/IMG_3200 | amethyst 94.8%, rose_quartz 2.3% | **aventurine 45.6%**, amethyst 42.8% |
+| aventurine/59ad40f0 | aventurine 99.3%, amethyst 0.4% | aventurine 62.9%, amethyst 23.7% |
+| aventurine/aba4d635 | aventurine 97.3%, amethyst 1.7% | aventurine 82.1%, amethyst 12.5% |
+| aventurine/IMG_3068 | aventurine 75.2%, rose_quartz 15.6% | aventurine 51.5%, rose_quartz 33.7% |
+| aventurine/IMG_3196 | aventurine 80.9%, rose_quartz 13.3% | **rose_quartz 47.1%**, aventurine 44.6% |
+| aventurine/IMG_3197 | aventurine 88.7%, rose_quartz 9.9% | **rose_quartz 62.3%**, aventurine 34.6% |
+
+Originals: 10 of 10 right. Saturation 0%: 6 of 10 right, and the confidence in
+the right answer is lower for all 10.
+
+## Problem 7, Guess 2 (14 October 2026), as Giulia gave it
+
+"Given what I observed from the first guess, color is not the determinant element
+for the model. I start to think that transparency also is important when
+guessing the crystals. As I mentioned in the first guess, 0% saturation
+aventurine that were guessed to be rose quartz were paler and less full in color,
+while the amethyst 0% saturation that were guessed to be aventurine also were
+less full, paler but overall darker. Which makes me think that for the model
+aventurine is dark, but also pale, while rose quartz is pale but lighter. If I
+think of the mistakes made, the first one was of
+data/new_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG being guessed as
+rose quartz, and in fact the crystal in the photo is less full in color, and
+lighter. To check this, the transparency of the images should be lowered.
+In particular my guess to check if transparency plays a role in how the model
+distinguishes the crystals, is that if we lower the transparency of the images
+of amethyst we turned to 0% saturation, since they're dark, they would be
+guessed as aventurine (pale but dark)."
+
+First request, word for word: "So make a copy of
+data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG and
+data/changed/less_saturation_amethyst/IMG_3089.JPG with lower transparency and
+save the copies in data/changed/less_saturation_less_transparency_amethyst"
+
+Not made yet: an image's alpha channel is dropped by prepare_image's
+convert("RGB"), so "transparency" has to be turned into a change to the pixels
+(brightness or contrast, and how much). Asked Giulia to choose.
+
+Second request, word for word: "Since there is no transparency setting to
+change in the images, I think the best way to make the crystal paler and less
+full would be to lower contrast to 50%, this way it's enough to make the image
+paler but keeps the darkess of the crystal which in my guess is what determines
+aventurine (pale but dark). So make a copy of
+data/changed/less_saturation_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less_saturation_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG and
+data/changed/less_saturation_amethyst/IMG_3089.JPG with contrast to 50% and save
+the copies in data/changed/less_saturation_less_transparency_amethyst. Also
+maintain the whole picture of the images for this guess."
+
+Made with Pillow's ImageEnhance.Contrast(...).enhance(0.5), run as a Colab cell.
+It moves every pixel halfway towards the picture's average grey: tested on one
+picture, the spread of brightness (standard deviation) went from 44.5 to 22.3
+and the average stayed at 154.6. So a dark stone on a light background comes
+out lighter, and the background a little darker.
+
+Giulia's clarification of why 50%, word for word: "what I meant is that 50%
+contrast I think it's a good compromise point to see the crystal paler but not
+have its dark parts getting too much lighter."
+
+### Guess 2: the page's answers, as Giulia read them off the page
+
+| photo | saturation 0% (Guess 1) | saturation 0% and contrast 50% |
+|---|---|---|
+| amethyst/44db3aaf | amethyst 84.6%, aventurine 7.9% | rose_quartz 50.0%, amethyst 27.7% (re-checked: first typed as 96.7%) |
+| amethyst/a95f9f93 | amethyst 77.0%, aventurine 14.3% | rose_quartz 46.2%, aventurine 27.8% |
+| amethyst/IMG_3089 | amethyst 40.8%, aventurine 30.6% | rose_quartz 64.4%, aventurine 25.2% |
+
+## Where we stopped (end of 14 October 2026)
+
+Done: Problems 1 to 6 in the long report, checked against README and PLAN and
+against the saved outputs; the page is live at
+https://giuliag9.github.io/MAS1004-assignment1/ with a green badge; Problem 7
+Guess 1 (saturation 0%) and Guess 2 (contrast 50% on the 0% saturation amethysts)
+are in the report with their pictures, answers and Giulia's conclusions.
+
+Still to do, in order:
+1. Problem 7 Guess 3 (Giulia, next day): her guess, change and photos. Changes
+   are made as a Colab cell, because the photos are in her Drive; the small
+   upright report copies come back through a zip and a push from her Mac.
+2. Problem 7 "What I now think the model uses", in her words (last red box).
+3. Her name and student ID at the top of long_report.tex.
+4. The walk-through of the whole long report with her (see above).
+4b. (Before the walk-through) Problem 7 Guess 5: Giulia reads the 21 cut pictures
+   and the 6 rose quartz originals off the page and sends the answers; then her
+   conclusion for Guess 5 and her final answer for Problem 7.
+5. Bring this branch, claude/epic-clarke-c92agm, into main (ask her first).
+6. PDF on Overleaf with XeLaTeX, and look for red text.
+7. The short report, which she writes on her own; the agent does not touch it.
+
+## Problem 7, Guess 3 (15 October 2026), as Giulia gave it
+
+"Given the previous guesses results, I think color and transparency are in a way
+considered by the model, even if not in the way I expected them. At this point
+is good to consider the case of the 3 mistakes of citrine of my images. Starting
+from the one I mentioned, citrine 6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG was
+guessed as rose quartz, and these crystals are generally light and pale. As I
+previously said, the images of citrine in clean, are more vivid in color than my
+own photos, which I think is an important element that makes the images in clean
+different from mine. In the first guess I focused on color, and observed if it's
+absence (so a 0% saturation) could impact the model's guessing, and overall,
+there were some changes, even for the images that were guessed correctly
+(guessed with less percentage). This makes me still want to keep color in
+consideration for a guess. Therefore, it would be interesting to test the
+opposite of what I did in the first guess, meaning instead of reducing color,
+enhancing it. Since both citrine and rose quartz are pale, the aspect that is
+different in them is color and them being mistaken could be linked to the color
+not being vivid. So, my third guess is that if citrine has higher saturation the
+model would have less problem recognizing it. If this guess turned to be true,
+it would confirm the reason for the mistake in my images."
+
+First request, word for word: "So make a copy of each image in
+data/new_images/citrine with higher saturation (70%) and save the copies in
+data/changed/saturated_citrine"
+
+Not made yet: asked whether "70%" means 70% more colour (factor 1.7) or another
+amount.
+
+Amount, word for word: "yes 70% more color."
+Prediction, word for word: "If my guess is right the 3 wrong will turn right and
+the other 2 right ones will stay right with higher percentages."
+
+Made with Pillow's ImageEnhance.Color(...).enhance(1.7) as a Colab cell, on the
+whole picture, EXIF kept. Tested here on a copy of 6dc1dd3c: the average
+saturation (HSV, 0-255) went from 12.3 to 20.5, so a pale stone gains only a
+little colour.
+
+### Guess 3: the page's answers, as Giulia read them off the page
+
+| photo | original | saturation +70% |
+|---|---|---|
+| citrine/6dc1dd3c (wrong in check.py) | rose_quartz 52.8%, aventurine 26.5% | rose_quartz 37.7%, aventurine 31.5% |
+| citrine/58f05f6d (wrong in check.py) | rose_quartz 49.1%, aventurine 22.4% | rose_quartz 54.7%, aventurine 18.0% |
+| citrine/2788e4fa (wrong in check.py) | rose_quartz 31.0%, amethyst 29.8% | rose_quartz 33.0%, amethyst 25.1% |
+| citrine/08f618d6 (right) | citrine 89.5%, aventurine 4.7% | citrine 96.2%, aventurine 2.1% |
+| citrine/f16efa23 (right) | citrine 59.9%, amethyst 25.1% | citrine 94.1%, amethyst 4.1% |
+
+The page and check.py do not give exactly the same numbers for the same
+photo: check.py printed 6dc1dd3c rose_quartz 54%, 58f05f6d rose_quartz 51%,
+2788e4fa amethyst 32%; the page gives 52.8%, 49.1%, and for 2788e4fa rose_quartz
+31.0% with amethyst 29.8% second. The page shrinks a photo in the browser
+(docs/app.js, resizeShorterSide, halving steps with the canvas's own smoothing),
+Python with Pillow's bilinear resize, so the 224 x 224 pictures the model gets
+differ slightly. The self-test badge cannot see this, because selftest.json
+holds pictures that are already 224 x 224. 2788e4fa is a near tie, so a slight
+difference flips its top answer.
+
+## Problem 7, Guess 4 (15 October 2026), as Giulia gave it
+
+"From the third guess I concluded that the color of background can be a factor
+that influences the model. Given all the previous guesses, I start to consider
+more and more the idea that the model uses a combination of elements to guess
+the crystals. The images that were still guessed wrong also had another thing in
+common: the crystals are small. Additionally, the two citrine images that are
+guessed right are the only two with more than one crystal in them. To check both
+background and size at the same time, the images could be cut so that the
+crystal occupies the most part of the image, and has little background. My
+guess would be that if we cut the background from the images of citrine, making
+the crystal the main object in the image, the model could guess them correctly."
+
+Request, word for word: "So make a copy of images
+data/changed/saturated_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG,
+data/changed/saturated_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG and
+data/changed/saturated_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG cut the
+background around the crystals and save the copies in
+data/changed/saturated_cut_citrine. In this case still work on the saturated
+version because I still think that saturation of the crystal plays a role."
+
+How the crop was chosen: the stone was found in the small upright report copy of
+each saturated photo (guess3_changed_citrine_*.jpg), and a square was drawn
+around it, centred on the stone, its side 1.5 times the stone's longer side, so
+the stone fills most of it with a thin border of background. As fractions of
+the upright picture (left, top, right, bottom):
+6dc1dd3c 0.322, 0.394, 0.633, 0.656; 58f05f6d 0.417, 0.441, 0.627, 0.599;
+2788e4fa 0.426, 0.497, 0.632, 0.652. A square, so that the page's centre crop
+keeps all of it.
+
+### Guess 4: the page's answers, as Giulia read them off the page
+
+| photo | saturated (Guess 3) | saturated and cut |
+|---|---|---|
+| citrine/6dc1dd3c | rose_quartz 37.7%, aventurine 31.5% | citrine 75.3%, aventurine 12.0% |
+| citrine/58f05f6d | rose_quartz 54.7%, aventurine 18.0% | citrine 99.6%, amethyst 0.3% |
+| citrine/2788e4fa | rose_quartz 33.0%, amethyst 25.1% | citrine 97.9%, amethyst 0.9% |
+
+## Problem 7, Guess 5 (15 October 2026), as Giulia gave it
+
+"At this point, i think a final check should be done, with a 5th guess. Guess 4
+showed that making the crystal bigger, and cutting the background was important
+for the model to guess, finally, the 3 citrine correclty. However, in those
+images the color also was saturated from the previous guess. So it could be
+interesting to test the cutting generally on the images. In particular,
+applying the cut to all of my original images. Since the other crystals were
+guessed right, observing how only the cut affects the results can be useful to
+understand how much cutting the background and making the crystal the main
+object in the image is taken in consideration from the model. Also, because the
+images are original, so with normal saturation, observing the results of the 3
+citrine, can give an idea of whether cut plays a bigger role than color. So my
+5th guess is that if we cut the background from my original images, making the
+crystals the main object in the image, the 3 citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG, 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG,
+and 2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG would still be guessed correctly,
+and all the other images (that were previously guessed right) would also be
+guessed right and more accurately."
+
+Request, word for word: "So make a copy of each image in data/new_images cut
+the background around the crystals and save the copies in data/changed/cut"
+
+The same rule as Guess 4 (a square centred on the stone, or on the group of
+stones, its side 1.5 times the longer side, moved inside the picture where it
+would stick out). Boxes for the 15 amethyst, aventurine and citrine photos
+chosen on the small upright report copies; the 6 rose quartz photos are not
+here yet.
+
+The 21 squares used (left, top, right, bottom, fractions of the upright picture),
+after Giulia asked for a95f9f93 to be moved lower so the stone is not cut:
+
+```
+    "amethyst/44db3aaf": (0.062, 0.263, 0.828, 0.837),
+    "amethyst/IMG_3072": (0.215, 0.244, 0.785, 0.706),
+    "amethyst/IMG_3089": (0.135, 0.128, 0.885, 0.863),
+    "amethyst/IMG_3200": (0.277, 0.357, 0.713, 0.683),
+    "amethyst/a95f9f93": (0.248, 0.398, 0.748, 0.772),
+    "aventurine/59ad40f0": (0.222, 0.331, 0.688, 0.679),
+    "aventurine/IMG_3068": (0.367, 0.340, 0.623, 0.680),
+    "aventurine/IMG_3196": (0.350, 0.410, 0.590, 0.590),
+    "aventurine/IMG_3197": (0.325, 0.309, 0.655, 0.631),
+    "aventurine/aba4d635": (0.040, 0.300, 0.840, 0.900),
+    "citrine/08f618d6": (0.247, 0.151, 0.922, 0.839),
+    "citrine/2788e4fa": (0.426, 0.497, 0.632, 0.652),
+    "citrine/58f05f6d": (0.417, 0.441, 0.627, 0.599),
+    "citrine/6dc1dd3c": (0.322, 0.394, 0.633, 0.656),
+    "citrine/f16efa23": (0.155, 0.274, 0.785, 0.746),
+    "rose_quartz/2270e0ff": (0.209, 0.325, 0.636, 0.645),
+    "rose_quartz/9dacd40a": (0.000, 0.144, 1.000, 0.706),
+    "rose_quartz/IMG_3069": (0.214, 0.376, 0.731, 0.764),
+    "rose_quartz/IMG_3194": (0.286, 0.359, 0.699, 0.669),
+    "rose_quartz/IMG_3204": (0.154, 0.166, 0.941, 0.774),
+    "rose_quartz/ea7f4b76": (0.023, 0.263, 0.848, 0.881),
+```
+
+Status at the end of 15 October 2026: the 21 originals (guess5_original_*) and
+the 21 cut pictures (guess5_changed_*) are on GitHub. Waiting for Giulia's 27
+answers from the page (21 cut, 6 rose quartz originals), then her Guess 5
+conclusion and her final answer for Problem 7, then her name and student ID.
+
+### Guess 5: the page's answers, as Giulia read them off the page (16 October 2026)
+
+| photo | original | cut |
+|---|---|---|
+| amethyst/44db3aaf | amethyst 96.7%, rose_quartz 2.4% | amethyst 87.0%, rose_quartz 10.5% |
+| amethyst/a95f9f93 | amethyst 86.9%, rose_quartz 8.1% | amethyst 93.3%, rose_quartz 3.7% |
+| amethyst/IMG_3072 | amethyst 80.2%, rose_quartz 16.7% | amethyst 62.1%, rose_quartz 29.2% |
+| amethyst/IMG_3089 | amethyst 90.5%, aventurine 5.2% | amethyst 88.7%, aventurine 8.9% |
+| amethyst/IMG_3200 | amethyst 94.8%, rose_quartz 2.3% | amethyst 91.1%, rose_quartz 5.7% |
+| aventurine/59ad40f0 | aventurine 99.3%, amethyst 0.4% | aventurine 99.9%, rose_quartz 0.1% |
+| aventurine/aba4d635 | aventurine 97.3%, amethyst 1.7% | aventurine 98.8%, amethyst 0.7% |
+| aventurine/IMG_3068 | aventurine 75.2%, rose_quartz 15.6% | aventurine 95.9%, rose_quartz 3.3% |
+| aventurine/IMG_3196 | aventurine 80.9%, rose_quartz 13.3% | aventurine 98.8%, rose_quartz 0.7% |
+| aventurine/IMG_3197 | aventurine 88.7%, rose_quartz 9.9% | aventurine 98.5%, rose_quartz 1.4% |
+| citrine/6dc1dd3c | rose_quartz 52.8%, aventurine 26.5% | citrine 48.0%, rose_quartz 23.5% |
+| citrine/08f618d6 | citrine 89.5%, aventurine 4.7% | citrine 94.5%, aventurine 2.4% |
+| citrine/58f05f6d | rose_quartz 49.1%, aventurine 22.4% | citrine 97.2%, amethyst 2.2% |
+| citrine/2788e4fa | rose_quartz 31.0%, amethyst 29.8% | citrine 90.1%, amethyst 6.4% |
+| citrine/f16efa23 | citrine 59.9%, amethyst 25.1% | citrine 85.9%, aventurine 6.8% |
+| rose_quartz/9dacd40a | rose_quartz 99.8%, aventurine 0.1% | rose_quartz 99.9%, aventurine 0.1% |
+| rose_quartz/2270e0ff | rose_quartz 95.3%, aventurine 2.9% | rose_quartz 97.6%, aventurine 1.8% |
+| rose_quartz/ea7f4b76 | rose_quartz 99.7%, amethyst 0.2% | rose_quartz 99.8%, aventurine 0.1% |
+| rose_quartz/IMG_3069 | rose_quartz 47.0%, amethyst 34.8% | rose_quartz 53.3%, aventurine 31.9% |
+| rose_quartz/IMG_3194 | rose_quartz 91.4%, aventurine 6.9% | rose_quartz 99.1%, aventurine 0.8% |
+| rose_quartz/IMG_3204 | rose_quartz 76.7%, aventurine 22.2% | rose_quartz 63.2%, aventurine 35.7% |
+
+Originals (amethyst and aventurine from Guess 1, citrine from Guess 3, rose
+quartz read on 16 October): 18 of 21 right on the page. Cut: 21 of 21 right.
+Of the 18 that were right before, 13 are more sure after the cut and 5 less
+(amethyst 44db3aaf, IMG_3072, IMG_3089, IMG_3200; rose quartz IMG_3204).
+
+## Giulia's wish for the whole long report (16 October 2026)
+
+"overall i think the long report should be clear and not written in an
+overcomplex way". During the walk-through, simplify long or technical
+paragraphs, and remove agent-side detail that is not her work.

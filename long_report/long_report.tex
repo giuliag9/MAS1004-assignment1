@@ -27,13 +27,9 @@
 \section*{Problem 1. Categories and images}
 
 \subsection*{Why these categories}
-Four varieties of quartz: amethyst, citrine, rose quartz and aventurine. A
-variety of quartz is the same crystal with a different colour and a different
-inclusion inside it, so the four are close to the same shape and differ in
-colour and in what shows through the stone. That is what makes them worth
-telling apart rather than being obviously different objects: a wrong answer
-here is a wrong judgement of colour and translucency between stones that are
-otherwise alike, and I can see in the picture whether the model was right.
+I chose these four categories because they are types of quartz, characterised
+by different colours. I'm interested in crystals, I own at least one crystal of
+each category, and they are the ones I can usually distinguish easily.
 They are also things I can photograph myself, which Problem 5 needs.
 
 I checked the four against \texttt{imagenet\_classes.txt}, the 1,000 categories
@@ -83,15 +79,24 @@ remove} started moving files out of it.
 % ---------------------------------------------------------------------------
 \section*{Problem 2. Preparing an image}
 
-\sidebyside{figures/prepare_original.jpg}{as downloaded: a rose quartz heart on a
-            stand, with a sphere and two towers behind it}
+\sidebyside{figures/prepare_original.jpg}{as downloaded (\texttt{rose\_quartz/0060}):
+            a rose quartz heart on a stand, with a sphere and two towers behind it}
            {figures/prepare_result.png}{what prepare\_image made of it: the middle
-            224 \(\times\) 224 square, with the heart filling it}
+            224 \(\times\) 224 square}
 
-\texttt{prepare\_image} resizes the shorter side to 256 and keeps the middle
-224 \(\times\) 224 square. Measured with \texttt{src/show\_prepare.py} on
-\texttt{data/new\_images/aventurine/IMG\_3068.JPG}, one of the photographs taken
-by hand for this assignment, 4032 \(\times\) 3024:
+\texttt{prepare\_image} prepares every photo the way ResNet18 expects: it shrinks
+the photo so that its shorter side is 256 pixels, keeps only the middle
+224 \(\times\) 224 square, and scales the colours. Everything outside that square
+is thrown away.
+
+An image where the crop cut off part of the thing I care about is the one above,
+\texttt{rose\_quartz/0060}. The red square below is what the model keeps: the
+bottom of the heart and the top of the tall tower are cut off.
+
+\begin{center}\picturefile[0.4\linewidth]{figures/prepare_cropbox.png}\end{center}
+
+How much is thrown away depends on the shape of the photo. For one of my own
+photos, \texttt{aventurine/IMG\_3068.JPG} (4032 \(\times\) 3024), the numbers are:
 
 \begin{center}\footnotesize
 \begin{tabular}{ll}
@@ -99,68 +104,33 @@ by hand for this assignment, 4032 \(\times\) 3024:
 step & result \\
 \midrule
 on disk & 4032 \(\times\) 3024 \\
-after Resize(256) & 341 \(\times\) 256 \\
+after shrinking the shorter side to 256 & 341 \(\times\) 256 \\
 square kept & x 58..282, y 16..240 \\
 cut off, in the 341 \(\times\) 256 picture & 58 left, 59 right, 16 top, 16 bottom \\
-cut off, back in the original photo & 686 left, 698 right, 189 top, 189 bottom \\
 kept & 57.5\% of the area \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-It throws away 34.3\% of the width and 12.5\% of the height: 686 pixels on each
-side of that photo, even though the stone is nowhere near those edges. That the
-rectangle drawn on the picture is the rectangle the model gets is measured, not
-assumed: the same box through ToTensor and Normalize differs from
-\texttt{prepare\_image} by 0.0e+00, and \texttt{prepare\_image} differs from
-torchvision's own ImageNet recipe for ResNet18 by 0.0e+00.
+So 42.5\% of that photo never reaches the model, mostly from the left and right
+sides; there the stone is in the middle, so it is not cut.
 
-An image where the crop cut off part of the thing I care about:
-\texttt{data/new\_images/rose\_quartz/9dacd40a-f98e-4312-a62d-78c4fd3a0a4b.JPG},
-900 \(\times\) 1600. Resize gives 256 \(\times\) 455 and the square keeps
-y 116..340, so 116 rows go from above and 115 from below: 50.8\% of the height,
-408 and 404 pixels of the original, and only 43.1\% of the area survives. The
-stone reaches the top of the square, so its edge is thrown away.
+The same holds for my other photos, where I placed the stone in the middle. Below
+are two of them, \texttt{rose\_quartz/9dacd40a} (left) and
+\texttt{rose\_quartz/ea7f4b76} (right), with the square that
+\texttt{prepare\_image} keeps drawn in red: in both, the whole stone is inside the
+square, unlike in the downloaded picture above.
 
-A second case, found with \texttt{show\_prepare.py --scan data/new\_images
---sheet}: the contact sheet draws the 15 crops that throw most away, and
-\texttt{data/new\_images/rose\_quartz/ea7f4b76-efcc-4973-814e-a7afe9273198.JPG},
-1500 \(\times\) 2000, keeps 57.5\% of its area while the point of the heart sits
-below the bottom edge of the square: the tip of the stone never reaches the
-model. The sheet found four pieces the crop cuts through, all of them in these
-21 photos.
+\begin{center}\picturefile[0.7\linewidth]{figures/prepare_cut_stones.jpg}\end{center}
 
-\picturefile{figures/prepare_cropbox.png}
-\picturefile{figures/prepare_side_by_side.png}
-\picturefile[0.9\linewidth]{figures/prepare_sheet.png}
-
-Looking for such a case needed the drawings and not a number. Three cheap ways of
-guessing "did the crop cut the stone" were tried on the 21 photos, and all three
-put a photo whose stone is safely inside the square above the one that is really
-cut. By how unlike the plain background the band outside the square is: 9dacd40a
-scores 24.8\%, eighth of 21, while \texttt{aventurine/IMG\_3197.JPG}, a stone
-lying in a palm, scores 84.3\% and first. The same measurement as the longest
-unbroken run along the edge of the square puts 9dacd40a tenth at 5.6\% and the
-palm first at 33.9\%. How busy the crop line is against how busy the inside is
-gives 9dacd40a 5.83 against 6.73 for the palm. All three ways chose the palm and
-a cardboard photo because what crosses their crop line is skin and a brightness
-gradient, not stone. So \texttt{--scan} reports the crop's own geometry and says
-that the drawing decides, and the reasoning is kept in its docstring instead of
-shipping a number that would have put the wrong photo in this report.
-
-Four of the 21 photos are also stored sideways. \texttt{show\_prepare.py --scan
-data/new\_images} reports an orientation other than 1 for
-\texttt{amethyst/IMG\_3200.JPG}, \texttt{aventurine/IMG\_3196.JPG},
-\texttt{rose\_quartz/IMG\_3069.JPG} and \texttt{rose\_quartz/IMG\_3194.JPG}: the
-camera stored those landscape, with a note in the file saying "turn 90 degrees
-before showing". \texttt{Image.open(...).convert("RGB")} does not apply the note,
-so \texttt{prepare\_image} cuts the middle out of a turned picture; none of the
-tests uses a picture with EXIF data, so they pass while those four reach the model
-sideways. The page will not even agree with itself here, because
-\texttt{docs/app.js} loads an upload into an \texttt{<img>} and a browser applies
-the note by itself, so the browser turns the photo and Python does not. The self
-test badge cannot catch it either: \texttt{selftest.json} holds three already
-resized square pictures with no EXIF in them.
+Four of my 21 photos are stored sideways: \texttt{amethyst/IMG\_3200},
+\texttt{aventurine/IMG\_3196}, \texttt{rose\_quartz/IMG\_3069} and
+\texttt{rose\_quartz/IMG\_3194}. The phone saved them lying on their side, with a
+note in the file that says ``turn this photo before showing it''.
+\texttt{prepare\_image} does not read that note, so in Python the model sees these
+four photos turned on their side, while the web page does read it and shows them
+upright. For these four photos, Python and the page therefore do not see quite
+the same picture.
 % ---------------------------------------------------------------------------
 \section*{Problem 3. First training runs}
 
@@ -178,71 +148,55 @@ clean & ImageNet & all layers & 10 & 0.0001 & 11,178,564 & 100.0\% & 100.0\% \\
 \end{tabular}
 \end{center}
 
-The first four rows are comparable with each other: they are the same code on the
-same \texttt{data/clean}, which at that point was still identical to
-\texttt{data/raw}, so all four test accuracies are measured on the same 115
-images, 457 train and 115 test out of 572. The fifth row, \texttt{clean}, is not
-comparable with them: it is the plain \texttt{run} settings again (ImageNet
-start, all layers, 10 epochs, lr 1e-4) on the same collection after the 198
-removals of Problem 4, so 374 images and a different split, 299 train and 75
-test. Only the data changed, which is what makes it a before-and-after pair with
-\texttt{run}, and it is the pair Problems 4 and 5 compare.
+The first four rows were trained before any cleaning, on the same 572 images
+split the same way: 457 for training and 115 for testing. So their test
+accuracies can be compared with each other. The fifth row, \texttt{clean}, uses
+the same settings as \texttt{run}, but after the cleaning of Problem 4: 374
+images, 299 for training and 75 for testing. It is compared with \texttt{run} in
+Problems 4 and 5.
 
-One test image is 0.87\% of 115. \texttt{run.py} seeds the split but not the
-shuffling or the new last layer's initial weights, so the same command does not
-print the same number twice: running the first three commands again moved test
-accuracy by +2.6 (+3 images), +1.7 (+2) and +3.5 (+4) points. Differences below
-about four test images are therefore not evidence of anything, which makes
-\texttt{run} (106/115) and \texttt{frozen} (102/115) a tie, and pretraining
-against no pretraining (106 against 95) not one.
+With 115 test images, one image is 0.87\%. Training twice with the same settings
+does not give exactly the same result, because the order of the images and the
+starting values of the new last layer are random. I ran the first three
+commands twice (the first attempt's output is below; the table uses the second),
+and the test accuracy changed by 2.6, 1.7 and 3.5 points, that is 3, 2 and 4
+test images. So a difference of up to about four test images between two runs
+does not mean much.
+
+\outputfile{outputs/first_attempt_output.txt}
+
+\subsection*{The loss curve}
 
 \picturefile{figures/run_curves.png}
 
-The train loss falls every epoch in the \texttt{run} curve, 0.8494, 0.1486,
-0.0485, down to 0.0054 at epoch 10, and it does not flatten: it keeps going down.
-Test loss is a different story. It falls to 0.2505 at epoch 4 and then drifts up
-to 0.2822 by epoch 10, and test accuracy stops improving at epoch 4 as well
-(92.2\%) and stays there for epochs 5 to 10. Epochs 5 to 10 bought nothing on
-pictures the model had not seen. In the \texttt{scratch} curve test loss never
-settles below about 0.52 and jumps to 1.2557 at epoch 7 while train accuracy
-reaches 98.9\%: that is a network fitting its training set.
+In the \texttt{run} curve the training loss goes down from 0.8494 at epoch 1 to
+0.0054 at epoch 10, with one small rise at epoch 4 (0.0485 to 0.0615). After
+epoch 5 it is below 0.02 and goes down only slowly, so it flattens out. The test
+loss is lowest at epoch 4 (0.2505) and then goes up a little, ending at 0.2822.
+The test accuracy reaches 92.2\% at epoch 4 and does not improve after that.
 
-100.0\% train against 92.2\% test is a gap of 7.8 points, which is all 457
-training images right against 9 of 115 test images wrong. It means the model can
-memorise 457 pictures of four visually distinct stones, and that the test number
-is the one that says something about pictures it has not seen.
+\subsection*{The gap between train and test accuracy}
+
+The train accuracy is 100.0\% and the test accuracy 92.2\%, a gap of 7.8 points:
+all 457 training images are right, while 9 of the 115 test images are wrong. The
+model has learned its training images by heart; the test accuracy is the number
+that says how well it does on pictures it has not seen.
+
+\subsection*{The confusion matrix}
 
 \begin{center}\picturefile[0.5\linewidth]{figures/run_confusion.png}\end{center}
 
-The nine wrong test images are all in the matrix below, printed from
-\texttt{results/run\_model.pt} by \texttt{src/show\_confusion.py --tag run} (the
-same split, seed 0, 115 pictures, so the picture \texttt{run\_confusion.png} and
-these numbers agree):
+Rows are what the image really is, columns what the model said. Citrine is
+always right (30 of 30). The 9 mistakes are: amethyst called aventurine 2 times
+and rose quartz 2 times, aventurine called rose quartz 2 times and citrine once,
+and rose quartz called amethyst 2 times. Counting both directions, the pairs
+mixed up most are amethyst with rose quartz (4) and aventurine with rose quartz
+(4).
 
-\begin{center}\footnotesize
-\begin{verbatim}
-                 amethyst   aventurine      citrine  rose_quartz      total
-amethyst                23            2            0            2         27
-aventurine               0           25            1            2         28
-citrine                  0            0           30            0         30
-rose_quartz              2            0            0           28         30
-                        25           27           31           32        115
-\end{verbatim}
-\end{center}
-
-Recall per class: amethyst 23/27 (85\%), aventurine 25/28 (89\%), citrine 30/30
-(100\%), rose\_quartz 28/30 (93\%). No single direction is ahead: 2 is the
-largest count and four directions reach it, so which pair looks "most" mixed up
-depends on whether the two directions of a pair are added. Added, the two biggest
-pairs both have rose quartz in them, amethyst/rose\_quartz 4 and
-aventurine/rose\_quartz 4, against amethyst/aventurine 2 and aventurine/citrine 1.
-Citrine is never the true class of a mistake, and it ends with one more
-prediction than it has pictures, 31 against 30.
-
-My answer to "which two categories, and did it surprise you":
+My answer to ``which two categories, and did it surprise you'':
 
 \begin{quote}
-The categories that got mixed up and surprised me was amethyst turning out as
+The categories that got mixed up and surprised me were amethyst turning out as
 aventurine twice. That is because purple is very different from green, so I
 thought they wouldn't get mixed. Aventurine was mixed up for rose quartz also
 twice but that surprised me less compared to the amethyst turning out as
@@ -251,26 +205,39 @@ similar to the light green of aventurine. I wasn't surprised about amethyst and
 rose quartz to get mixed up due to their similar colors.
 \end{quote}
 
-Amethyst with rose quartz is what it mixes up most, 4 of the 9 mistakes through
-both of its directions, and that is the pair I was not surprised about.
+\subsection*{Starting from ImageNet against starting from random numbers}
 
-Same code, same data, same epochs and learning rate: 92.2\% starting from
-ImageNet against 82.6\% starting from random numbers, 11 test images apart, and
-the \texttt{scratch} test loss rises while its train accuracy approaches 100\%.
-The pretrained features already carry most of what separates coloured quartz; the
-random network has to learn all of it from 457 photographs.
+With the same images, code and number of epochs, starting from ImageNet gives
+92.2\% and starting from random numbers 82.6\%: 9.6 points, 11 test images
+apart, more than the noise of about four images. Why I think that is: considering
+my categories, and that I expected the model to tell them apart by colour,
+starting from random numbers needs much longer to learn than starting from
+ImageNet, which is already trained on millions of images. In the same 10 epochs
+the random model only has my 457 training images to learn from, and its test
+loss goes up and down (1.2557 at epoch 7) while its train accuracy keeps
+rising.
 
-Training only the last layer, 2,052 of 11,178,564 parameters
-(2,052 / 11,178,564 = 0.018\%, 5,445 times fewer), reaches 88.7\% against 92.2\%
-for training everything, and takes 0.1 minutes instead of 0.3. That is within
-the four-image noise of the best run, with a smaller train/test gap (97.2 against
-100.0) and a smoother curve.
+\subsection*{Training only the last layer}
 
-A fourth setting, \texttt{lr1e-3}, is the default run with the learning rate ten
-times larger: 84.3\% against 92.2\%, and an erratic test loss, 16.8645 at epoch
-1, 1.8993 at epoch 4 and 1.4221 at epoch 9, where the run at 0.0001 keeps test
-loss under 0.33 the whole way. A learning rate big enough to pull one fresh layer
-into place is too big when all 11 million parameters can move.
+Training only the new last layer changes 2,052 of the 11,178,564 parameters, about
+0.02\%. It reaches 88.7\%, against 92.2\% when all layers are trained: 3.5 points,
+4 test images, which is within the noise. It also trains faster (0.1 minutes
+instead of 0.3).
+
+\subsection*{My own setting: a larger learning rate}
+
+\texttt{lr1e-3} is the same as \texttt{run} with a learning rate ten times
+larger (0.001 instead of 0.0001). It reaches only 84.3\%, and its test loss jumps
+around (16.8645 at epoch 1, 1.8993 at epoch 4, 1.4221 at epoch 9). A learning rate
+that works for training one new layer is too large when all the layers are
+trained.
+
+The curves of the other three runs, \texttt{scratch}, \texttt{frozen} and
+\texttt{lr1e-3}, top to bottom:
+
+\picturefile[0.8\linewidth]{figures/scratch_curves.png}
+\picturefile[0.8\linewidth]{figures/frozen_curves.png}
+\picturefile[0.8\linewidth]{figures/lr1e-3_curves.png}
 
 \subsection*{Output of the runs}
 \outputfile{outputs/run_output.txt}
@@ -304,44 +271,43 @@ I remove images that has more than one type of crystal
 I remove images that show the wrong crystal.
 \end{quote}
 
-Seven clauses. \texttt{clean.py remove} takes one \texttt{--reason} per clause and
-\texttt{clean.py count} groups by that string, so the shorter string written into
-the log is named with each clause below.
+How I cleaned, in order: I wrote these rules first. Then I went through all
+572 downloaded images myself and listed every image that broke a rule, next to
+the rule it broke. Then I looked at the suspect sheets and the near copies. In
+the end I removed only the images on my list (188) and the near copies (10),
+each with its reason, using \texttt{clean.py remove}.
 
 \subsection*{Three kinds of junk}
-Mostly unrelated objects: clothes, car accessories, logos, drawings, and with
-them characters and the wrong crystal. Three kinds, each with one of the files
-that went to \texttt{data/removed/}:
+Mostly unrelated objects: clothes, car accessories, logos, drawings, and also
+characters and the wrong crystal. Three kinds, each with one of the removed
+files:
 
 \begin{itemize}
-\item not a crystal at all (clothes, car accessories, logos, characters), removed
-      by "The image doesn't show a crystal at all": \texttt{aventurine/0102.jpg}
-\item a drawing rather than a photograph, removed by "The image is a drawing":
-      \texttt{amethyst/0118.jpg}
-\item the wrong crystal, removed by "The image shows the wrong crystal":
-      \texttt{aventurine/0110.jpg}
+\item not a crystal at all: \texttt{aventurine/0102.jpg}, a logo (left)
+\item a drawing rather than a photograph: \texttt{amethyst/0118.jpg} (middle)
+\item the wrong crystal: \texttt{aventurine/0110.jpg}, red stones (right)
 \end{itemize}
 
-\fillin{pictures: copy aventurine/0102.jpg, amethyst/0118.jpg and
-aventurine/0110.jpg out of data/removed/ into figures/junk\_1.jpg, junk\_2.jpg
-and junk\_3.jpg, then uncomment the three lines below}
-
-% \picturefile[0.3\linewidth]{figures/junk_1.jpg}
-% \picturefile[0.3\linewidth]{figures/junk_2.jpg}
-% \picturefile[0.3\linewidth]{figures/junk_3.jpg}
+\picturefile[0.3\linewidth]{figures/junk_1.jpg}\hfill
+\picturefile[0.3\linewidth]{figures/junk_2.jpg}\hfill
+\picturefile[0.3\linewidth]{figures/junk_3.jpg}
 
 \subsection*{What I removed}
 \outputfile{outputs/clean_count.txt}
 
-The suspect pass found 27 pairs of images above 0.95 similarity. 16 of those pairs
-were settled by my own rule, because both halves were junk under one of the seven
-clauses and had already gone: that is the whole amethyst tail, where
-\texttt{0123}, \texttt{0124}, \texttt{0126}, \texttt{0127} and \texttt{0128} are
-near copies of each other, so the run removed under "The image doesn't show a
-crystal at all" took the duplicates with it. The other nine groups, 19 pictures,
-were still in \texttt{data/clean} and I decided them one by one on the copies
-sheet, keeping one picture of each group and removing the rest under one new
-reason, "The image is a near copy of another picture":
+Every removed file, with its reason, is listed in
+\texttt{outputs/removed\_log.csv}; the per-class numbers in this section are
+counted from it.
+
+198 of the 572 images were removed and 374 kept. Aventurine changed most (83 of
+138 removed), mostly images that did not show a crystal at all (45) or had a lot
+of text (16), and citrine least (17 of 150).
+
+\subsection*{Near copies}
+The tool found 27 pairs of near copies. In 16 of them both pictures had already
+been removed because they broke one of my rules. For the other 9 groups I kept
+one picture and removed the other 10, with the reason ``The image is a near copy
+of another picture'':
 
 \begin{center}\footnotesize
 \begin{tabular}{ll}
@@ -361,19 +327,16 @@ kept & the near copies removed \\
 \end{tabular}
 \end{center}
 
-Ten images removed, one kept of each group, decided on 13 October 2026: 27 pairs
-above 0.95, 16 of them already gone as junk by my own rule, nine groups left, one
-picture kept from each and the other ten removed.
-
-The suspect pass ran on all 572 images before any removal, so these numbers are
-about the data as downloaded. Each sheet draws the 32 images of a class that look
-least like the rest of their class, and \texttt{suspects.csv} carries a row for
-every image with its rank, rank 1 being the least typical. Removals by rank:
+\subsection*{The suspects}
+Each suspect sheet shows the 32 images of a class that look least like the rest
+of that class (\texttt{outputs/suspects.csv} gives every image its rank, rank 1
+being the least typical). This table shows, for the images I removed by my
+rules, where they were on that ranking:
 
 \begin{center}\footnotesize
 \begin{tabular}{lrrrr}
 \toprule
-class & removed by my rule & of those, rank 1--20 & rank 21--32 & rank 33 and later \\
+class & removed by my rules & rank 1--20 & rank 21--32 & rank 33 and later \\
 \midrule
 amethyst & 38 & 11 & 6 & 21 \\
 aventurine & 81 & 15 & 9 & 57 \\
@@ -383,210 +346,721 @@ rose\_quartz & 57 & 15 & 6 & 36 \\
 \end{tabular}
 \end{center}
 
-The first 20 of each class went by: amethyst no crystal 5, jewellery 3, drawing 1,
-unclear 1, wrong crystal 1; aventurine no crystal 9, wrong crystal 2, jewellery 1,
-more than one 1, unclear 1, text 1; citrine text 2, more than one 2; rose\_quartz
-no crystal 5, jewellery 4, more than one 4, wrong crystal 1, text 1.
+Of the first 20 suspects in each class, I removed 11 amethyst, 15 aventurine, 4
+citrine and 15 rose quartz.
 
-The images that look least like the rest of their class are mostly junk by my rule
-too, most strongly in aventurine and rose\_quartz, which are also the two classes
-my rule removed most from. Citrine is where the two views disagree most, 4 of 20
-of the first suspects were removed, and aventurine is where I went furthest on my
-own: 57 of its 81 removals sit at rank 33 or later, in pictures the sheet never
-showed me. "Removed but not on the suspect list at all" is always 0 and says
-nothing, because every one of the 572 images has a rank; the number that answers
-"did you find junk it did not list" is that rank 33 and later column, 21, 57, 8
-and 36.
+Did the suspects include junk I had missed when I looked myself? No. I had
+already listed every image that broke my rules, and I removed only those and the
+near copies. The suspect sheets also showed images that the tool found unusual
+but that I had judged ok when I first went through them, because they did not
+break my rules, so I kept them. For example, \texttt{amethyst/0107.jpg} was on
+the amethyst suspect sheet, which gave it 8\% amethyst, but it did not break any
+of my rules, so it is still in \texttt{data/clean}.
+
+\picturefile{figures/suspects_amethyst.png}
+
+{\small The amethyst suspect sheet, as \texttt{clean.py suspects} drew it.
+\texttt{amethyst/0107.jpg} is number 8, a strand of amethyst beads.}
+
+Did I find junk that the suspect sheets did not list? Yes, a lot: the last column
+of the table counts the images I removed that were not on the sheets at all
+(rank 33 and later), for example 57 of the 81 aventurine images I removed.
 
 \subsection*{Before and after cleaning}
 \outputfile{outputs/compare.txt}
 
-Nothing went down, but the pair of test numbers is not as big as it looks. 92.2\%
-was 9 wrong of 115; 100\% is 0 wrong of 75, so after cleaning one test image is
-worth 1.3\% instead of 0.87\%, the 198 removals took 28 images out of the test set
-(aventurine's share of it fell from 28 to 11), and the cleaned test set is by
-construction the part of the collection that survived my own rule of throwing
-away the pictures the model was getting wrong. Some of the 7.8 points is a better
-model and some of it is a kinder exam, and these two numbers cannot tell those
-apart. Nor can 100\% of 75 be anything more than 75 pictures out of 75:
-\texttt{run.py} printed "no mistakes to plot, which is suspicious. Check your
-split." for this run, because with nothing wrong on the test set there is no
-mistake picture to draw, so this run has no \texttt{clean\_worst.png}. The
-training set also fell from 457 to 299 images, a third smaller, and the test
-accuracy went up anyway.
+(The line about \texttt{docs/} missing the model was printed because the model
+had not been exported yet at that point; it was exported afterwards, see the
+Appendix.)
 
-The fair comparison is the row that did not change: the same 21 photographs from
-a different source, 18/21 before and 18/21 after, which is the pair of numbers
-Problem 5 is built on. Cleaning moved the number of right answers by nothing at
-all, and the next section shows that it did not leave the pictures alone either.
+The \texttt{clean} run, its curves and its confusion matrix on its 75 test
+images:
+
+\picturefile[0.8\linewidth]{figures/clean_curves.png}
+\begin{center}\picturefile[0.5\linewidth]{figures/clean_confusion.png}\end{center}
+
+\outputfile{outputs/clean_output.txt}
+
+The test accuracy went from 92.2\% (9 wrong of 115) to 100.0\% (0 wrong of 75).
+Nothing went down, but this gain is smaller than it looks. The test set after
+cleaning is smaller (75 images instead of 115) and easier, because the unusual
+pictures that are hardest to classify were mostly removed by my rules. So part of
+the gain may come from a better model and part from an easier test, and these two
+numbers cannot tell them apart. (With no mistakes on the test set,
+\texttt{run.py} printed ``no mistakes to plot, which is suspicious. Check your
+split.'' and drew no picture of mistakes for this run.)
+
+The fair comparison is on my 21 new photos, which did not change: 18 of 21 right
+before cleaning and 18 of 21 after. Cleaning did not change the number of right
+answers on them, but, as Problem 5 shows, it changed which photos were right.
 
 % ---------------------------------------------------------------------------
 \section*{Problem 5. Images from a new source}
 
-Photographs I took myself for this assignment, with my own phone, saved as JPEG
-because the phone's HEIC files cannot be read by the code: 21 of them, five in
-each class and six rose\_quartz, in \texttt{data/new\_images/<class>/}. One of
-them, \texttt{data/new\_images/aventurine/IMG\_3068.JPG}, is the photograph
-measured in Problem 2.
+My new images are 21 photographs of crystals, five of each class and six of rose
+quartz, taken for this assignment by me and by family members and friends I asked
+for them. They are saved as JPEG, because the code cannot read the phones' HEIC
+files, in \texttt{data/new\_images/<class>/}.
 
-They cannot be among the downloads: they are photographs of objects in front of
-me, taken by me, while the four categories were downloaded from a search engine,
-and a search cannot return a photograph that never existed on the web. The
-overlap check tests that instead of assuming it: every new image is described and
-compared with all 572 downloaded files, including the 198 that moved to
-\texttt{data/removed/}, and the closest any of the 21 comes to any of them is
-0.85, under the 0.95 the tool calls a near copy. The tool prints 570 rather than
-572 because it hashes every file and counts each picture once, and two of the 572
-downloaded files are byte-for-byte copies of another file in the set.
+I am sure none of them is among my downloads, because they were never online:
+they were taken for this purpose, and the downloads come from a web search. The
+overlap check confirms it: it compared each of my 21 photos with all the
+downloaded images, and none of them is a near copy (the closest any of them comes
+is 0.85, and near copies are above 0.95).
 
 \outputfile{outputs/overlap.txt}
 
-\begin{center}\footnotesize
-\begin{tabular}{lrr}
-\toprule
-run & test accuracy & new images \\
-\midrule
-\texttt{run} & 92.2\% & 85.7\% (18/21) \\
-\texttt{clean} & 100.0\% & 85.7\% (18/21) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The two test accuracies are measured on different pictures, because the split is
-drawn after cleaning, 92.2\% of 115 and then 100.0\% of 75 (Problem 4). The new
-images are the same 21 photographs for both rows and their total is the same too,
-18 of 21 either way.
-
-Not the same eighteen pictures. Loading both saved models and asking each of them
-about all 21 new images (the file named by the first eight characters of its
-name):
-
-\begin{center}\footnotesize
-\begin{tabular}{llll}
-\toprule
-new image & really & \texttt{run} says & \texttt{clean} says \\
-\midrule
-\texttt{amethyst/44db3aaf} & amethyst & \textbf{rose\_quartz} & amethyst \\
-\texttt{amethyst/a95f9f93} & amethyst & \textbf{rose\_quartz} & amethyst \\
-\texttt{rose\_quartz/IMG\_3069} & rose\_quartz & \textbf{aventurine} & rose\_quartz \\
-\texttt{citrine/2788e4fa} & citrine & citrine & \textbf{amethyst} \\
-\texttt{citrine/58f05f6d} & citrine & citrine & \textbf{rose\_quartz} \\
-\texttt{citrine/6dc1dd3c} & citrine & citrine & \textbf{rose\_quartz} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Those six pictures are the only ones where the two models disagree, three each
-way, and no picture is wrong in both: 15 right in both, three wrong in each, so
-\texttt{run} is wrong on 3/21 and \texttt{clean} is wrong on 3/21. Cleaning traded
-three right answers for three wrong ones, one class for another:
+The accuracy on the downloaded test set and on my new images, side by side:
 
 \begin{center}\footnotesize
 \begin{tabular}{lrr}
 \toprule
-class & \texttt{run} on the new images & \texttt{clean} on the new images \\
+run & downloaded test set & my new images \\
 \midrule
-amethyst & 3/5 & 5/5 \\
-aventurine & 5/5 & 5/5 \\
-citrine & 5/5 & 2/5 \\
-rose\_quartz & 5/6 & 6/6 \\
+\texttt{run} (before cleaning) & 92.2\% & 85.7\% (18/21) \\
+\texttt{clean} (after cleaning) & 100.0\% & 85.7\% (18/21) \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-It is the same boundary, moved to the other side. Every pair \texttt{run} got
-wrong on the downloaded test set had rose quartz in it, amethyst/rose\_quartz 4
-and aventurine/rose\_quartz 4, its two biggest pairs, with citrine perfect at
-30/30. On the new images it calls two amethysts rose quartz; after cleaning those
-three answers are right, and three citrines have gone over to rose quartz and
-amethyst in their place. My guess at why, marked as a guess and not as a
-measurement: my rule took 83 of 138 aventurine pictures and 58 of 150
-rose\_quartz, but only 17 of 150 citrine, so citrine is a larger share of a much
-smaller collection and the pictures that held the citrine boundary are the ones
-that went. A run on the same split as before would settle it; 21 pictures, one of
-them worth 4.8\%, cannot.
+The two test accuracies are measured on different test sets (115 images before
+cleaning, 75 after; see Problem 4), while the new images are the same 21 photos
+for both. On my new images both models get 18 of 21 right, less than on the
+downloaded test set.
 
-\texttt{check.py} prints the five mistakes it was most sure about, and the
-published model made three, so three is the whole list and not a selection. All
-three are one small stone, in flat light, on a plain pale background:
+\subsection*{The mistakes it was confident about}
+
+\texttt{check.py} lists the five mistakes the published model was most sure
+about; on my new images it made only three, so these are all of them. All three
+are citrines:
 
 \picturefile[0.32\linewidth]{figures/mistake_1_citrine_called_rose_quartz.jpg}\hfill
 \picturefile[0.32\linewidth]{figures/mistake_2_citrine_called_rose_quartz.jpg}\hfill
 \picturefile[0.32\linewidth]{figures/mistake_3_citrine_called_amethyst.jpg}
 
-{\small left to right: said rose quartz 54\%, said rose quartz 51\%, said amethyst
-32\%; all three really citrine.}
+{\small left to right: \texttt{6dc1dd3c} said rose quartz 54\%,
+\texttt{58f05f6d} said rose quartz 51\%, \texttt{2788e4fa} said amethyst 32\%;
+all three really citrine.}
+
+What I think pushed each of them the wrong way:
 
 \begin{itemize}
-\item \texttt{citrine/6dc1dd3c-0216-...JPG}, said rose\_quartz (54\%). One small
-stone on grey speckled granite, and it is the pale end of citrine: milky white
-with a faint yellow patch at one end, with the wet-looking grey paving around it
-nearly as pale as the stone, so the whole frame is cream and grey. Nothing in the
-picture is pink, but "pale stone, little colour" is what rose\_quartz looks like
-in the downloads, and the flat light has taken the yellow away. Colour is the only
-thing separating citrine from rose\_quartz in a picture like this, and the colour
-is washed out.
-\item \texttt{citrine/58f05f6d-77f2-...JPG}, said rose\_quartz (51\%). One amber
-stone on white paper, underexposed, so the paper reads light grey and the amber
-reads pale. 51\% is a coin toss, for the reason above.
-\item \texttt{citrine/2788e4fa-a7ad-...JPG}, said amethyst (32\%). One pale yellow
-stone on light grey paper, small in the frame, low contrast, most of the picture
-empty background. 32\% out of four classes is close to guessing and there is
-nothing purple in the picture: this one reads as an image the model had almost no
-information from, rather than an image that fooled it in a particular way.
+\item \texttt{citrine/6dc1dd3c}: the crystal is pale, less full in colour and
+small in size, and the background has colour hues in it, so it could affect the
+model's answer.
+\item \texttt{citrine/58f05f6d}: the crystal is small, the light is dark and the
+background has pink colour hues in it.
+\item \texttt{citrine/2788e4fa}: similarly to \texttt{58f05f6d}, the crystal is
+small and the light is dark; however, its colour is fuller.
 \end{itemize}
 
-The three the earlier model got wrong instead are the three other wrong answers in
-the table above: two amethysts called rose quartz, one a crystal deep violet over
-half of it and white over the other half on pale pinkish paper, one a milky pale
-lilac pendant with a silver chain on grey speckled granite; and one rose quartz
-called aventurine, a pale lavender cabochon with a bright white highlight on a
-grey surface, where aventurine in the downloads is also a smooth translucent
-pebble, so the shape is no help. All six mistakes of the two models together are
-the same shot: one small stone, flat light, a plain white or grey background, the
-stone filling little of the frame, its colour washed out. The one citrine picture
-the cleaned model does get right, \texttt{citrine/f16efa23}, has three stones,
-warm light, saturated honey colour and hard shadows.
+\subsection*{What is different about my new images}
 
-\fillin{What is different about your new images: background, lighting, angle,
-distance, what else is in the frame.}
+Compared with the downloads, my new images are less saturated, and their
+colours are sometimes less vivid. The crystals are smaller, usually in the
+middle of the photo. The light is darker in some of them. Some photos also show
+my hand as the surface the crystal is lying on.
+
+My guess at why cleaning did not make the model better on my new images: some
+of the photos I removed because they broke my rules may have looked more like
+my own photos, and the ones that remained look even more different from my
+photos. Not all of the removed images were obvious junk. The images I removed are the
+ones that broke my rules, plus the near copies I chose to remove. Not every
+suspect was removed: some of the images the tool listed as least like the rest
+of their category did not break my rules, so I kept them. However, when I check the removed images, they do not necessarily look like my
+photos. What I can see is that in the clean images the colours are more vivid
+and the crystals are bigger in size than in my photos.
+
+The citrine suspect sheet is different from the others. Even the downloaded
+citrines that look least like the rest are still mostly over 90\% citrine (21 of
+32), and none of them looks like another category. On the other three sheets,
+many images are under 50\%. So the downloaded citrines all look very much alike:
+vivid in colour and clearly visible (the numbers are in
+\texttt{outputs/suspects.csv}).
+
+\picturefile{figures/suspects_citrine.png}
+
+{\small The citrine suspect sheet, as \texttt{clean.py suspects} drew it.}
+
+Even so, all three mistakes of the cleaned model on my
+new images are citrines, while it got all 27 citrines in the downloaded test
+set right.
+
+My guess: the citrines in my photos are small, less vivid in colour and
+sometimes paler, rather than having the full yellow or orange colour of the
+citrines in the clean images, and in two of the three photos it got wrong the
+light is darker.
 
 % ---------------------------------------------------------------------------
 \section*{Problem 6. The demo}
 
-Address: \fillin{your GitHub Pages address}
+Address: \url{https://giuliag9.github.io/MAS1004-assignment1/}
 
-\fillin{What happens when you show it something that is none of your
-categories.}
+I checked the page on my phone: it worked, and it showed the green badge.
+
+\begin{center}\picturefile[0.8\linewidth]{figures/demo_page.png}\end{center}
+{\small My page, with the green badge: ``self test passed: the browser agrees
+with Python''.}
+
+I showed the page photos of four things that are none of my categories, and
+it named one of my four stones every time, because it has no answer for ``none
+of these'': an adapter was rose quartz (47.1\%, then amethyst 43.7\%), a
+yellow highlighter was aventurine (65.3\%, then citrine only 24.9\%), a pink
+mask product was rose quartz (92.2\%), and a beige mug was rose quartz
+(79.4\%).
+
+\begin{center}\picturefile[0.8\linewidth]{figures/demo_highlighter.png}\end{center}
+{\small The yellow highlighter: aventurine 65.3\%, citrine 24.9\%.}
 
 % ---------------------------------------------------------------------------
 \section*{Problem 7. What the model looks at}
 
 % Copy this subsection once for every guess.
-\subsection*{Guess 1}
+\subsection*{Guess 1: colour separates amethyst from aventurine}
 
-\fillin{The guess, and what in your images or your model's mistakes made you
-think of it.}
+My guess, in my words as I gave it: ``I'll start from my original guess on what
+the model would look at to distinguish the crystal. I mentioned I expect it to
+look at colors. From my images, amethyst and aventurine were not mistaken in the
+current model. So my first guess is that if we lower the saturation on amethyst
+and aventurine the model will have more problems to distinguish them.''
 
-\fillin{The change you chose, and why it tests the guess.}
+The change: the saturation of all ten of my new amethyst and aventurine photos
+lowered to 0\%, which leaves the light and dark, the shape and the texture of
+each photo as they were and takes the colour away completely, so that I can
+test the model with the absence of colour. Ten photos, five of each class, and
+all ten originals are answered right by the page.
+
+My requests to the agent, word for word:
+\begin{quote}
+make a copy of each image in data/new\_images/amethyst and
+data/new\_images/aventurine with lowered saturation and save the copies,
+respectively, in data/changed/less\_saturation\_amethyst and
+data/changed/less\_saturation\_aventurine
+\end{quote}
+and, asked by how much:
+\begin{quote}
+to 0\% , so we can test with the absence of color.
+\end{quote}
+
+The agent wrote the change as a short piece of code that I ran on Colab, where
+my photos are; it made the changed copies and left the originals as they were. I
+uploaded every original and every changed photo to my web page and wrote down its
+first two answers:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & original & saturation 0\% \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 96.7\%, rose quartz 2.4\% & amethyst 84.6\%, aventurine 7.9\% \\
+\texttt{amethyst/a95f9f93} & amethyst 86.9\%, rose quartz 8.1\% & amethyst 77.0\%, aventurine 14.3\% \\
+\texttt{amethyst/IMG\_3072} & amethyst 80.2\%, rose quartz 16.7\% & \textbf{aventurine 45.5\%}, amethyst 36.4\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 40.8\%, aventurine 30.6\% \\
+\texttt{amethyst/IMG\_3200} & amethyst 94.8\%, rose quartz 2.3\% & \textbf{aventurine 45.6\%}, amethyst 42.8\% \\
+\texttt{aventurine/59ad40f0} & aventurine 99.3\%, amethyst 0.4\% & aventurine 62.9\%, amethyst 23.7\% \\
+\texttt{aventurine/aba4d635} & aventurine 97.3\%, amethyst 1.7\% & aventurine 82.1\%, amethyst 12.5\% \\
+\texttt{aventurine/IMG\_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 51.5\%, rose quartz 33.7\% \\
+\texttt{aventurine/IMG\_3196} & aventurine 80.9\%, rose quartz 13.3\% & \textbf{rose quartz 47.1\%}, aventurine 44.6\% \\
+\texttt{aventurine/IMG\_3197} & aventurine 88.7\%, rose quartz 9.9\% & \textbf{rose quartz 62.3\%}, aventurine 34.6\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The originals are 10 of 10 right; with the colour taken away, 6 of 10 are still
+right, and the probability of the right answer is lower for all ten. The four
+that changed: two amethysts became aventurine, and two aventurines became rose
+quartz.
+
+% One \sidebyside for every image you changed. The pictures are scaled down for
+% the report.
+\sidebyside{figures/guess1_original_amethyst_44db3aaf.jpg}{amethyst/44db3aaf, original: amethyst 96.7\%, rose quartz 2.4\%}
+           {figures/guess1_changed_amethyst_44db3aaf.jpg}{saturation 0\%: amethyst 84.6\%, aventurine 7.9\%}
+\sidebyside{figures/guess1_original_amethyst_a95f9f93.jpg}{amethyst/a95f9f93, original: amethyst 86.9\%, rose quartz 8.1\%}
+           {figures/guess1_changed_amethyst_a95f9f93.jpg}{saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3072.jpg}{amethyst/IMG\_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
+           {figures/guess1_changed_amethyst_IMG_3072.jpg}{saturation 0\%: \textbf{aventurine 45.5\%}, amethyst 36.4\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3089.jpg}{amethyst/IMG\_3089, original: amethyst 90.5\%, aventurine 5.2\%}
+           {figures/guess1_changed_amethyst_IMG_3089.jpg}{saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
+\sidebyside{figures/guess1_original_amethyst_IMG_3200.jpg}{amethyst/IMG\_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
+           {figures/guess1_changed_amethyst_IMG_3200.jpg}{saturation 0\%: \textbf{aventurine 45.6\%}, amethyst 42.8\%}
+\sidebyside{figures/guess1_original_aventurine_59ad40f0.jpg}{aventurine/59ad40f0, original: aventurine 99.3\%, amethyst 0.4\%}
+           {figures/guess1_changed_aventurine_59ad40f0.jpg}{saturation 0\%: aventurine 62.9\%, amethyst 23.7\%}
+\sidebyside{figures/guess1_original_aventurine_aba4d635.jpg}{aventurine/aba4d635, original: aventurine 97.3\%, amethyst 1.7\%}
+           {figures/guess1_changed_aventurine_aba4d635.jpg}{saturation 0\%: aventurine 82.1\%, amethyst 12.5\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3068.jpg}{aventurine/IMG\_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
+           {figures/guess1_changed_aventurine_IMG_3068.jpg}{saturation 0\%: aventurine 51.5\%, rose quartz 33.7\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3196.jpg}{aventurine/IMG\_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
+           {figures/guess1_changed_aventurine_IMG_3196.jpg}{saturation 0\%: \textbf{rose quartz 47.1\%}, aventurine 44.6\%}
+\sidebyside{figures/guess1_original_aventurine_IMG_3197.jpg}{aventurine/IMG\_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
+           {figures/guess1_changed_aventurine_IMG_3197.jpg}{saturation 0\%: \textbf{rose quartz 62.3\%}, aventurine 34.6\%}
+
+What the results say about the guess, in my words: From these results I can
+observe two things. First, the cases in which the 0\% saturation changed the
+model's answer as I thought were only amethyst to aventurine, and not
+aventurine to amethyst: the only two times the answer changed for aventurine,
+it went to rose quartz and not to amethyst. Second, by looking at the changed
+images I realised that the aventurine images that were called rose quartz at
+0\% saturation were paler than the others, meaning that in the original the
+colour was lighter, paler, less full. At the same time the amethyst images that
+were called aventurine at 0\% saturation also showed some paler parts and
+appeared less full, but still darker than the aventurine images that were
+called rose quartz. Overall the answers change a bit after removing the colour,
+but not as much as I expected, which makes me think that colour is considered,
+but it is not the determining element for the model to tell the crystals
+apart.
+
+\subsection*{Guess 2: transparency, aventurine pale but dark}
+
+My guess, in my words as I gave it: ``Given what I observed from the first
+guess, color is not the determinant element for the model. I start to think
+that transparency also is important when guessing the crystals. As I mentioned
+in the first guess, 0\% saturation aventurine that were guessed to be rose quartz
+were paler and less full in color, while the amethyst 0\% saturation that were
+guessed to be aventurine also were less full, paler but overall darker. Which
+makes me think that for the model aventurine is dark, but also pale, while rose
+quartz is pale but lighter. If I think of the mistakes made, the first one was
+of data/new\_images/citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG being
+guessed as rose quartz, and in fact the crystal in the photo is less full in
+color, and lighter. To check this, the transparency of the images should be
+lowered. In particular my guess to check if transparency plays a role in how
+the model distinguishes the crystals, is that if we lower the transparency of
+the images of amethyst we turned to 0\% saturation, since they're dark, they
+would be guessed as aventurine (pale but dark).''
+
+The change: a photo has no setting for how see-through a stone is (the
+``transparency'' setting a picture file can have is not seen by the model). So I
+chose to show less transparency by lowering the contrast to 50\%, on the whole
+picture, on the three amethyst photos that were still called amethyst at 0\%
+saturation. Lowering the contrast brings the light and dark parts of the picture
+closer to grey, so the crystal looks paler and less full. I chose 50\% as a
+compromise, to make the crystal paler without its dark parts getting too much
+lighter.
+
+My requests to the agent, word for word:
+\begin{quote}
+So make a copy of
+data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
+and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with lower transparency
+and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst
+\end{quote}
+and, after the agent explained that a picture has no transparency setting the
+model would see:
+\begin{quote}
+Since there is no transparency setting to change in the images, I think the
+best way to make the crystal paler and less full would be to lower contrast to
+50\%, this way it's enough to make the image paler but keeps the darkess of the
+crystal which in my guess is what determines aventurine (pale but dark). So make
+a copy of
+data/changed/less\_saturation\_amethyst/44db3aaf-5cdf-4004-9255-868fefec64c3.JPG,
+data/changed/less\_saturation\_amethyst/a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG
+and data/changed/less\_saturation\_amethyst/IMG\_3089.JPG with contrast to 50\%
+and save the copies in data/changed/less\_saturation\_less\_transparency\_amethyst.
+Also maintain the whole picture of the images for this guess.
+\end{quote}
+
+The agent wrote the change as a short piece of code that I ran on Colab. My web
+page's first two answers, next to the ones the same photos got at 0\%
+saturation in Guess 1:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & saturation 0\% & saturation 0\% and contrast 50\% \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 84.6\%, aventurine 7.9\% & \textbf{rose quartz 50.0\%}, amethyst 27.7\% \\
+\texttt{amethyst/a95f9f93} & amethyst 77.0\%, aventurine 14.3\% & \textbf{rose quartz 46.2\%}, aventurine 27.8\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 40.8\%, aventurine 30.6\% & \textbf{rose quartz 64.4\%}, aventurine 25.2\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three changed their answer, all three to rose quartz and none to aventurine;
+aventurine is second for two of them.
+
+\sidebyside{figures/guess1_changed_amethyst_44db3aaf.jpg}{44db3aaf, saturation 0\%: amethyst 84.6\%, aventurine 7.9\%}
+           {figures/guess2_changed_amethyst_44db3aaf.jpg}{and contrast 50\%: \textbf{rose quartz 50.0\%}, amethyst 27.7\%}
+\sidebyside{figures/guess1_changed_amethyst_a95f9f93.jpg}{a95f9f93, saturation 0\%: amethyst 77.0\%, aventurine 14.3\%}
+           {figures/guess2_changed_amethyst_a95f9f93.jpg}{and contrast 50\%: \textbf{rose quartz 46.2\%}, aventurine 27.8\%}
+\sidebyside{figures/guess1_changed_amethyst_IMG_3089.jpg}{IMG\_3089, saturation 0\%: amethyst 40.8\%, aventurine 30.6\%}
+           {figures/guess2_changed_amethyst_IMG_3089.jpg}{and contrast 50\%: \textbf{rose quartz 64.4\%}, aventurine 25.2\%}
+
+What the results say about the guess, in my words: These results make me think
+that while lowering the contrast, the crystals also got lighter, and therefore
+closer to rose quartz rather than aventurine. Lowering the contrast and keeping
+the original darkness is difficult. However, these results seem to fit my idea
+that rose quartz is pale and light. Even if it did not separate amethyst from
+aventurine, transparency, which in this case was conveyed by lowering the
+contrast, seems to be considered by the model: all three images got a different
+answer from the one they had at 0\% saturation. It is also worth noticing that
+the lower contrast changed all three answers, but it was applied to the 0\%
+saturation images, not to the original ones. Overall, the results of the second
+guess make me think of two things. First, if rose quartz is light and pale, and
+the mistaken citrine is also light and pale, what does the model look at in the
+image to tell them apart, and why was the citrine called rose quartz? Perhaps
+transparency is not the answer. Second, there might be another factor that the
+model considers to tell the crystals apart, or a combination of factors.
+
+\subsection*{Guess 3: more colour would help the pale citrines}
+
+My guess, in my words as I gave it: ``Given the previous guesses results, I
+think color and transparency are in a way considered by the model, even if not
+in the way I expected them. At this point is good to consider the case of the 3
+mistakes of citrine of my images. Starting from the one I mentioned, citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG was guessed as rose quartz, and these
+crystals are generally light and pale. As I previously said, the images of
+citrine in clean, are more vivid in color than my own photos, which I think is
+an important element that makes the images in clean different from mine. In the
+first guess I focused on color, and observed if its absence (so a 0\%
+saturation) could impact the model's guessing, and overall, there were some
+changes, even for the images that were guessed correctly (guessed with less
+percentage). This makes me still want to keep color in consideration for a
+guess. Therefore, it would be interesting to test the opposite of what I did in
+the first guess, meaning instead of reducing color, enhancing it. Since both
+citrine and rose quartz are pale, the aspect that is different in them is color
+and them being mistaken could be linked to the color not being vivid. So, my
+third guess is that if citrine has higher saturation the model would have less
+problem recognizing it. If this guess turned to be true, it would confirm the
+reason for the mistake in my images.''
+
+What I expected, written before I saw the results: ``If my guess is right the
+3 wrong will turn right and the other 2 right ones will stay right with higher
+percentages.''
+
+The change: 70\% more colour (saturation 170\% on the scale of Guess 1, where
+100\% is the photo as it is), on the whole picture, on all five of my new
+citrine photos: the three the model gets wrong and the two it gets right.
+
+My requests to the agent, word for word:
+\begin{quote}
+So make a copy of each image in data/new\_images/citrine with higher saturation
+(70\%) and save the copies in data/changed/saturated\_citrine
+\end{quote}
+and, asked whether 70\% meant 70\% more colour:
+\begin{quote}
+yes 70\% more color.
+\end{quote}
+
+The agent wrote the change as a short piece of code that I ran on Colab. Raising
+the saturation makes the colour that is already there stronger; it cannot add
+colour to parts that are white or grey. My web page's first two answers:
+
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & original & saturation +70\% \\
+\midrule
+\texttt{citrine/6dc1dd3c} & rose quartz 52.8\%, aventurine 26.5\% & rose quartz 37.7\%, aventurine 31.5\% \\
+\texttt{citrine/58f05f6d} & rose quartz 49.1\%, aventurine 22.4\% & rose quartz 54.7\%, aventurine 18.0\% \\
+\texttt{citrine/2788e4fa} & rose quartz 31.0\%, amethyst 29.8\% & rose quartz 33.0\%, amethyst 25.1\% \\
+\texttt{citrine/08f618d6} & citrine 89.5\%, aventurine 4.7\% & citrine 96.2\%, aventurine 2.1\% \\
+\texttt{citrine/f16efa23} & citrine 59.9\%, amethyst 25.1\% & citrine 94.1\%, amethyst 4.1\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two that were right stayed right and became more sure, \texttt{f16efa23}
+from 59.9\% to 94.1\%. The three that were wrong stayed wrong, all three still
+rose quartz, and citrine is not among the first two answers for any of them.
+
+The page's numbers for the three originals are close to, but not exactly the
+same as, the ones \texttt{check.py} printed in Problem 5 (54\%, 51\% and 32\%).
+For \texttt{2788e4fa} the order of the first two even changes: \texttt{check.py}
+said amethyst, the page says rose quartz 31.0\% with amethyst 29.8\% second. Before
+the model looks at a photo, the photo is shrunk to a small square; the web page
+and Python shrink it in slightly different ways, so the model gets an almost, but
+not exactly, identical picture. The green badge cannot notice this, because its
+test pictures are already small squares. When the model is unsure, as it is
+here, such a tiny difference is enough to swap its first two answers.
+
+\sidebyside{figures/guess3_original_citrine_6dc1dd3c.jpg}{citrine/6dc1dd3c, original: rose quartz 52.8\%, aventurine 26.5\%}
+           {figures/guess3_changed_citrine_6dc1dd3c.jpg}{saturation +70\%: rose quartz 37.7\%, aventurine 31.5\%}
+\sidebyside{figures/guess3_original_citrine_58f05f6d.jpg}{citrine/58f05f6d, original: rose quartz 49.1\%, aventurine 22.4\%}
+           {figures/guess3_changed_citrine_58f05f6d.jpg}{saturation +70\%: rose quartz 54.7\%, aventurine 18.0\%}
+\sidebyside{figures/guess3_original_citrine_2788e4fa.jpg}{citrine/2788e4fa, original: rose quartz 31.0\%, amethyst 29.8\%}
+           {figures/guess3_changed_citrine_2788e4fa.jpg}{saturation +70\%: rose quartz 33.0\%, amethyst 25.1\%}
+\sidebyside{figures/guess3_original_citrine_08f618d6.jpg}{citrine/08f618d6, original: citrine 89.5\%, aventurine 4.7\%}
+           {figures/guess3_changed_citrine_08f618d6.jpg}{saturation +70\%: citrine 96.2\%, aventurine 2.1\%}
+\sidebyside{figures/guess3_original_citrine_f16efa23.jpg}{citrine/f16efa23, original: citrine 59.9\%, amethyst 25.1\%}
+           {figures/guess3_changed_citrine_f16efa23.jpg}{saturation +70\%: citrine 94.1\%, amethyst 4.1\%}
+
+What the results say about the guess, in my words: Once again, the results do
+not confirm my guess completely; in fact they only confirmed my guess for the
+images of citrine that were already guessed right. However, the results give me
+more insight about where I should put my attention in understanding what the
+model looks at to distinguish the crystals, in particular what in those 3 images
+of citrine is different from the others. As the saturation was increased, other
+colours in the image also became more evident. In particular, it is possible to
+notice that the background's colour is also more vivid. In the saturated image
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG the granite background shows more hues
+that can resemble pink, but also a slight green. In the saturated image
+58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG, due to the type of light, the
+background looks more pink too. The same happens in the saturated image
+2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG. In fact, the results show that for the
+saturated images 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG and
+2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG the model is surer about its answer
+``rose quartz'', while for 6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG the first
+answer, rose quartz, decreases to 37.7\% as aventurine rises to 31.5\%.
+Therefore, the conclusion I draw from the results of the third guess is that the
+colour of the background, also influenced by light, can influence the model's
+answer in some situations.
+
+\subsection*{Guess 4: the stone's size and the background}
+
+My guess, in my words as I gave it: ``From the third guess I concluded that the
+color of background can be a factor that influences the model. Given all the
+previous guesses, I start to consider more and more the idea that the model uses
+a combination of elements to guess the crystals. The images that were still
+guessed wrong also had another thing in common: the crystals are small.
+Additionally, the two citrine images that are guessed right are the only two
+with more than one crystal in them. To check both background and size at the
+same time, the images could be cut so that the crystal occupies the most part of
+the image, and has little background. My guess would be that if we cut the
+background from the images of citrine, making the crystal the main object in the
+image, the model could guess them correctly.''
+
+The change: the three citrines that were still wrong in Guess 3, in their
+saturated versions, cut to a square around the stone, so that the stone fills
+most of the picture with only a thin border of background (the square is 1.5
+times as wide as the stone). A square, because the model always looks at a
+square, so it sees all of the cut picture.
 
 My request to the agent, word for word:
 \begin{quote}
-\fillin{the request}
+So make a copy of images
+data/changed/saturated\_citrine/6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG,
+data/changed/saturated\_citrine/2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG and
+data/changed/saturated\_citrine/58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG cut the
+background around the crystals and save the copies in
+data/changed/saturated\_cut\_citrine. In this case still work on the saturated
+version because I still think that saturation of the crystal plays a role.
 \end{quote}
 
-% One \sidebyside for every image you changed.
-\sidebyside{figures/guess1_original_1.jpg}{\fillin{original: the model's answer}}
-           {figures/guess1_changed_1.jpg}{\fillin{changed: the model's answer}}
+The agent found the stone in each picture, chose the square, showed me the three
+cut pictures before they were made, and wrote the cut as a short piece of code
+that I ran on Colab. My web page's first two answers, next to the ones the same saturated
+pictures got in Guess 3:
 
-\fillin{What the results say about the guess.}
+\begin{center}\footnotesize
+\begin{tabular}{lll}
+\toprule
+photo & saturated & saturated and cut \\
+\midrule
+\texttt{citrine/6dc1dd3c} & rose quartz 37.7\%, aventurine 31.5\% & \textbf{citrine 75.3\%}, aventurine 12.0\% \\
+\texttt{citrine/58f05f6d} & rose quartz 54.7\%, aventurine 18.0\% & \textbf{citrine 99.6\%}, amethyst 0.3\% \\
+\texttt{citrine/2788e4fa} & rose quartz 33.0\%, amethyst 25.1\% & \textbf{citrine 97.9\%}, amethyst 0.9\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three changed from rose quartz to citrine, two of them above 97\%. The
+pictures were both saturated and cut, so these three results alone cannot
+separate the two changes; but in Guess 3 the same three pictures, saturated and
+not cut, were all still rose quartz.
+
+\sidebyside{figures/guess3_changed_citrine_6dc1dd3c.jpg}{6dc1dd3c, saturated: rose quartz 37.7\%, aventurine 31.5\%}
+           {figures/guess4_changed_citrine_6dc1dd3c.jpg}{saturated and cut: citrine 75.3\%, aventurine 12.0\%}
+\sidebyside{figures/guess3_changed_citrine_58f05f6d.jpg}{58f05f6d, saturated: rose quartz 54.7\%, aventurine 18.0\%}
+           {figures/guess4_changed_citrine_58f05f6d.jpg}{saturated and cut: citrine 99.6\%, amethyst 0.3\%}
+\sidebyside{figures/guess3_changed_citrine_2788e4fa.jpg}{2788e4fa, saturated: rose quartz 33.0\%, amethyst 25.1\%}
+           {figures/guess4_changed_citrine_2788e4fa.jpg}{saturated and cut: citrine 97.9\%, amethyst 0.9\%}
+
+What the results say about the guess, in my words: These results are the first
+in which my guess was completely right. I can therefore assume that cutting the
+background and making the crystal the main object of the image is an important
+element that the model considers in order to answer correctly. The answers on
+the cut images are so accurate that it makes me wonder whether it plays a bigger
+role than colour (considering it was done on saturated images).
+
+\subsection*{Guess 5: the cut on its own, on all my photos}
+
+My guess, in my words as I gave it: ``At this point, I think a final check should
+be done, with a 5th guess. Guess 4 showed that making the crystal bigger, and
+cutting the background was important for the model to guess, finally, the 3
+citrine correctly. However, in those images the color also was saturated from
+the previous guess. So it could be interesting to test the cutting generally on
+the images. In particular, applying the cut to all of my original images. Since
+the other crystals were guessed right, observing how only the cut affects the
+results can be useful to understand how much cutting the background and making
+the crystal the main object in the image is taken in consideration from the
+model. Also, because the images are original, so with normal saturation,
+observing the results of the 3 citrine, can give an idea of whether cut plays a
+bigger role than color. So my 5th guess is that if we cut the background from my
+original images, making the crystals the main object in the image, the 3 citrine
+6dc1dd3c-0216-45b8-abb7-214d633d280e.JPG, 58f05f6d-77f2-467e-b497-c4265bb43b8e.JPG,
+and 2788e4fa-a7ad-453a-b3ad-3984b54d6e2c.JPG would still be guessed correctly,
+and all the other images (that were previously guessed right) would also be
+guessed right and more accurately.''
+
+The change: all 21 of my original photos, with their normal colour, cut in the
+same way as in Guess 4: a square around the stone (or around all the stones,
+when there are several), so that the stone fills most of the picture. The agent showed me all 21 cuts
+before they were made, and on my request moved the square for
+\texttt{amethyst/a95f9f93} lower, so that the stone is not cut.
+
+My request to the agent, word for word:
+\begin{quote}
+So make a copy of each image in data/new\_images cut the background around the
+crystals and save the copies in data/changed/cut
+\end{quote}
+and, after the preview:
+\begin{quote}
+yes, just change the cut on image a95f9f93-5117-4b70-9e92-4c513bb5decc.JPG to
+make the cut a bit lower so that the crystal is not cut.
+\end{quote}
+The copies are in \texttt{data/changed/cut/<class>/}, one folder per class.
+The agent wrote the cut as a short piece of code that I ran on Colab. My web
+page's first two answers, the originals as the page answered them (amethyst and aventurine from
+Guess 1, citrine from Guess 3, rose quartz read for this guess):
+
+\begin{center}\scriptsize
+\begin{tabular}{lll}
+\toprule
+photo & original & cut \\
+\midrule
+\texttt{amethyst/44db3aaf} & amethyst 96.7\%, rose quartz 2.4\% & amethyst 87.0\%, rose quartz 10.5\% \\
+\texttt{amethyst/a95f9f93} & amethyst 86.9\%, rose quartz 8.1\% & amethyst 93.3\%, rose quartz 3.7\% \\
+\texttt{amethyst/IMG\_3072} & amethyst 80.2\%, rose quartz 16.7\% & amethyst 62.1\%, rose quartz 29.2\% \\
+\texttt{amethyst/IMG\_3089} & amethyst 90.5\%, aventurine 5.2\% & amethyst 88.7\%, aventurine 8.9\% \\
+\texttt{amethyst/IMG\_3200} & amethyst 94.8\%, rose quartz 2.3\% & amethyst 91.1\%, rose quartz 5.7\% \\
+\texttt{aventurine/59ad40f0} & aventurine 99.3\%, amethyst 0.4\% & aventurine 99.9\%, rose quartz 0.1\% \\
+\texttt{aventurine/aba4d635} & aventurine 97.3\%, amethyst 1.7\% & aventurine 98.8\%, amethyst 0.7\% \\
+\texttt{aventurine/IMG\_3068} & aventurine 75.2\%, rose quartz 15.6\% & aventurine 95.9\%, rose quartz 3.3\% \\
+\texttt{aventurine/IMG\_3196} & aventurine 80.9\%, rose quartz 13.3\% & aventurine 98.8\%, rose quartz 0.7\% \\
+\texttt{aventurine/IMG\_3197} & aventurine 88.7\%, rose quartz 9.9\% & aventurine 98.5\%, rose quartz 1.4\% \\
+\texttt{citrine/6dc1dd3c} & rose quartz 52.8\%, aventurine 26.5\% & citrine 48.0\%, rose quartz 23.5\% \\
+\texttt{citrine/08f618d6} & citrine 89.5\%, aventurine 4.7\% & citrine 94.5\%, aventurine 2.4\% \\
+\texttt{citrine/58f05f6d} & rose quartz 49.1\%, aventurine 22.4\% & citrine 97.2\%, amethyst 2.2\% \\
+\texttt{citrine/2788e4fa} & rose quartz 31.0\%, amethyst 29.8\% & citrine 90.1\%, amethyst 6.4\% \\
+\texttt{citrine/f16efa23} & citrine 59.9\%, amethyst 25.1\% & citrine 85.9\%, aventurine 6.8\% \\
+\texttt{rose\_quartz/9dacd40a} & rose quartz 99.8\%, aventurine 0.1\% & rose quartz 99.9\%, aventurine 0.1\% \\
+\texttt{rose\_quartz/2270e0ff} & rose quartz 95.3\%, aventurine 2.9\% & rose quartz 97.6\%, aventurine 1.8\% \\
+\texttt{rose\_quartz/ea7f4b76} & rose quartz 99.7\%, amethyst 0.2\% & rose quartz 99.8\%, aventurine 0.1\% \\
+\texttt{rose\_quartz/IMG\_3069} & rose quartz 47.0\%, amethyst 34.8\% & rose quartz 53.3\%, aventurine 31.9\% \\
+\texttt{rose\_quartz/IMG\_3194} & rose quartz 91.4\%, aventurine 6.9\% & rose quartz 99.1\%, aventurine 0.8\% \\
+\texttt{rose\_quartz/IMG\_3204} & rose quartz 76.7\%, aventurine 22.2\% & rose quartz 63.2\%, aventurine 35.7\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The originals are 18 of 21 right on the page; the cut pictures are 21 of 21
+right. The three citrines that were wrong are right without any extra colour,
+\texttt{6dc1dd3c} at 48.0\% against 75.3\% when it was also saturated in Guess 4.
+Of the 18 photos that were right before, 13 are more sure after the cut and 5
+are less sure: four amethysts (\texttt{44db3aaf}, \texttt{IMG\_3072},
+\texttt{IMG\_3089}, \texttt{IMG\_3200}) and one rose quartz (\texttt{IMG\_3204}).
+
+\sidebyside{figures/guess5_original_amethyst_44db3aaf.jpg}{amethyst/44db3aaf, original: amethyst 96.7\%, rose quartz 2.4\%}
+           {figures/guess5_changed_amethyst_44db3aaf.jpg}{cut: amethyst 87.0\%, rose quartz 10.5\%}
+\sidebyside{figures/guess5_original_amethyst_a95f9f93.jpg}{amethyst/a95f9f93, original: amethyst 86.9\%, rose quartz 8.1\%}
+           {figures/guess5_changed_amethyst_a95f9f93.jpg}{cut: amethyst 93.3\%, rose quartz 3.7\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3072.jpg}{amethyst/IMG\_3072, original: amethyst 80.2\%, rose quartz 16.7\%}
+           {figures/guess5_changed_amethyst_IMG_3072.jpg}{cut: amethyst 62.1\%, rose quartz 29.2\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3089.jpg}{amethyst/IMG\_3089, original: amethyst 90.5\%, aventurine 5.2\%}
+           {figures/guess5_changed_amethyst_IMG_3089.jpg}{cut: amethyst 88.7\%, aventurine 8.9\%}
+\sidebyside{figures/guess5_original_amethyst_IMG_3200.jpg}{amethyst/IMG\_3200, original: amethyst 94.8\%, rose quartz 2.3\%}
+           {figures/guess5_changed_amethyst_IMG_3200.jpg}{cut: amethyst 91.1\%, rose quartz 5.7\%}
+\sidebyside{figures/guess5_original_aventurine_59ad40f0.jpg}{aventurine/59ad40f0, original: aventurine 99.3\%, amethyst 0.4\%}
+           {figures/guess5_changed_aventurine_59ad40f0.jpg}{cut: aventurine 99.9\%, rose quartz 0.1\%}
+\sidebyside{figures/guess5_original_aventurine_aba4d635.jpg}{aventurine/aba4d635, original: aventurine 97.3\%, amethyst 1.7\%}
+           {figures/guess5_changed_aventurine_aba4d635.jpg}{cut: aventurine 98.8\%, amethyst 0.7\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3068.jpg}{aventurine/IMG\_3068, original: aventurine 75.2\%, rose quartz 15.6\%}
+           {figures/guess5_changed_aventurine_IMG_3068.jpg}{cut: aventurine 95.9\%, rose quartz 3.3\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3196.jpg}{aventurine/IMG\_3196, original: aventurine 80.9\%, rose quartz 13.3\%}
+           {figures/guess5_changed_aventurine_IMG_3196.jpg}{cut: aventurine 98.8\%, rose quartz 0.7\%}
+\sidebyside{figures/guess5_original_aventurine_IMG_3197.jpg}{aventurine/IMG\_3197, original: aventurine 88.7\%, rose quartz 9.9\%}
+           {figures/guess5_changed_aventurine_IMG_3197.jpg}{cut: aventurine 98.5\%, rose quartz 1.4\%}
+\sidebyside{figures/guess5_original_citrine_6dc1dd3c.jpg}{citrine/6dc1dd3c, original: rose quartz 52.8\%, aventurine 26.5\%}
+           {figures/guess5_changed_citrine_6dc1dd3c.jpg}{cut: citrine 48.0\%, rose quartz 23.5\%}
+\sidebyside{figures/guess5_original_citrine_08f618d6.jpg}{citrine/08f618d6, original: citrine 89.5\%, aventurine 4.7\%}
+           {figures/guess5_changed_citrine_08f618d6.jpg}{cut: citrine 94.5\%, aventurine 2.4\%}
+\sidebyside{figures/guess5_original_citrine_58f05f6d.jpg}{citrine/58f05f6d, original: rose quartz 49.1\%, aventurine 22.4\%}
+           {figures/guess5_changed_citrine_58f05f6d.jpg}{cut: citrine 97.2\%, amethyst 2.2\%}
+\sidebyside{figures/guess5_original_citrine_2788e4fa.jpg}{citrine/2788e4fa, original: rose quartz 31.0\%, amethyst 29.8\%}
+           {figures/guess5_changed_citrine_2788e4fa.jpg}{cut: citrine 90.1\%, amethyst 6.4\%}
+\sidebyside{figures/guess5_original_citrine_f16efa23.jpg}{citrine/f16efa23, original: citrine 59.9\%, amethyst 25.1\%}
+           {figures/guess5_changed_citrine_f16efa23.jpg}{cut: citrine 85.9\%, aventurine 6.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_9dacd40a.jpg}{rose quartz/9dacd40a, original: rose quartz 99.8\%, aventurine 0.1\%}
+           {figures/guess5_changed_rose_quartz_9dacd40a.jpg}{cut: rose quartz 99.9\%, aventurine 0.1\%}
+\sidebyside{figures/guess5_original_rose_quartz_2270e0ff.jpg}{rose quartz/2270e0ff, original: rose quartz 95.3\%, aventurine 2.9\%}
+           {figures/guess5_changed_rose_quartz_2270e0ff.jpg}{cut: rose quartz 97.6\%, aventurine 1.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_ea7f4b76.jpg}{rose quartz/ea7f4b76, original: rose quartz 99.7\%, amethyst 0.2\%}
+           {figures/guess5_changed_rose_quartz_ea7f4b76.jpg}{cut: rose quartz 99.8\%, aventurine 0.1\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3069.jpg}{rose quartz/IMG\_3069, original: rose quartz 47.0\%, amethyst 34.8\%}
+           {figures/guess5_changed_rose_quartz_IMG_3069.jpg}{cut: rose quartz 53.3\%, aventurine 31.9\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3194.jpg}{rose quartz/IMG\_3194, original: rose quartz 91.4\%, aventurine 6.9\%}
+           {figures/guess5_changed_rose_quartz_IMG_3194.jpg}{cut: rose quartz 99.1\%, aventurine 0.8\%}
+\sidebyside{figures/guess5_original_rose_quartz_IMG_3204.jpg}{rose quartz/IMG\_3204, original: rose quartz 76.7\%, aventurine 22.2\%}
+           {figures/guess5_changed_rose_quartz_IMG_3204.jpg}{cut: rose quartz 63.2\%, aventurine 35.7\%}
+
+What the results say about the guess, in my words: From these results I can
+observe two things. First, as I expected, the 3 wrong citrines were guessed
+correctly even without being more saturated, although with less accuracy. This
+means that cutting the background and making the crystal bigger in the image is
+important for the model to guess it correctly; in particular it plays a bigger
+role than colour, since in Guess 3 the 3 citrines were still guessed wrong when
+only the saturation was enhanced. Second, the crystals that were already guessed
+right were also guessed right, as expected, but not exactly as I imagined: not
+all the answers were more accurate. In particular, 4 amethysts were guessed with
+less accuracy and only one with more. This is important to give the right amount
+of importance to the cut (so to the size of the crystals and the absence of
+background). Considering the other factors that I observed in the previous
+guesses, such as transparency and colour, and my idea of a combination of
+elements, the reason why the 4 amethysts got a less accurate answer after the
+cut could be connected to the fact that the colour of amethyst is fuller and
+darker, which can have an effect on how useful the cut is to the model in that
+case. However, it is important to also mention that one of the rose quartz
+photos, IMG\_3204.jpg, also had less accuracy after the cut, but in this case
+the transparency and saturation of the crystal are different from amethyst.
+Therefore, it is possible that there is another element that the model looks at
+that is not among those I tried to test in my 5 guesses.
 
 \subsection*{What I now think the model uses}
-\fillin{What you now think the model uses to tell your categories apart, and
-how sure you are.}
+At the beginning of the assignment I thought that the model would mostly look at
+the colour of the crystals to distinguish them, as it is the first thing that is
+visible by looking at them. However, through the 5 guesses I made I became more
+sure that the model does not use only one element to recognise the different
+crystals, but rather takes a combination of them into consideration. This is
+probably the part of the conclusion that I am most sure about.
+
+The elements that I tried to test, in order to understand whether they are
+considered by the model, were three. The first was colour, so the saturation of
+the crystals. The second was transparency, in the sense of how pale the crystal
+is, and it was observed through less contrast. Lastly, the size of the crystal
+and the reduction of the background, which were observed together through the
+cut. Among these, I think that mainly two elements are considered by the model,
+but differently. The element that I think has more importance for the model is
+the size of the crystal and the reduction of the background, since all my images
+were recognised correctly after the cut that made the crystal the main object in
+the image and reduced the background. Colour (saturation) is the second element
+in importance, considering that the 3 saturated citrines were not recognised
+correctly before the cut. As for transparency, it might play a role, but it was
+not easy to check, as lowering the contrast is not exactly the same as having a
+crystal that is pale and less full in colour. Therefore, from my guesses I
+conclude that the model uses a combination of the size of the crystal, the
+reduction of the background, and colour to distinguish the categories, and that
+the size of the crystal and the reduction of the background have a stronger
+impact on the model than colour.
+
+However, it is important to mention that my guesses were based on tests I tried
+on my own images, which were only 21, so my conclusion has limitations. As
+mentioned in the conclusion of Guess 5, I think there might be other elements
+that the model looks at to distinguish the categories, which I did not test in my
+guesses. Apart from Guess 5, which tested the cut on all my images, my other
+guesses were done on a smaller number of images; in particular, my second and
+fourth guesses were more specific and focused only on 3 amethysts and on the 3
+wrong citrines, so my conclusions from those two guesses are limited. I am aware
+that more tests and guesses, especially on more images and from other sources as
+well, could give a more complete answer to what the model uses to recognise the
+categories.
 
 % ---------------------------------------------------------------------------
 \section*{Appendix. Output of check.py}
+
+(The warning that \texttt{docs/model.onnx} is not committed was true when I ran
+\texttt{check.py} on Colab; I committed and pushed the model from my own computer
+afterwards, and the published page uses it, see Problem 6.)
+
 \outputfile{outputs/check.txt}
 
 \end{document}
